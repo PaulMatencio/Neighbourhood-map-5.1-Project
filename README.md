@@ -1,9 +1,9 @@
 ##Neighborhood map project
 
 ###Setting up Project:
-   I'm using node.js and gulp so all the original, readable and commented HTML/CSS/JavaScript/image files are in the 'Dev' folder. The system set up in a way that if I start gulp it will start a listener and will compress any element changed in the 'Dev' folder and move it in the right place in the project folder. Check ['Dev'](https://github.com/DevRob/Udacity-WebDev-project5/tree/master/Dev) folder for commented readable codes.
+   I'm using node.js and gulp so all the original, readable and commented HTML/CSS/JavaScript/image files are in the 'Dev' folder. The system set up in a way that if I start gulp it will start a listener and will compress any element changed in the 'Dev' folder and move it in the right place in the project folder. Check ['src'](https://github.com/PaulMatencio/Neighbourhood-Maps-Project/tree/master/src) folder for commented readable codes.
    
-   For the working page check this link: [Neighborhood app](http://devrob.github.io/Udacity-WebDev-project5/)
+   For the working page check this link: 
 
 ###Project Overview:
 
@@ -51,7 +51,7 @@ also there is a photo viewer if the place has photos you can hit the "photos" li
 * [Online image compressor](http://compresspng.com)
 * [piazza Front-End Web Dev Nanodegree forum](https://piazza.com/class/i36sqlrb9xu332)
 * [Dev Tools](https://developer.chrome.com/devtools/docs/rendering-settings)
-* [project5 on github](https://github.com/DawoonC/dw-neighborhood)
+* [project5 on github](http://devrob.github.io/Udacity-WebDev-project5)
 * [Pixlr Online photo editor](https://pixlr.com/editor/)
 * [CSS Matic: The ultimate CSS tools for web designers](http://www.cssmatic.com)
 
