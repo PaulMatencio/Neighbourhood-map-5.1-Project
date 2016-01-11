@@ -11,13 +11,12 @@
 
 ###How to use the app
 
-* Search bar:
+* Search box:
 
    Use the search bar to find a neighborhood you want to visit. Type city name or district. The app will focus on that area and request the 10-20 most popular places in the area.
-You can even type "sushi near philly" or "gym near Manhattan" that case the search gonna return the nearby sushi restaurants / gym in the area you searched for.
-Searchbar has an autocomplete feature as well, you need to choose from the dropdown with mouse or up-down arrows and hit enter. if you dont choose from autocomplete options and hit enter it will try to predict your search goal - note that the system needs at least 3 characters to able to predict your search. 
+   Searchbox has an autocomplete feature as well, you need to choose from the dropdown with mouse or up-down arrows and hit enter. if you dont choose from autocomplete options and hit enter it will try to predict your search goal - note that the system needs at least 3 characters to able to predict your search. 
 
-   You can filter the places returned by the search simple typing in the search bar it will update the markers and the placelist on keydown (can search for name or type "bar, restaurant, takeaway ....").
+   You can filter the places returned by the search simple typing in the search box it will update the markers and the placelist on keydown (can search for name or type "bar, chinese restaurant, takeaway , sushi near Paris....").
 
 * search box: 
 
