@@ -67,8 +67,8 @@ gMaps.prototype.nearbySearch = function(position) {
 };
 
 /**
-    get the places with types != "politcal" 
-   
+    get the places with types != "politcal"
+
 */
 gMaps.prototype.getResults = function(results, status, pagination) {
   var bounds = new google.maps.LatLngBounds();
@@ -124,7 +124,7 @@ gMaps.prototype.initAutocomplete = function() {
     searchInput.value = "";
     //self.keyword("");
   }
-  searchBox.addListener('places_changed', boxSearch);  
+  searchBox.addListener('places_changed', boxSearch);
 };
 
 /**
@@ -133,8 +133,8 @@ gMaps.prototype.initAutocomplete = function() {
 gMaps.prototype.createMarkers = function(places) {
   /*
   place= { geometry : Object,
-          icon: url, 
-          id: string, 
+          icon: url,
+          id: string,
           name:  string,
           place_id: string
           opening_hours: object,
@@ -143,7 +143,8 @@ gMaps.prototype.createMarkers = function(places) {
           reference:  string,
           scope: string,
           type : Array[],
-          vicinity : text
+          formated_address: text,
+          vicinity : html
        }
   */
   var iconSize = Math.sqrt($(window).width()) + 20;
@@ -183,7 +184,7 @@ gMaps.prototype.createMarkers = function(places) {
     }
 
     marker.addListener('click', function() {
-    
+
       Map.markers.forEach(function(marker) {
         marker.setAnimation(null);
       });
@@ -196,6 +197,7 @@ gMaps.prototype.createMarkers = function(places) {
         Map.map.panBy(offsetX, offsetY);
       }
     });
+
     Map.markers.push(marker);
 
     google.maps.event.addListener(marker, 'click', function() {
@@ -224,22 +226,12 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
 
     if (status === google.maps.places.PlacesServiceStatus.OK) {
       var website = self.getWebsite(place);
-      infoWindow.setContent(
-        /**
-         * Dynamically generated info window content.
-         */
-        '<div id="infoWindow" class="infoWindow"><p><h3>' + place.name + '</h3></p>' +
-        '<hr>' +
-        '<p><span>' + place.formatted_address + '</span></p>' +
-        '<p><span class="opening>' + place.opening_hours + '</span></p>' +
-        '<br>' +
-        '<div id="wiki" style="white-space: normal;"><span></span></div>' +
-        '<hr>' + Map.getRating(place) + Map.getPhotoes(place) + '</div></p>' +
-        '<p><span>' + Map.getPhone(place) + '</span></p>' +
-        '<p><div class="longtext"><a href="' + website + '" target="_blank">' + website + '<a></div>' +
-        '<hr style="background: #ffbccd;">' +
-        '<img style="width: 20px;" src="images/Foursquare-icon.png"><a href="#" id="fourLink" style="display: inline;"> Top 5 place by 4Square</a>'
-      );
+
+      var reviewsTemplate = $('script[data-template="reviews"]').html();
+      var rev = reviewsTemplate.replace(/{{name}}/,place.name).replace(/{{formatted_address}}/,place.formatted_address).replace(/{{opening}}/,Map.getOpenings(place)).replace(/{{rating}}/,Map.getRating(place)).replace(/{{photos}}/,Map.getPhotoes(place));
+      // var rev1 = rev.replace(/{{website}}/g,website).replace(/{{phone}}/,Map.getPhone(place));
+
+      infoWindow.setContent(rev.replace(/{{website}}/g,website).replace(/{{phone}}/,Map.getPhone(place)));
 
       infoWindow.open(Map.map, marker);
 
@@ -248,6 +240,7 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
       self.placePhotos(place.photos);
 
       document.getElementById('photoLink').addEventListener("click", function() {
+
         /**
          * Open The photo viewer and navigate throught the list of photos.
          */
@@ -355,17 +348,16 @@ gMaps.prototype.getRating = function(place) {
 
   var self = this.self;
   var ratingTag = "";
-  var starHolder = self.rateImg(place.rating);
+  var starHolder = self.rateStar(place.rating);
   if (place.rating) {
     ratingTag = '<div><span style="color: #df6d15; padding-right: 3px;">' + place.rating + '</span>';
-
     for (var i in starHolder) {
       if (i) {
         ratingTag += '<img class="rate-star" src="' + starHolder[i].star + '" />';
       }
     }
-
-    return ratingTag + '<a id="reviews"  href="#"">reviews,</a>';
+    ratingTag += '<span class="rating"> Users rating:' + place.user_ratings_total+'</span>';
+    return ratingTag + '<a id="reviews"  href="#"">Reviews,</a>';
   } else {
     return '<span style="font-style: italic;">no rating available</span>';
   }
@@ -384,20 +376,35 @@ gMaps.prototype.getPhone = function(place) {
 
 
 /*
- * Get photo urls from place object 
+ * Get photo urls from place object
  */
 gMaps.prototype.getPhotoes = function(place) {
 
   if (place.photos) {
     if (place.photos.length > 1) {
-      return '<a style="margin-left: 5px;" id="photoLink" href="#"">photos</a>';
+      return '<a style="margin-left: 5px;" id="photoLink" href="#"">Photos</a>';
     }
   }
   return '<div id="photoLink"></div></div>';
 };
 
+/*
+ * Get opening hours  from place object
+ */
+gMaps.prototype.getOpenings = function(place) {
+  var opening;
+  console.log(place.opening_hours);
+  try{
+      opening = "Mon-Sat:" + place.opening_hours.periods[1].open.time + "-" + place.opening_hours.periods[1].close.time + " " +
+      "Sun:" + place.opening_hours.periods[0].open.time + "-" + place.opening_hours.periods[0].close.time ;
+  }
+    catch(e){
+    opening='Work time not available';
+  };
+  return opening;
+};
 
-/* 
+/*
    https://developers.google.com/places/supported_types
    List of supported values for the types property in the Google Places API
  */
@@ -531,8 +538,8 @@ var mapPlaceTypes = [
   myCategories = [],
   radius = 2000,
   today = new Date(),
-  /* 
-    initMap option 
+  /*
+    initMap option
   */
   mapOptions = {
     center: mapCenter,

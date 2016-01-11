@@ -10,7 +10,7 @@
   <body>
     <!--div tag that holds the google map-->
     <div id="map-canvas"></div>
-    
+
     <div id="search-box" class="input-group" group="controls">
       <input id="search-input"  type="text" class="form-control" placeholder="Looking for...">
     </div>
@@ -43,7 +43,7 @@
                 <img class="list-photo" src="images/nophoto.jpg" alt="no-photo">
               </div>
             </div>
-            <!-- end picture -->         
+            <!-- end picture -->
             <!-- place information-->
             <div class="col-sm-12 col-md-8">
               <h3 class="longtext" data-bind="text: $data.name"></h3>
@@ -52,7 +52,7 @@
                 <div data-bind="if: $data.rating">
                   <div>
                     <span class="rating-number" data-bind="text: $data.rating"></span>
-                    <div style="display: inline;" data-bind="foreach: $parent.rateImg($data.rating)">
+                    <div style="display: inline;" data-bind="foreach: $parent.rateStar($data.rating)">
                      <img class="rate-star" data-bind="attr:{src: star}" alt="*">
                     </div>
                   </div>
@@ -61,9 +61,9 @@
                   <em>no rating available.</em>
                 </span>
               </p>
-              <p class="place-address"><span data-bind="text: $parent.getAddress($data)"></span></p>   
-            </div> 
-            <!-- end of place inforantion -->     
+              <p class="place-address"><span data-bind="text: $parent.getAddress($data)"></span></p>
+            </div>
+            <!-- end of place inforantion -->
         </li>
       </ul>
 
@@ -112,19 +112,19 @@
             </div>
             <div style="float: right;">
               <span class="rating-number" style="font-size: 16px;" data-bind="text: $data.rating"></span>
-              <div style="display: inline;" data-bind="foreach: $parent.rateImg($data.rating)">
+              <div style="display: inline;" data-bind="foreach: $parent.rateStar($data.rating)">
                 <img style="height: 16px;" class="rate-star" data-bind="attr:{src: star}" alt="*">
               </div>
             </div>
           </p>
           <p class="greytext"><span data-bind="text: $data.formatted_address"></span></p>
         </div>
-        <ul class="infolist" data-bind="foreach: placeReviews"> 
+        <ul class="infolist" data-bind="foreach: placeReviews">
           <li style="margin-bottom: 15px;">
             <strong style="display: inline" data-bind="text: $data.author_name"></strong>
             <div style="display: inline">
               <span class="rating-number" data-bind="text: $data.rating"></span>
-              <div style="display: inline;" data-bind="foreach: $parent.rateImg($data.rating)">
+              <div style="display: inline;" data-bind="foreach: $parent.rateStar($data.rating)">
                 <img class="rate-star" data-bind="attr:{src: star}" alt="*">
               </div>
             </div>
@@ -157,7 +157,7 @@
             <strong data-bind="text: venue.name"></strong>
             <div class="rating_group">
               <span class="rating-number" data-bind="text: venue.rating"></span>
-              <div style="display: inline;" data-bind="foreach: $parent.rateImg(Math.round(venue.rating) / 2)">
+              <div style="display: inline;" data-bind="foreach: $parent.rateStar(Math.round(venue.rating) / 2)">
                 <img class="rate-star" data-bind="attr:{src: star}" alt="*">
               </div>
             </div>
@@ -180,7 +180,22 @@
         </div>
       </div>
     </div> <!--end foursquare page -->
-
+    <!-- template scripts -->
+    <script type="text/template" data-template="reviews">
+        <div id="infoWindow" class="infoWindow">
+          <p><h3>{{name}}</h3></p>
+          <hr>
+          <p><span>{{formatted_address}} </span></p>
+          <p><span class="opening">{{opening}}</span></p>
+          <div id="wiki" style="white-space: normal;"><span></span></div>
+             <hr>{{rating}} {{photos}}
+          </div></p>
+          <p><span>{{phone}} </span></p>
+          <p><div class="longtext"><a href="{{website}}" target="_blank">{{website}}<a></div></p>
+          <hr style="background: #ffbccd;">
+          <img style="width: 20px;" src="images/Foursquare-icon.png"><a href="#" id="fourLink" style="display: inline;"> Top 5 place by 4Square</a>
+        </div>
+   </script>
     <!-- load scripts -->
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places" defer></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
