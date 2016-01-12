@@ -2,8 +2,8 @@
 
 ###Setting up Project:
    I'm using node.js and gulp so all the original, readable and commented HTML/CSS/JavaScript/image files are in the 'src' folder. The system set up in a way that if I start gulp it will start a listener and will compress any element changed in the 'src' folder and move it in the right place in the project folder. Check ['src'](https://github.com/PaulMatencio/Neighbourhood-Maps-Project/tree/master/src) folder for commented readable codes.
-   
-   For the working page check this link: 
+
+   For the working page check this link:
 
 ###Project Overview:
 
@@ -13,18 +13,17 @@
 
 * Search box:
 
-   Use the search bar to find a neighborhood you want to visit. Type city name or district. The app will focus on that area and request the 10-20 most popular places in the area.
-   Searchbox has an autocomplete feature as well, you need to choose from the dropdown with mouse or up-down arrows and hit enter. if you dont choose from autocomplete options and hit enter it will try to predict your search goal - note that the system needs at least 3 characters to able to predict your search. 
+   Use the search box to find a neighborhood you want to visit. Type city name or district. The app will focus on that area and request the 10-20 most popular places in the area.
 
    You can filter the places returned by the search simple typing in the search box it will update the markers and the placelist on keydown (can search for name or type "bar, chinese restaurant, takeaway , sushi near Paris....").
 
-* search box: 
+* Humbuger button:
 
-  you can search for search and filter places  the with the search box. As for instance, when you look for "Paris", the Place list will show you the top 20 places around Paris, you can use the search-box to look for "Chinese restaurant" or whatever.
+  This button is on the upper right corner. Use it to hide or show the Place list. It is useful when the sĉreen width is reduced.
 
 * Place list:
 
-   On the right you can find the places correspond to the markers. Clicking on the will focus the map on the place and will open an infowindow. 
+   On the right you can find the places correspond to the markers. Clicking on the will focus the map on the place and will open an infowindow.
    You can hide the Place list with the hamburger button located on the top right corner.
 
 
