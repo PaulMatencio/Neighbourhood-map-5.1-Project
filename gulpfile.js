@@ -1,25 +1,43 @@
 var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
-    minifyCss = require('gulp-minify-css'),
+    minifycss = require('gulp-minify-css'),
     imagemin = require('gulp-imagemin'),
     plumber = require('gulp-plumber'),
-    htmlmin = require('gulp-minify-html');
+    minifyinline = require('gulp-minify-inline');
+    minifyhtml = require('gulp-minify-html');
 
 // HTML minifier
-gulp.task('htmlmini', function() {
+gulp.task('mini-html', function() {
   var opts = {
     conditionals: true,
     spare:true
   };
 
   return gulp.src('src/*.html')
-    .pipe(htmlmin(opts))
+    .pipe(minifyhtml(opts))
     .pipe(plumber())
     .pipe(gulp.dest('./'));
 });
 
-// JScript minifier
-gulp.task('jsmini', function() {
+gulp.task('mini-critical-html', function() {
+    var opts = {
+        conditionals: true,
+        spare: true
+    };
+    return gulp.src('*.html')
+        .pipe(minifyhtml(opts))
+        .pipe(gulp.dest(''));
+});
+
+gulp.task('mini-inline', function() {
+  gulp.src('*.html')
+    .pipe(minifyinline())
+    .pipe(gulp.dest(''))
+})
+
+
+// JavaScript  minifier
+gulp.task('mini-js', function() {
   gulp.src('src/js/*.js')
     .pipe(plumber())
     .pipe(uglify())
@@ -27,15 +45,53 @@ gulp.task('jsmini', function() {
 });
 
 // CSS minifier
-gulp.task('cssmini', function() {
+gulp.task('mini-css', function() {
   gulp.src('src/css/*.css')
     .pipe(plumber())
-    .pipe(minifyCss({compatibility: 'ie8'}))
+    .pipe(minifycss({compatibility: 'ie8'}))
     .pipe(gulp.dest('./css'));
 });
 
+
+gulp.task('critical', function () {
+  critical.generate({
+    base: 'src',
+    src: 'index.html',
+    css: ['src/css/style.css'],
+    dimensions: [{
+      width: 320,
+      height: 480
+    },{
+      width: 768,
+      height: 1024
+    },{
+      width: 1280,
+      height: 960
+    }],
+    dest: 'index.html',
+    minify:true,
+    inline: true
+  });
+});
+
+
+
+// Image optimize
+gulp.task('optimize-image', function() {
+    gulp.src('src/images/*')
+        .pipe(imagemin({
+            progressive: true,
+            svgoPlugins: [{
+                removeViewBox: false
+            }],
+            use: [pngquant()]
+        }))
+        .pipe(gulp.dest('images'));
+});
+
+
 // Image compress
-gulp.task('imagecomp', function() {
+gulp.task('compress-image', function() {
   gulp.src('src/images/*')
     .pipe(plumber())
     .pipe(imagemin())
@@ -44,10 +100,10 @@ gulp.task('imagecomp', function() {
 
 // I watching U workin'
 gulp.task('watch', function() {
-  gulp.watch('src/*.html', ['htmlmini']);
-  gulp.watch('src/js/*.js', ['jsmini']);
-  gulp.watch('src/css/*.css', ['cssmini']);
-  gulp.watch('src/img/*', ['imagecomp']);
+  gulp.watch('src/*.html', ['mini-html']);
+  gulp.watch('src/js/*.js', ['mini-js']);
+  gulp.watch('src/css/*.css', ['mini-css']);
+  gulp.watch('src/images/*', ['optimize-image']);
 });
 
-gulp.task('default', ['htmlmini', 'jsmini','cssmini', 'imagecomp', 'watch']);
+gulp.task('default', ['mini-html', 'mini-js','mini-css', 'compress-image', 'watch']);

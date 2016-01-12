@@ -64,29 +64,14 @@ strong {
   background-color: white;
 }
 
-[group~=lists] {
-  position: absolute;
-  background-color: #fffae3;
-  padding: 15px;
-  top: 5%;
-  max-width: 50%;
-  height: 80%;
-  left: 25%;
-}
-
 [type~=core] {
   background-color: #4b86b4;
   color: white;
 }
 
 [group~=closeButton] {
-  position: absolute;
-  z-index: 110;
-  cursor: pointer;
   top: 30px;
-  left: 20px;
-  width: 40px;
-  height: 40px;
+  right: 30px;
 }
 
 #search-box input:focus {
@@ -170,23 +155,16 @@ strong {
   background-color: #f4e2d2;
 }
 
-
-.mylist {
-  overflow-y: scroll;
-  max-height: 80%;
-}
-
-.mylist::-webkit-scrollbar {
-  width: 12px;
-  overflow: visible;
-  margin: 10px;
-  background-color: white;
-}
-
-.mylist::-webkit-scrollbar-thumb {
-  background-color: #4b86b4;
-  height: 30px;
-  box-shadow: inset 1px 1px 0 rgba(0,0,0,.2),inset 0 -1px 0 rgba(0,0,0,.1);
+.myContainer {
+  background-color: #fffae3;
+  position: absolute;
+  padding: 30px;
+  max-width: 40%;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
 }
 
 .viewport {
@@ -199,6 +177,10 @@ strong {
  background: -webkit-linear-gradient(left,  rgba(216,224,222,0.48) 0%,rgba(189,203,200,0.48) 14%,rgba(174,191,188,0.53) 22%,rgba(153,175,171,0.6) 33%,rgba(142,166,162,0.7) 50%,rgba(130,157,152,0.8) 67%,rgba(78,92,90,0.89) 82%,rgba(14,14,14,1) 100%);
  background: linear-gradient(to right,  rgba(216,224,222,0.48) 0%,rgba(189,203,200,0.48) 14%,rgba(174,191,188,0.53) 22%,rgba(153,175,171,0.6) 33%,rgba(142,166,162,0.7) 50%,rgba(130,157,152,0.8) 67%,rgba(78,92,90,0.89) 82%,rgba(14,14,14,1) 100%);
  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7ad8e0de', endColorstr='#0e0e0e',GradientType=1 );
+
+
+
+
 
 }
 
@@ -338,6 +320,7 @@ strong {
 }
 
 .row {
+  /* height: 85px; */
   height: 10vh;
   margin-top: 3px;
 }
@@ -366,9 +349,10 @@ strong {
 .opening, .rating{
   color: #4a7ea7;
   white-space: normal;
+  /*font-weight: bold; */
 }
 
-/* Media query */
+/* media query */
 
 @media screen and (min-width: 1170px) {
 
@@ -412,10 +396,11 @@ strong {
     padding: 5px;
   }
 
-  [group~=lists] {
-    max-width: 70%;
-    left: 15%;
-    font-size: 12px;
+  .myContainer {
+    height: 60%;
+    max-width: 80%;
+    font-size: 11px;
+    padding: 5px;
   }
 
   .infolist {

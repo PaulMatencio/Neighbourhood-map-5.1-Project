@@ -92,19 +92,19 @@
     </div>
 
     <div id="photoViewer"  class="viewport" style="display: none;">
-      <img id="close-photo"  group="closeButton" class="navButton" src="images/close_button.png" alt="X">
-      <img id="prev" class="navButton" src="images/prev_button.png" alt="<">
-      <img id="next" class="navButton" src="images/next_button.png" alt=">">
+      <img id="close-photo"  group="closeButton" class="navButton" src="images/close.png" alt="X">
+      <img id="prev" class="navButton" src="images/stepbackward.png" alt="<">
+      <img id="next" class="navButton" src="images/stepforward.png" alt=">">
       <div id="frame" data-bind="foreach: placePhotos">
         <img class="photo" style="margin: 0 1px 0 1px;" data-bind="attr:{id: $index, src: $data.getUrl({maxHeight: 600})}" alt="photo">
       </div>
       <span id="photoCounter" class="navButton"></span>
     </div>
 
-    <!--review page -->
+    <!--Review page -->
     <div id="review-page"  class="viewport" style="display: none;">
-      <img id="close-review"  group="closeButton" class="navButton" src="images/close_button.png" alt="X">
-      <div class="myContainer">
+      <img id="close-review"  group="closeButton" src="images/close.png" alt="X">
+      <div class="Container" group="lists">
         <div class="review-title" data-bind="with: placeInFocus">
           <p>
             <div class="longtext">
@@ -119,20 +119,21 @@
           </p>
           <p class="greytext"><span data-bind="text: $data.formatted_address"></span></p>
         </div>
-        <ul class="infolist" data-bind="foreach: placeReviews">
-          <li style="margin-bottom: 15px;">
-            <strong style="display: inline" data-bind="text: $data.author_name"></strong>
-            <div style="display: inline">
-              <span class="rating-number" data-bind="text: $data.rating"></span>
-              <div style="display: inline;" data-bind="foreach: $parent.rateStar($data.rating)">
-                <img class="rate-star" data-bind="attr:{src: star}" alt="*">
+        <div class="list-group mylist" data-bind="foreach: placeReviews">
+            <div class="list-group-item ">
+              <strong style="display: inline" data-bind="text: $data.author_name"></strong>
+              <div style="display: inline">
+                 <span class="rating-number" data-bind="text: $data.rating"></span>
+                 <div style="display: inline;" data-bind="foreach: $parent.rateStar($data.rating)">
+                    <img class="rate-star" data-bind="attr:{src: star}" alt="*">
+                 </div>
               </div>
+              <p>
+                 <span class="review" data-bind="text: $data.text"></span>
+              </p>
             </div>
-            <p>
-              <span class="review" data-bind="text: $data.text"></span>
-            </p>
-          </li>
-        </ul>
+        </div>
+
         <div class="logo">
           <span>powered by </span>
           <img src="images/googlelogo.jpg" alt="Google" />
