@@ -232,65 +232,52 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
       // var rev1 = rev.replace(/{{website}}/g,website).replace(/{{phone}}/,Map.getPhone(place));
 
       infoWindow.setContent(rev.replace(/{{website}}/g,website).replace(/{{phone}}/,Map.getPhone(place)));
-
       infoWindow.open(Map.map, marker);
-
       $('.infoWindow').fadeIn(500);
-
       self.placePhotos(place.photos);
+      var numberPhotos = place.photos.length;
 
-      document.getElementById('photoLink').addEventListener("click", function() {
+      $('#photos').click( function() {
+
+        $('#showPhotos').show();
+        $('#backward').show();
+        $('#forward').show();
+        var current = 0;
+        navigate(0);
+
+        $('#forward').click(function() {
+          navigate(1);
+        });
+
+        $('#backward').click(function() {
+          navigate(-1);
+        });
 
         /**
-         * Open The photo viewer and navigate throught the list of photos.
-         */
-        $('#photoViewer').show();
-
-        var numberOfPhotos = place.photos.length;
-        var photoIdx = 0;
-
-        updPhoto(0);
-
-        $('#next').click(function() {
-          updPhoto(1);
-
-        });
-
-        $('#prev').click(function() {
-          updPhoto(-1);
-        });
-
-        function updPhoto(direction) {
-          /**
            * Updates which photo to be shown, @param {number} - direction based on wich navButton pressed.
-           */
-          photoIdx += direction;
+        */
 
-          if (photoIdx === 0) {
-            $('#prev').hide();
-            $('#next').show();
-          } else if (photoIdx === numberOfPhotos - 1) {
-            $('#next').hide();
-            $('#prev').show();
-          } else {
-            $('#prev').show();
-            $('#next').show();
-          }
-          $('#frame').children().eq(photoIdx - direction).hide();
-          $('#frame').children().eq(photoIdx).show();
-          updCounter();
+        function navigate(direction) {
+          previous  = current;
+          current  = (current + direction) % numberPhotos ;
+          current  =  current < 0 ? numberPhotos - 1 : current;
+          $('#frame').children().eq(previous).hide();
+          $('#frame').children().eq(current).show();
+          updCounter(current);
         }
 
-        function updCounter() {
-          $('#photoCounter').text((photoIdx + 1) + " / " + numberOfPhotos);
+        function updCounter(current) {
+         /* $('#photoCounter').text((photoIdx + 1) + " / " + numberOfPhotos); */
+         $('#photoCounter').text(current + "/" + numberPhotos);
         }
 
         $('#close-photo').click(function() {
           $('#frame').children().hide();
-          $('#photoViewer').hide();
-          photoIdx = 0;
-        });
+          $('#backward').hide();
+          $('#backward').hide();
+          $('#showPhotos').hide();
 
+        });
       });
 
       /**
@@ -382,10 +369,10 @@ gMaps.prototype.getPhotoes = function(place) {
 
   if (place.photos) {
     if (place.photos.length > 1) {
-      return '<a style="margin-left: 5px;" id="photoLink" href="#"">Photos</a>';
+      return '<a style="margin-left: 5px;" id="photos" href="#"">Photos</a>';
     }
   }
-  return '<div id="photoLink"></div></div>';
+  return '<div id="photos"></div></div>';
 };
 
 /*

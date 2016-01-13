@@ -111,15 +111,15 @@ strong {
   left: 5vw;
 }
 
-#prev {
+#backward {
   display: none;
-  left: 50px;
+  left: 20%;
   top: 50%;
 }
 
-#next {
+#forward {
   display: none;
-  right: 50px;
+  right: 20%;
   top: 50%;
 }
 

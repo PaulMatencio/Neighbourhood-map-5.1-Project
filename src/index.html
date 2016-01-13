@@ -5,6 +5,7 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <link rel="stylesheet"  type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet"  type="text/css" href="css/style.css" media="screen" title="no title">
+    <link rel="stylesheet"  type="text/css" href="css/caroussel.css" media="screen" title="no title">
     <title>Your neighborhood</title>
   </head>
   <body>
@@ -32,7 +33,8 @@
         </div>
       </div>
 
-      <ul id="mainInfoList" class="infolist" data-bind="foreach: nearByPlaces">
+      <!--ul id="mainInfoList" class="infolist" data-bind="foreach: nearByPlaces"-->
+      <ul class="infolist" data-bind="foreach: nearByPlaces">
         <li  data-bind="click: $parent.clickMarker">
           <!-- picture -->
             <div class="col-md-4">
@@ -91,15 +93,6 @@
       </button>
     </div>
 
-    <div id="photoViewer"  class="viewport" style="display: none;">
-      <img id="close-photo"  group="closeButton" class="navButton" src="images/close.png" alt="X">
-      <img id="prev" class="navButton" src="images/stepbackward.png" alt="<">
-      <img id="next" class="navButton" src="images/stepforward.png" alt=">">
-      <div id="frame" data-bind="foreach: placePhotos">
-        <img class="photo" style="margin: 0 1px 0 1px;" data-bind="attr:{id: $index, src: $data.getUrl({maxHeight: 600})}" alt="photo">
-      </div>
-      <span id="photoCounter" class="navButton"></span>
-    </div>
 
     <!--Review page -->
     <div id="review-page"  class="viewport" style="display: none;">
@@ -140,6 +133,19 @@
         </div>
       </div>
     </div> <!--end review page -->
+
+    <!-- Photos display -->
+
+    <div id="showPhotos"  class="viewport" style="display: none;">
+      <img id="close-photo"  group="closeButton" class="navButton" src="images/close.png" alt="X">
+      <div id="frame" data-bind="foreach: placePhotos">
+        <img class="photo" style="margin: 0 1px 0 1px;" data-bind="attr:{id: $index, src: $data.getUrl({maxHeight: 600})}" alt="photo">
+      </div>
+      <span id="photoCounter" class="navButton"></span>
+      <img id="backward" class="navButton" src="images/stepbackward.png" alt="<">
+      <img id="forward" class="navButton" src="images/stepforward.png" alt=">">
+    </div>
+
 
     <!--Foursquare page-->
     <div id="foursquare-page" class="viewport" style="display: none;">
@@ -197,6 +203,7 @@
           <img style="width: 20px;" src="images/Foursquare-icon.png"><a href="#" id="fourLink" style="display: inline;"> Top 5 place by 4Square</a>
         </div>
    </script>
+
     <!-- load scripts -->
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places" defer></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
