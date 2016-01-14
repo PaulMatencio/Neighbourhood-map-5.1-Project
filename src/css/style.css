@@ -124,9 +124,9 @@ strong {
 }
 
 #photoCounter {
-  width: 100px;
+  width: 10%;
   font-size: 30px;
-  color: grey;
+  color: black;
   left: 54%;
   margin-right: -50%;
   transform: translate(-50%, -50%);
@@ -215,8 +215,8 @@ strong {
 
 .infolist {
   font-size: 13px;
-  list-style: none;
-  text-align: center;
+  /* list-style: none; */
+  /* text-align: center; */
   overflow-x: hidden;
   overflow-y: scroll;
   margin: 5px 0 5px 0;
@@ -368,6 +368,17 @@ strong {
   white-space: normal;
 }
 
+/*
+.nytimes-container {
+    padding: 10px;
+    margin-left: 5px;
+    width: calc(60% - 5px);
+    display: flex;
+    background-color: rgba(255,255,255,0.5);
+}
+*/
+
+
 /* Media query */
 
 @media screen and (min-width: 1170px) {
@@ -384,16 +395,8 @@ strong {
     font-size: 12px;
   }
 
-  .infolist li {
-    text-align: center;
-  }
-
   #btn-toolbar {
-    bottom: 150px;
-  }
-
-  #next, #prev {
-    top: 90%;
+    bottom: 10%;
   }
 
   #photoCounter {

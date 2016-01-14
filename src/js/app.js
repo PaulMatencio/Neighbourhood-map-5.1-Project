@@ -14,9 +14,13 @@ $(function() {
     self.placeReviews = ko.observableArray([]);    // ko array for place review objects returned by google map places API getDetails() service
     self.placePhotos  = ko.observableArray([]);    //ko array for place photo urls returned by google map places API getDetails() service
     self.placeInFocus = ko.observable();           //place object container when opening photos and reviews via infowindows
+    self.nytarticles  = ko.observableArray([]);
     self.foursquarePlaces = ko.observableArray([]); //Array for foursquare API objects
 
     myMaps.self = self;
+
+    var nyturl = "http://api.nytimes.com/svc/search/v2/articlesearch.json?";
+    var nytArtSearchKey= "befcd9ed183aa5edba4a379ed537e27f:10:73683129";
 
     /**
       return the address of the place
@@ -113,6 +117,57 @@ $(function() {
         }
       });
     };
+
+   self.getNytArticle = function(place) {
+      /*
+      var $nytHeaderElem = $('#nytimes-header') ;
+      var $nytElem = $('#nytimes-articles');
+      $nytElem.text("");
+      */
+      console.log(place);
+      var url = nyturl;
+      var query = place.formated_address;
+      var filter ="";
+      var wikiRequestTimeout = setTimeout( function(){
+        // $nytElem.text("failed to query New York times resources");
+        console.log("failed to query New York times resources");
+      },5000);
+
+       $.getJSON(url, {
+         "q": query,
+         "fq" : filter,
+         "page": 0,
+          "sort": "newest",
+         "hl": true,
+          "api-key": nytArtSearchKey
+      })
+       .done (function(data) {
+        self.nytarticles([]);
+        if (data.status == "OK") {
+           $.each(data.response.docs, function(key,value) {
+            var headline = value.headline.main ;
+            if (headline != null) {
+              self.nytarticles().push(headline);
+             // items.push(HTMLarticle.replace("#",value.web_url).replace("%data%",headline));
+             //self.nytarticles(headline)
+           }
+          });
+           console.log(self.nytarticles());
+        };
+        /*
+        $nytElem.append(items);
+        $nytHeaderElem.text("New York Times Articles about " + query);
+        */
+        clearTimeout(wikiRequestTimeout);
+      })
+     .fail (function(e){
+          console.log("New York Times Articles could bot be loaded");
+          // $nytHeaderElem.text("New York Times Articles could bot be loaded");
+      });
+    }; 
+
+
+
 
 
     function getFourSquare(place) {

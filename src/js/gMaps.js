@@ -127,24 +127,13 @@ gMaps.prototype.initAutocomplete = function() {
   searchBox.addListener('places_changed', boxSearch);
 };
 
-/**
+/*
  * Set markers to the map. @param {Object[]} places - returned by the google API search.
  */
 gMaps.prototype.createMarkers = function(places) {
   /*
-  place= { geometry : Object,
-          icon: url,
-          id: string,
-          name:  string,
-          place_id: string
-          opening_hours: object,
-          photos: Array[],
-          rating: number,
-          reference:  string,
-          scope: string,
-          type : Array[],
-          formated_address: text,
-          vicinity : html
+    place= { geometry : Object,icon: url,id: string,name:  string, place_id: string,opening_hours: object,photos: Array[],rating: number,
+          reference:  string,scope: string,type : Array[],formated_address: text,vicinity : html
        }
   */
   var iconSize = Math.sqrt($(window).width()) + 20;
@@ -178,7 +167,7 @@ gMaps.prototype.createMarkers = function(places) {
       offsetX = 150,
       offsetY = -height / 5;
 
-    if (width < 800) {
+    if (width < 750) {
       offsetX = -20;
       offsetY = -1 * (height / 2 - 100);
     }
@@ -207,7 +196,7 @@ gMaps.prototype.createMarkers = function(places) {
 };
 
 
-/**
+/*
  * Get details about place corresponded to the clicked marker and build the infoWindow.
  */
 
@@ -221,42 +210,46 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
     placeId: place.place_id
   }, function(place, status) {
 
-    // getFourSquare(place);
+    // self.getFourSquare(place);
     // getWikiExtract(place);
+    // self.getNytArticle(place);
 
     if (status === google.maps.places.PlacesServiceStatus.OK) {
-      var website = self.getWebsite(place);
 
+      /* set infoWinoow content */
+      var website = self.getWebsite(place);
       var reviewsTemplate = $('script[data-template="reviews"]').html();
       var rev = reviewsTemplate.replace(/{{name}}/,place.name).replace(/{{formatted_address}}/,place.formatted_address).replace(/{{opening}}/,Map.getOpenings(place)).replace(/{{rating}}/,Map.getRating(place)).replace(/{{photos}}/,Map.getPhotoes(place));
-      // var rev1 = rev.replace(/{{website}}/g,website).replace(/{{phone}}/,Map.getPhone(place));
+      console.log(rev);
 
       infoWindow.setContent(rev.replace(/{{website}}/g,website).replace(/{{phone}}/,Map.getPhone(place)));
       infoWindow.open(Map.map, marker);
       $('.infoWindow').fadeIn(500);
+
+
+      /* 
+         Open the photo-page  dom when photo link is clicked
+      */
+    
       self.placePhotos(place.photos);
       var numberPhotos = place.photos.length;
-
       $('#photos').click( function() {
-
-        $('#showPhotos').show();
+        $('#photo-page').show();
         $('#backward').show();
         $('#forward').show();
         var current = 0;
         navigate(0);
-
         $('#forward').click(function() {
           navigate(1);
         });
-
         $('#backward').click(function() {
           navigate(-1);
         });
 
-        /**
-           * Updates which photo to be shown, @param {number} - direction based on wich navButton pressed.
+        /*
+            show photo in circular list manner when the navButtons 
+            backward or forward are clicked
         */
-
         function navigate(direction) {
           previous  = current;
           current  = (current + direction) % numberPhotos ;
@@ -267,7 +260,6 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
         }
 
         function updCounter(current) {
-         /* $('#photoCounter').text((photoIdx + 1) + " / " + numberOfPhotos); */
          $('#photoCounter').text(current + "/" + numberPhotos);
         }
 
@@ -275,13 +267,13 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
           $('#frame').children().hide();
           $('#backward').hide();
           $('#backward').hide();
-          $('#showPhotos').hide();
+          $('#photo-page').hide();
 
         });
       });
 
       /**
-           * Opens the review page.
+           * Opens the review-page  dom  when the reviews is clicked
       */
 
       var $reviews   = $('#reviews');
@@ -302,8 +294,23 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
             $('#review-page').hide();
           });
         });
-      }
+      };
 
+      /* 
+        Open the nyt article when the nyt link is clicked
+      */
+      var $nytlink = $('#nytLink') ;
+
+      if ($nytlink) {
+           $nytlink.click( function() {
+              self.nytarticles(self.getNytArticle(place));
+              $('#nytimes-page').show();
+              $('#close-nytimes').click(function() {
+                  $("#nytimes-page").hide();
+              });
+           });          
+      }; /* end nyt */
+      
       var foursquareLink = document.getElementById('fourLink');
       if (foursquareLink) {
         foursquareLink.addEventListener("click", function() {
@@ -315,7 +322,8 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
             $('#foursquare-page').hide();
           });
         });
-      }
+      }; /* end 4square */
+
     }
   });
 
@@ -390,6 +398,7 @@ gMaps.prototype.getOpenings = function(place) {
   };
   return opening;
 };
+
 
 /*
    https://developers.google.com/places/supported_types
