@@ -11,9 +11,12 @@
     <!--div tag that holds the google map-->
     <div id="map-canvas"></div>
 
+    <!--  search box -->
     <div id="search-box" class="input-group" group="controls">
       <input id="search-input"  type="text" class="form-control" placeholder="Looking for...">
     </div>
+
+    <!-- button to hide or show the serach result list -->
     <div class="hide-result" group="controls" >
       <a data-bind="click: toggleResults">
       <svg xmls="http://www/w3/org/2000/svg" viewbox="0 0 24 24">
@@ -21,6 +24,7 @@
       </svg>
       </a>
    </div>
+
     <!-- place search result -->
     <div class="results container-fluide" group="controls" data-bind="visible: showResults">
       <div class="info row">
@@ -31,7 +35,6 @@
           <h2>Places near by</h2>
         </div>
       </div>
-
       <ul class="list-group infolist" data-bind="foreach: nearByPlaces">
         <li  data-bind="click: $parent.clickMarker">
           <!-- picture -->
@@ -66,7 +69,6 @@
             <!-- end of place inforantion -->
         </li>
       </ul>
-
       <div class="logo">
         <span>powered by </span>
         <img src="images/googlelogo.jpg" alt="Google" />
@@ -115,7 +117,6 @@
     </div> <!--end review page -->
 
     <!-- Photos display -->
-
     <div id="photo-page"  class="viewport" style="display: none;">
       <img id="close-photo"  group="closeButton" class="navButton" src="images/close.png" alt="X">
       <div id="frame" data-bind="foreach: placePhotos">
@@ -126,26 +127,23 @@
       <img id="forward" class="navButton" src="images/stepforward.png" alt=">">
     </div>
 
+    <!-- Tools bar -->
     <div id="btn-toolbar" group="controls">
-
       <button id="reset" type="core" class="btn" style="display: block">
         <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
       </button>
-
       <div id="filters" class="btn-group" data-bind="foreach: icons" role="group" aria-label="plane">
         <!--placeholder for filter buttons-->
         <button type="button" class="btn">
           <img class="btn-toolbar-img" data-bind="attr: {src: icon}" alt="icon">
         </button><br>
       </div>
-
       <button id="hide" type="core" class="btn" style="display: block">
         <span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span>
       </button>
     </div>
 
     <!-- New york times page -->
-
     <div id="nytimes-page" class="viewport" style="display: none;">
       <img id="close-nytimes"  group="closeButton" class="navButton" src="images/close.png" alt="X">
       <div class="Container" group="lists">
@@ -203,7 +201,8 @@
         </div>
       </div>
     </div> <!--end foursquare page -->
-    <!-- template scripts -->
+
+    <!-- template scripts  for reviews page-->
     <script type="text/template" data-template="reviews">
         <div id="infoWindow" class="infoWindow">
           <p><h3>{{name}}</h3></p>
@@ -220,6 +219,8 @@
           <img style="width: 20px;" src="images/Foursquare-icon.png"><a href="#" id="fourLink" style="display: inline;"> Top 5 place by 4Square</a>
         </div>
    </script>
+
+   <!-- template for newyork times page -->
    <script type="text/template" data-template="nytimes">
          <p class="longtext"><a href="{{articleUrl}}" target="_blank">{{headline}}</a></p>
    </script>

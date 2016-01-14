@@ -69,7 +69,7 @@ strong {
   background-color: #fffae3;
   padding: 15px;
   top: 5%;
-  max-width: 50%;
+  max-width: 60%;
   height: 80%;
   left: 25%;
 }
@@ -331,11 +331,12 @@ strong {
   vertical-align: middle;
   padding-bottom: 15px;
 }
-
+/*
 .prev-element,
 .next-element {
   display: none;
 }
+*/
 
 .row {
   height: 10vh;
@@ -372,15 +373,6 @@ strong {
   font-size: 14px;
   font-weight: bold;
 }
-/*
-.nytimes-container {
-    padding: 10px;
-    margin-left: 5px;
-    width: calc(60% - 5px);
-    display: flex;
-    background-color: rgba(255,255,255,0.5);
-}
-*/
 
 
 /* Media query */
@@ -420,7 +412,7 @@ strong {
   }
 
   [group~=lists] {
-    max-width: 70%;
+    max-width: 80%;
     left: 15%;
     font-size: 12px;
   }
@@ -447,8 +439,7 @@ strong {
     height: 30px;
   }
 
-  p,
-  a {
+  p,a {
     white-space: nowrap;
     text-overflow: ellipsis;
     font-size: 12px;

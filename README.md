@@ -1,9 +1,11 @@
 ##Neighborhood map project
 
 ###Setting up Project:
-   I'm using node.js and gulp so all the original, readable and commented HTML/CSS/JavaScript/image files are in the 'src' folder. The system set up in a way that if I start gulp it will start a listener and will compress any element changed in the 'src' folder and move it in the right place in the project folder. Check ['src'](https://github.com/PaulMatencio/Neighbourhood-Maps-Project/tree/master/src) folder for commented readable codes.
 
-   For the working page check this link:
+  Readable and commented HTML/CSS/JavaScript/image files are in the '<project folder>/src' folder. Gulp is isued to minify html, js and css files , to cmpress images, and to deploy the resulting files into the <project folder>.
+  Check ['src'](https://github.com/PaulMatencio/Neighbourhood-Maps-Project/tree/master/src) folder for commented readable codes.
+
+ For the working page check this link: ( https://http://paulmatencio.github.io/Neighbourhood-Maps-Project )
 
 ###Project Overview:
 
@@ -17,16 +19,14 @@
 
    You can filter the places returned by the search simple typing in the search box it will update the markers and the placelist on keydown (can search for name or type "bar, chinese restaurant, takeaway , sushi near Paris....").
 
-* Humbuger button:
-
-  This button is on the upper right corner. Use it to hide or show the Place list. It is useful when the sĉreen width is reduced.
-
 * Place list:
 
    On the right you can find the places correspond to the markers. Clicking on the will focus the map on the place and will open an infowindow.
    You can hide the Place list with the hamburger button located on the top right corner.
 
+* Humbuger button:
 
+  This button is on the upper right corner of the Place list. Use it to hide or show the Place list. It is useful when the sĉreen width is reduced.
 
 
 * Button toolbar:
@@ -37,21 +37,24 @@
 
 * Info window:
 
-   You can find useful information here like the name of the place, address, opening hours, wikipedia extract/link(if existing) rating and review link.
-also there is a photo viewer if the place has photos you can hit the "photos" link to check out the pictures uploaded by google users.
+   You can find useful information here like the name of the place, address, opening hours, newyork times headline/link(if existing)
 
-###Resources and tools I used:
+* Photo viewer for dispaying photos for a place  [click on Photos]
+* List  of the reviews for a place [click on Reviews]
+* New york times headline  and latest news for a city and country ( based of the address of the place)  [Click on NYT articles]
+* Wiki pedia
+
+
+* This application is designed to work on mobile and desktop. Pages are responsive
+
+###Resources and tools that are used
 
 * [knockoutjs](http://knockoutjs.com/)
 * [bootstrap] (http://getbootstrap.com/)
 * [JQuery](https://jquery.com/)
 * [Google Maps APIs](https://developers.google.com/maps/?hl=en)
-* [Online image compressor](http://compresspng.com)
-* [piazza Front-End Web Dev Nanodegree forum](https://piazza.com/class/i36sqlrb9xu332)
 * [Dev Tools](https://developer.chrome.com/devtools/docs/rendering-settings)
-* [project5 on github](http://devrob.github.io/Udacity-WebDev-project5)
-* [Pixlr Online photo editor](https://pixlr.com/editor/)
-* [CSS Matic: The ultimate CSS tools for web designers](http://www.cssmatic.com)
+* [project5] (http://devrob.github.io/Udacity-WebDev-project5)
 
 * [Gulp plugins](http://gulpjs.com/plugins/)
     * [compress images with gulp-imagemin](https://www.npmjs.com/package/gulp-imagemin)
