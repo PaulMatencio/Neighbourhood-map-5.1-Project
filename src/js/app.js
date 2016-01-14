@@ -15,6 +15,7 @@ $(function() {
     self.placePhotos  = ko.observableArray([]);    //ko array for place photo urls returned by google map places API getDetails() service
     self.placeInFocus = ko.observable();           //place object container when opening photos and reviews via infowindows
     self.nytarticles  = ko.observableArray([]);
+    self.nytInFocus     = ko.observable();
     self.foursquarePlaces = ko.observableArray([]); //Array for foursquare API objects
 
     myMaps.self = self;
@@ -35,6 +36,11 @@ $(function() {
       }
     };
 
+    self.getCity = function(place) {
+      var city = place.formatted_address.split(" ");
+      return city.slice(-2) ;
+    }
+
     /**
       hide/show  the places  returned by google Map places API nearby search services
       This showResults is used by the data-bind: "invisible" of the result  <div>
@@ -52,11 +58,11 @@ $(function() {
     self.icons = ko.computed(function() {
       var iconSet = new Set();
       var iconDict = [];
-      for (var idx in self.nearByPlaces()) {
+      self.nearByPlaces().forEach(function(place,idx){
         if (idx) {
-        	iconSet.add(self.nearByPlaces()[idx].icon);
+          iconSet.add(place.icon);
         }
-      }
+      });
       iconSet.forEach(function(icon) {
         iconDict.push({"icon": icon});
       });
@@ -118,57 +124,62 @@ $(function() {
       });
     };
 
+
+   /* I find a strange behaviour between Knockout.js and observable array with ajax.
+      The KO modeview  object contains the observable array "nytarticles", however when I want to access
+      the observable  array, I got an error that the array is undefined
+      As for instance
+      console.log(self)  => modelview object which contains the function nyarticles
+      console.log(self.nytarticles())  ==> undefined
+      self.nytarticles.push(headline)  ==> Error
+
+      I find a way to circumvent by first pushing the nyt articles into the "articles" array then
+      when the query is completed, just doing
+
+      self.nytarticles( articles)
+
+   */
    self.getNytArticle = function(place) {
-      /*
-      var $nytHeaderElem = $('#nytimes-header') ;
-      var $nytElem = $('#nytimes-articles');
-      $nytElem.text("");
-      */
-      console.log(place);
-      var url = nyturl;
-      var query = place.formated_address;
-      var filter ="";
+
+      var city = self.getCity(place),
+          url = nyturl;
+      var query = city[1],   // country
+          filter = city[0];  // city
+      var articles = [] ;
+      var nytTemplate = $('script[data-template="nytimes"]').html();
+
+      self.nytInFocus("about " + filter + " " + query);
       var wikiRequestTimeout = setTimeout( function(){
-        // $nytElem.text("failed to query New York times resources");
-        console.log("failed to query New York times resources");
-      },5000);
+         articles.push("<p>failed to query New York times resources</p>");
+      }.bind(articles),5000);
 
        $.getJSON(url, {
          "q": query,
          "fq" : filter,
          "page": 0,
-          "sort": "newest",
+         "sort": "newest",
          "hl": true,
-          "api-key": nytArtSearchKey
+         "api-key": nytArtSearchKey
       })
        .done (function(data) {
-        self.nytarticles([]);
         if (data.status == "OK") {
            $.each(data.response.docs, function(key,value) {
             var headline = value.headline.main ;
             if (headline != null) {
-              self.nytarticles().push(headline);
-             // items.push(HTMLarticle.replace("#",value.web_url).replace("%data%",headline));
-             //self.nytarticles(headline)
-           }
-          });
-           console.log(self.nytarticles());
+              //  nytTemplate.replace(/{{headline}}/,headline).replace(/{{articleUrl}}/,value.web_url);
+              articles.push(nytTemplate.replace(/{{headline}}/,headline).replace(/{{articleUrl}}/,value.web_url));
+              // this.nytarticles.push(headline);
+            }
+           }.bind(self));
         };
-        /*
-        $nytElem.append(items);
-        $nytHeaderElem.text("New York Times Articles about " + query);
-        */
+        this.nytarticles(articles);
         clearTimeout(wikiRequestTimeout);
-      })
+      }.bind(self))
      .fail (function(e){
-          console.log("New York Times Articles could bot be loaded");
-          // $nytHeaderElem.text("New York Times Articles could bot be loaded");
-      });
-    }; 
-
-
-
-
+        articles.push("<p>New York Times Articles could bot be loaded</p>");
+        this.nytarticles(articles);
+      }.bind(self));
+    };
 
     function getFourSquare(place) {
       var lat = place.geometry.location.lat(), lng = place.geometry.location.lng(),

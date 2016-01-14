@@ -73,8 +73,6 @@
       </div>
     </div><!-- end of place search result -->
 
-    
-
 
     <!--Review page -->
     <div id="review-page"  class="viewport" style="display: none;">
@@ -146,19 +144,20 @@
       </button>
     </div>
 
-    <!-- New york time page -->
+    <!-- New york times page -->
 
     <div id="nytimes-page" class="viewport" style="display: none;">
       <img id="close-nytimes"  group="closeButton" class="navButton" src="images/close.png" alt="X">
       <div class="Container" group="lists">
         <div class="review-title">
-            <h3 id="nytimes-header ">New York Times Articles</h3>
+          <p>
+            <span class="nytimes-header">New York Times Articles</span>
+            <span class="nytimes-header" data-bind="text:nytInFocus"></span>
+          </p>
         </div>
         <div class="list-group mylist" data-bind="foreach: nytarticles">
             <div  class="list-group-item">
-              <p>
-                <span class="review" data-bind="text:$data.text"></span> 
-              </p>
+                <span class="review" data-bind="html:$data"></span>
             </div>
         </div>
       </div>
@@ -217,9 +216,12 @@
           <p><span>{{phone}} </span></p>
           <p><div class="longtext"><a href="{{website}}" target="_blank">{{website}}<a></div></p>
           <hr style="background: #ffbccd;">
-          <img style="width: 20px;" src= "images/Foursquare-icon.png"><a href="#" id="nytLink" style="display: inline;"> NYT articles</a>
+          <img style="width: 20px;" src= "images/NYT-logo.png"><a href="#" id="nytLink" style="display: inline;"> NYT articles</a>
           <img style="width: 20px;" src="images/Foursquare-icon.png"><a href="#" id="fourLink" style="display: inline;"> Top 5 place by 4Square</a>
         </div>
+   </script>
+   <script type="text/template" data-template="nytimes">
+         <p class="longtext"><a href="{{articleUrl}}" target="_blank">{{headline}}</a></p>
    </script>
 
     <!-- load scripts -->

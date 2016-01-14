@@ -368,6 +368,10 @@ strong {
   white-space: normal;
 }
 
+.nytimes-header {
+  font-size: 14px;
+  font-weight: bold;
+}
 /*
 .nytimes-container {
     padding: 10px;
@@ -424,6 +428,11 @@ strong {
   .infolist {
     font-size: 11px;
   }
+
+  .nytimes-header {
+      font-size: 12px;
+  }
+
 
   .btn-toolbar-button {
     width: 15px;

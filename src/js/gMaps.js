@@ -220,17 +220,18 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
       var website = self.getWebsite(place);
       var reviewsTemplate = $('script[data-template="reviews"]').html();
       var rev = reviewsTemplate.replace(/{{name}}/,place.name).replace(/{{formatted_address}}/,place.formatted_address).replace(/{{opening}}/,Map.getOpenings(place)).replace(/{{rating}}/,Map.getRating(place)).replace(/{{photos}}/,Map.getPhotoes(place));
-      console.log(rev);
+      //console.log(rev);
 
       infoWindow.setContent(rev.replace(/{{website}}/g,website).replace(/{{phone}}/,Map.getPhone(place)));
       infoWindow.open(Map.map, marker);
       $('.infoWindow').fadeIn(500);
 
 
-      /* 
+      /*
          Open the photo-page  dom when photo link is clicked
       */
-    
+
+
       self.placePhotos(place.photos);
       var numberPhotos = place.photos.length;
       $('#photos').click( function() {
@@ -247,7 +248,7 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
         });
 
         /*
-            show photo in circular list manner when the navButtons 
+            show photo in circular list manner when the navButtons
             backward or forward are clicked
         */
         function navigate(direction) {
@@ -271,6 +272,8 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
 
         });
       });
+
+
 
       /**
            * Opens the review-page  dom  when the reviews is clicked
@@ -296,7 +299,7 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
         });
       };
 
-      /* 
+      /*
         Open the nyt article when the nyt link is clicked
       */
       var $nytlink = $('#nytLink') ;
@@ -308,9 +311,9 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
               $('#close-nytimes').click(function() {
                   $("#nytimes-page").hide();
               });
-           });          
+           });
       }; /* end nyt */
-      
+
       var foursquareLink = document.getElementById('fourLink');
       if (foursquareLink) {
         foursquareLink.addEventListener("click", function() {
@@ -388,7 +391,6 @@ gMaps.prototype.getPhotoes = function(place) {
  */
 gMaps.prototype.getOpenings = function(place) {
   var opening;
-  console.log(place.opening_hours);
   try{
       opening = "Mon-Sat:" + place.opening_hours.periods[1].open.time + "-" + place.opening_hours.periods[1].close.time + " " +
       "Sun:" + place.opening_hours.periods[0].open.time + "-" + place.opening_hours.periods[0].close.time ;
