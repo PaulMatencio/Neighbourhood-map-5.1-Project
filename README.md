@@ -1,22 +1,47 @@
 ##Neighborhood map project
 
+
+This project is the fifth project of the Udacity Front-end developer nanodegree. To complete this project, I have been using following.
+
+* Javasctipt
+* Javscript OO
+* HTML 5
+* CSS 3
+* CSS Media query
+* Bootstrap
+* Google MAPS API
+* AJAX
+* Knockout.js
+* Newyork times API
+* Wikipedia API ( )
+* Street view API
+* Gulp
+
+
+## issues with knockout.js
+
+I got a strange behaviour between Knockout.js and observable array with Ajax that is described below:
+
+Eventhougth the KO modelview  object contains the observable array, as for instance "nytarticles", when I want to access the observable array, I got an error telling that "nytarticles"  is undefined. A mean to circumvent this issue is to use a javascript array , as for instance "articles" and  assign the javascript array "articles" to the ko observable array "nyarticles" when the operation is completed.
+
+
 ###Setting up Project:
 
-  The Readable and commented HTML/CSS/JavaScript files are in the '<project folder>/src' folder. Gulp is used to minify html, javasript and css files , to cmpress images, and to deploy the resulting files into the <project folder>. Check ['src'](https://github.com/PaulMatencio/Neighbourhood-Maps-Project/tree/master/src) folder for commented readable codes.
+The Readable and commented HTML/CSS/JavaScript files are in the '<project folder>/src' folder. Gulp is used to minify html, javasript and css files , to cmpress images, and to deploy the resulting files into the <project folder>. Check ['src'](https://github.com/PaulMatencio/Neighbourhood-Maps-Project/tree/master/src) folder for commented readable codes.
 
- For the working page check this link: ( http://paulmatencio.github.io/Neighbourhood-Maps-Project )
+For the working page check this link: ( http://paulmatencio.github.io/Neighbourhood-Maps-Project )
 
 ###Project Overview:
 
-   Develop a single page application featuring a map of a neighborhood you would like to visit. Add additional functionality to this map including highlighted locations, third-party data about those locations and various ways to browse the content.
+Develop a single page application featuring a map of a neighborhood you would like to visit. Add additional functionality to this map including highlighted locations, third-party data about those locations and various ways to browse the content.
 
 ###How to use the app
 
 * Search box:
 
    Use the search box to find a neighborhood you want to visit. Type city name or district. The app will focus on that area and request the 10-20 most popular places in the area.
-
    You can filter the places returned by the search simple typing in the search box it will update the markers and the placelist on keydown (can search for name or type "bar, chinese restaurant, takeaway , sushi near Paris....").
+   The search-box support the autocomplete feature.
 
 * Place list:
 
@@ -42,6 +67,7 @@
 * List  of the reviews for a place [click on Reviews]
 * New york times headline  and latest news for a city and country ( based of the address of the place)  [Click on NYT articles]
 * Wiki pedia
+* Street views
 
 
 * The application is responsive. It has been tested on Nexus 5x, 6, 6P, Laptop and Desktop
@@ -58,7 +84,7 @@
 * [Dev Tools](https://developer.chrome.com/devtools/docs/rendering-settings)
 * [Convert command] (http://www.imagemagick.org/script/convert.php)
 
-###Inspired by the project 5 below. I reused the buuton toolbar
+###Inspired by the UI of project 5 below. I reused litterally its button toolbar.
 * [Project5] (http://devrob.github.io/Udacity-WebDev-project5)
 
 
@@ -67,5 +93,5 @@
     * [compress javascript with gulp-uglify](https://www.npmjs.com/package/gulp-uglify/)
     * [compress CSS with gulp-minify-css](https://www.npmjs.com/package/gulp-minify-css)
     * [compress HTML with gulp-minify-html](https://www.npmjs.com/package/gulp-minify-html)
-   
+
 

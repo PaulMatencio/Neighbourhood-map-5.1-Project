@@ -1,4 +1,3 @@
-
 function gMaps(mapoptions, mapStyle) {
 
   this.mapCenter = mapOptions.mapCenter;
@@ -77,15 +76,15 @@ gMaps.prototype.getResults = function(results, status, pagination) {
   self.nearByPlaces([]);
   myCategories = [];
 
-  function isPolitical(value){
+  function isPolitical(value) {
     return value == "political";
   }
 
   if (status == google.maps.places.PlacesServiceStatus.OK) {
     results.forEach(function(place) {
       if (place.types.filter(isPolitical).length == 0) {
-       self.nearByPlaces.push(place);
-       bounds.extend(place.geometry.location);
+        self.nearByPlaces.push(place);
+        bounds.extend(place.geometry.location);
       }
     });
     this.map.fitBounds(bounds);
@@ -94,10 +93,10 @@ gMaps.prototype.getResults = function(results, status, pagination) {
 };
 
 /**
-   * Google maps places API autocomplete service.
-*/
+ * Google maps places API autocomplete service.
+ */
 gMaps.prototype.initAutocomplete = function() {
-  var Map = this ;
+  var Map = this;
   var map = this.map;
   var self = this.self;
   // Create the search box and link it to the input UI element.
@@ -115,15 +114,14 @@ gMaps.prototype.initAutocomplete = function() {
     var searchedPlaces = searchBox.getPlaces();
     var places = searchedPlaces.length;
     if (places > 0) {
-      if (places == 1){
-         Map.nearbySearch(searchedPlaces[0].geometry.location);
-       } else {
+      if (places == 1) {
+        Map.nearbySearch(searchedPlaces[0].geometry.location);
+      } else {
         self.nearByPlaces(searchedPlaces);
         Map.createMarkers(searchedPlaces);
-       }
+      }
     };
     searchInput.value = "";
-    //self.keyword("");
   }
   searchBox.addListener('places_changed', boxSearch);
 };
@@ -138,11 +136,11 @@ gMaps.prototype.createMarkers = function(places) {
        }
   */
   var iconSize = Math.sqrt($(window).width()) + 20;
-  var Map  = this;
+  var Map = this;
   this.markers.forEach(function(marker) {
-    marker.setMap(null);    // Clear out the old markers.
+    marker.setMap(null); // Clear out the old markers.
   });
-  this.markers= [];
+  this.markers = [];
 
   // For each place, get the icon, name and location.
   places.forEach(function(place) {
@@ -220,8 +218,8 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
       /* set infoWinoow content */
       var website = self.getWebsite(place);
       var reviewsTemplate = $('script[data-template="reviews"]').html();
-      var rev = reviewsTemplate.replace(/{{name}}/,place.name).replace(/{{formatted_address}}/,place.formatted_address).replace(/{{opening}}/,Map.getOpenings(place)).replace(/{{rating}}/,Map.getRating(place)).replace(/{{photos}}/,Map.getPhotoes(place));
-      infoWindow.setContent(rev.replace(/{{website}}/g,website).replace(/{{phone}}/,Map.getPhone(place))); 
+      var rev = reviewsTemplate.replace(/{{name}}/, place.name).replace(/{{formatted_address}}/, place.formatted_address).replace(/{{opening}}/, Map.getOpenings(place)).replace(/{{rating}}/, Map.getRating(place)).replace(/{{photos}}/, Map.getPhotoes(place));
+      infoWindow.setContent(rev.replace(/{{website}}/g, website).replace(/{{phone}}/, Map.getPhone(place)));
       infoWindow.open(Map.map, marker);
       $('.infoWindow').fadeIn(500);
 
@@ -229,66 +227,74 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
          Open the photo-page  dom when photo link is clicked
       */
       self.placePhotos(place.photos);
-      var numberPhotos = place.photos.length;
-      $('#photos').click( function() {
-        $('#photo-page').show();
-        $('#backward').show();
-        $('#forward').show();
-        var current = 0;
-        navigate(0);
-        $('#forward').click(function() {
-          navigate(1);
+      if (place.photos) {
+        var numberPhotos = place.photos.length;
+
+        $('#photos').click(function() {
+          $('#photo-page').show();
+          $('#backward').show();
+          $('#forward').show();
+          var current = 0;
+          navigate(0);
+          $('#forward').click(function() {
+            navigate(1);
+          });
+          $('#backward').click(function() {
+            navigate(-1);
+          });
+
+          /*
+              show photo in circular list manner when the navButtons
+              backward or forward are clicked
+          */
+          function navigate(direction) {
+            previous = current;
+            current = (current + direction) % numberPhotos;
+            current = current < 0 ? numberPhotos - 1 : current;
+            var $children = $('#frame').children();
+            $children.eq(previous).hide();
+            $children.eq(current).show();
+            updCounter(current);
+          }
+          /*
+            circular update the  photo counter
+          */
+          function updCounter(current) {
+            $('#photoCounter').text(current + "/" + numberPhotos);
+          }
+
+          $('#close-photo').click(function() {
+            $('#frame').children().hide();
+            $('#backward').hide();
+            $('#backward').hide();
+            $('#photo-page').hide();
+
+          });
         });
-        $('#backward').click(function() {
-          navigate(-1);
-        });
-
-        /*
-            show photo in circular list manner when the navButtons
-            backward or forward are clicked
-        */
-        function navigate(direction) {
-          previous  = current;
-          current  = (current + direction) % numberPhotos ;
-          current  =  current < 0 ? numberPhotos - 1 : current;
-          $('#frame').children().eq(previous).hide();
-          $('#frame').children().eq(current).show();
-          updCounter(current);
-        }
-
-        function updCounter(current) {
-         $('#photoCounter').text(current + "/" + numberPhotos);
-        }
-
-        $('#close-photo').click(function() {
-          $('#frame').children().hide();
-          $('#backward').hide();
-          $('#backward').hide();
-          $('#photo-page').hide();
-
-        });
-      });
+      };
 
       /**
-           * Opens the review-page  dom  when the reviews is clicked
-      */
+       * Opens the review-page  dom  when the reviews is clicked
+       */
 
-      var $reviews   = $('#reviews');
+      var $reviews = $('#reviews');
       if ($reviews) {
-          $reviews.click (function() {
+        $reviews.click(function() {
           self.placeReviews([]);
           self.placeInFocus(place);
           place.reviews.forEach(function(review) {
             if (review.text !== "") {
-              self.placeReviews.push(review) ;
+              self.placeReviews.push(review);
             }
           });
-          $('#review-page').show();
-          $('#reviews').children().show();
+          var $reviewpage = $('#review-page');
+          var $reviews = $('#reviews');
+          $reviewpage.show();
+          $reviews.children().show();
 
           $('#close-review').click(function() {
-            $('#reviews').children().hide();
-            $('#review-page').hide();
+            $reviews.children().hide();
+            $reviewpage.hide();
           });
         });
       };
@@ -296,33 +302,52 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
       /*
         Open the nyt article when the nyt link is clicked
       */
-      var $nytlink = $('#nytLink') ;
+      var $nytlink = $('#nytLink');
 
       if ($nytlink) {
-           $nytlink.click( function() {
-              self.nytarticles(self.getNytArticle(place));
-              $('#nytimes-page').show();
-              $('#close-nytimes').click(function() {
-                  $("#nytimes-page").hide();
-              });
-           });
+        $nytlink.click(function() {
+          self.nytarticles(self.getNytArticle(place));
+          var $nytimespage = $('#nytimes-page');
+          $nytimespage.show();
+          $('#close-nytimes').click(function() {
+            $nytimespage.hide();
+          });
+        });
       }; /* end nyt */
 
 
       /*
         Open the wikit article when the nyt link is clicked
       */
-      var $nytlink = $('#wikiLink') ;
+      var $nytlink = $('#wikiLink');
 
       if ($nytlink) {
-           $nytlink.click( function() {
-              self.nytarticles(self.openSearchWikipedia(place));
-              $('#wiki-page').show();
-              $('#close-wiki').click(function() {
-                  $("#wiki-page").hide();
-              });
-           });
+        $nytlink.click(function() {
+          var $wikipage = $('#wiki-page');
+          self.nytarticles(self.openSearchWikipedia(place));
+          $wikipage.show();
+          $('#close-wiki').click(function() {
+            $wikipage.hide();
+          });
+        });
       }; /* end nyt */
+
+      /*
+        Open the street view page when it is clicked
+      */
+
+      var $streetLink = $('#streetLink');
+      if ($streetLink) {
+        $streetLink.click(function() {
+          self.streetview(self.getStreetView(place));
+          var $streetpage = $('#street-page');
+          $streetpage.show();
+          $('#close-street').click(function() {
+            $streetpage.hide();
+          });
+        });
+      };
+
 
       var foursquareLink = document.getElementById('fourLink');
       if (foursquareLink) {
@@ -341,7 +366,7 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
   });
 
   google.maps.event.addListener(infoWindow, 'closeclick', function() {
-     Map.markers.forEach(function(marker) {
+    Map.markers.forEach(function(marker) {
       marker.setAnimation(null);
     }.bind(this));
   });
@@ -364,7 +389,7 @@ gMaps.prototype.getRating = function(place) {
         ratingTag += '<img class="rate-star" src="' + starHolder[i].star + '" />';
       }
     }
-    ratingTag += '<span class="rating"> Users rating:' + place.user_ratings_total+'</span>';
+    ratingTag += '<span class="rating"> Users rating:' + place.user_ratings_total + '</span>';
     return ratingTag + '<a id="reviews"  href="#"">Reviews,</a>';
   } else {
     return '<span style="font-style: italic;">no rating available</span>';
@@ -401,12 +426,11 @@ gMaps.prototype.getPhotoes = function(place) {
  */
 gMaps.prototype.getOpenings = function(place) {
   var opening;
-  try{
-      opening = "Mon-Sat:" + place.opening_hours.periods[1].open.time + "-" + place.opening_hours.periods[1].close.time + " " +
-      "Sun:" + place.opening_hours.periods[0].open.time + "-" + place.opening_hours.periods[0].close.time ;
-  }
-    catch(e){
-    opening='Work time not available';
+  try {
+    opening = "Mon-Sat:" + place.opening_hours.periods[1].open.time + "-" + place.opening_hours.periods[1].close.time + " " +
+      "Sun:" + place.opening_hours.periods[0].open.time + "-" + place.opening_hours.periods[0].close.time;
+  } catch (e) {
+    opening = 'Work time not available';
   };
   return opening;
 };
@@ -514,9 +538,9 @@ var mapPlaceTypes = [
     "veterinary_care",
     "zoo"
   ],
- /*
-    https://developers.google.com/maps/documentation/javascript/styling#styling_the_default_map
- */
+  /*
+     https://developers.google.com/maps/documentation/javascript/styling#styling_the_default_map
+  */
   mapStyle = [{
     "featureType": "road.local",
     "elementType": "labels",

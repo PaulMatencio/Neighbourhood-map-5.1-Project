@@ -14,19 +14,20 @@ $(function() {
     self.placeReviews = ko.observableArray([]); // ko array for place review objects returned by google map places API getDetails() service
     self.placePhotos = ko.observableArray([]); //ko array for place photo urls returned by google map places API getDetails() service
     self.placeInFocus = ko.observable(); //place object container when opening photos and reviews via infowindows
-    self.nytarticles = ko.observableArray([]);
+    self.nytarticles = ko.observableArray([]); //ko array for place new york times artcicle (search API)
     self.nytInFocus = ko.observable();
-    self.wikiarticles = ko.observableArray([]);
+    self.wikiarticles = ko.observableArray([]); //ko array for place wikipedia  artcicle  ( opensearch API)
     self.wikiInFocus = ko.observable();
-
-    self.foursquarePlaces = ko.observableArray([]); //Array for foursquare API objects
+    self.streetview = ko.observable(); // photo returned by streetview APU
 
     myMaps.self = self;
 
-    var nyturl = "http://api.nytimes.com/svc/search/v2/articlesearch.json?";
-    var nytArtSearchKey = "befcd9ed183aa5edba4a379ed537e27f:10:73683129";
-    var wikiOpenSearchURL = "http://en.wikipedia.org/w/api.php?action=opensearch&search=%data%&format=json&callback=wikiCallback";
-    var wikiarticle = 'http://fr.wikipedia.org/wiki/';
+    var nyturl = "http://api.nytimes.com/svc/search/v2/articlesearch.json?",
+      streetViewApiKey = "AIzaSyAUYlUoaLYjM8hidnMVQ05zXiEXJ87dFiY",
+      nytArtSearchKey = "befcd9ed183aa5edba4a379ed537e27f:10:73683129",
+      wikiOpenSearchURL = "http://en.wikipedia.org/w/api.php?action=opensearch&search=%data%&format=json&callback=wikiCallback",
+      wikiarticle = 'http://fr.wikipedia.org/wiki/',
+      streeViewURL = "http://maps.googleapis.com/maps/api/streetview?";
 
     /**
       return the address of the place
@@ -137,19 +138,20 @@ $(function() {
       });
     };
 
+    /* There a strange behaviour between Knockout.js and observable array with Ajax that is described below:
 
-    /* I find a strange behaviour between Knockout.js and observable array with ajax.
-       The KO modeview  object contains the observable array "nytarticles", however when I want to access
+       Eventhougth the KO modelview  object contains the observable array "nytarticles", when I want to access
        the observable  array, I got an error that the array is undefined
        As for instance
-       console.log(self)  => modelview object which contains the function nyarticles
+       console.log(self)  => modelview object which contains the function nyarticles()
        console.log(self.nytarticles())  ==> undefined
-       self.nytarticles.push(headline)  ==> Error
+       self.nytarticles.push(headline)  ==> Error  ( can't push on undefined )
 
-       I find a way to circumvent by first pushing the nyt articles into the "articles" array then
-       when the query is completed, just doing
+       A mean to circumvent this issue is  to use a javascript array "articles" and  assign the javascript array to the ko observable array
 
-       self.nytarticles( articles)
+      var articles = [];
+      loop :  articles.push(xxx);
+      end_of_loop:self.nytarticles( articles)
 
     */
     self.getNytArticle = function(place) {
@@ -160,11 +162,10 @@ $(function() {
         filter = city[0]; // city
       var articles = [];
       var nytTemplate = $('script[data-template="nytimes"]').html();
-
       self.nytInFocus("about " + filter + " " + query);
       var wikiRequestTimeout = setTimeout(function() {
         articles.push("<p>failed to query New York times resources</p>");
-      }.bind(articles), 5000);
+      }, 5000);
 
       $.getJSON(url, {
           "q": query,
@@ -179,25 +180,27 @@ $(function() {
             $.each(data.response.docs, function(key, value) {
               var headline = value.headline.main;
               if (headline != null) {
-                //  nytTemplate.replace(/{{headline}}/,headline).replace(/{{articleUrl}}/,value.web_url);
                 articles.push(nytTemplate.replace(/{{headline}}/, headline).replace(/{{articleUrl}}/, value.web_url));
-                // this.nytarticles.push(headline);
               }
-            }.bind(self));
+            });
           };
           this.nytarticles(articles);
           clearTimeout(wikiRequestTimeout);
-        }.bind(self))
+        }.bind(self)) /* "self" is passed to the function as "this" */
         .fail(function(e) {
           articles.push("<p>New York Times Articles could bot be loaded</p>");
           this.nytarticles(articles);
-        }.bind(self));
+        }.bind(self)); /* "self" is passed to the function as "this" */
     };
 
+    /*
+
+
+    */
     self.openSearchWikipedia = function(place) {
 
-      var city = self.getCity(place), 
-          articles = [];
+      var city = self.getCity(place),
+        articles = [];
       // var query = city[0] + " " + city[1];
       var query = city[0];
       var url = wikiOpenSearchURL.replace("%data%", query);
@@ -207,7 +210,7 @@ $(function() {
       var wikiRequestTimeout = setTimeout(function() {
         articles.push("<p>failed to query wiki resources</p>");
       }, 5000);
-      console.log(url);
+
       $.ajax({
           url: url,
           dataType: "jsonp"
@@ -215,87 +218,27 @@ $(function() {
         .done(function(response) {
           var article = response[1];
           $.each(article, function(key, value) {
-            // $wikiElem.append(HTMLarticle.replace("#",wikiarticle + value).replace("%data%",value));
             var articleurl = wikiarticle + value;
-            articles.push(wikiTemplate.replace(/{{wikiarticle}}/,value).replace(/{{articleUrl}}/, articleurl));
+            articles.push(wikiTemplate.replace(/{{wikiarticle}}/, value).replace(/{{articleUrl}}/, articleurl));
           });
           this.wikiarticles(articles);
           clearTimeout(wikiRequestTimeout);
-        }.bind(self))
+        }.bind(self)) /* "self" is passed to the function as "this" */
         .fail(function(e) {
           articles.push("<p>wiki pages could not be found</p>");
           this.wikiarticles(articles);
-        }.bind(self));
+        }.bind(self)); /* "self" is passed to the function as "this" */
     };
 
-    function getFourSquare(place) {
-      var lat = place.geometry.location.lat(),
-        lng = place.geometry.location.lng(),
-        baseUrl = "https://api.foursquare.com/v2/venues/explore?ll=",
-        baseLocation = lat + ", " + lng,
-        extraParams = "&limit=5&section=topPicks&day=any&time=any&locale=en&&client_id=PMDCA1TH4CXRVBSLMBTPME2OBYL4G2FY5JZJ1SHXPW5T50ZL&client_secret=ZYQZSU5EZP3T0PRYJASI0N5X12ORCCI5113ENQOQAKIR1AAP&v=20151119",
-        url = baseUrl + baseLocation + extraParams;
-      $.getJSON(url, function(data) {
-          self.foursquarePlaces(data.response.groups[0].items);
 
-        })
-        .fail(function() {
-          /**
-           * Handle API load error. Instead of alert() I pass a
-           *    "fake" JSON to the observable array tailored as an error msg.
-           */
-          console.log("The foursquare API faild to load.");
-          self.foursquarePlaces([{
-            "venue": {
-              "name": "FOURSQUARE API failed to load.",
-              "categories": [{
-                "name": ""
-              }],
-              "location": {
-                "formattedAddress": ""
-              }
-            },
-            "tips": [{
-              "text": "Try reload the page!"
-            }]
-          }]);
+    self.getStreetView = function(place) {
 
-        })
-        .always(function() {
-          console.log("The foursquare request finished.");
-        });
+      console.log(place);
+      var street = streeViewURL + 'size=600x400&location=' + place.formatted_address;
+      console.log(street);
+      return street;
 
     };
-
-    function getWikiExtract(place) {
-      /**
-       * Get wikipedia page extract and link based on place name.
-       */
-      var searchParam = place.name.replace(/[\s,]/g, "%20");
-      var wiki = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=" + searchParam;
-
-      var wikiTimeOut = setTimeout(function() {
-        console.log("Wiki API failed to load."); //Could notify user but did not seemed necessary, anyhow it's useful for debug
-      }, 3000);
-
-      $.ajax({
-        url: wiki,
-        dataType: "jsonp",
-        success: function(response) {
-          var wikiTag = document.getElementById('wiki');
-          for (var page in response.query.pages) {
-            if (response.query.pages[page].extract === undefined || response.query.pages[page].extract === "") {
-
-            } else {
-              wikiTag.innerHTML = '<span>' + response.query.pages[page].extract.substring(0, 60) +
-                "..." + '</span><a style="display: block;" href=http://en.wikipedia.org/?curid=' + response.query.pages[page].pageid +
-                ' target="_blank">read more on wikipedia</a>';
-            }
-          }
-          clearTimeout(wikiTimeOut);
-        }
-      });
-    }
 
     /**
       Based on which the icon is pressed, map API nearby search is called with altered categories

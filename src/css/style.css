@@ -62,7 +62,7 @@ p a {
 }
 
 p a:hover {
-  text-decoration: underline;
+  text-decoration: none;
   color: #212121;
 }
 
@@ -84,12 +84,20 @@ strong {
   max-width: 60%;
   height: 70%;
   left: 20%;
-  font-size: 15px;
+  font-size: 20px;
 }
 
 [type~=core] {
   background-color: #4b86b4;
   color: white;
+}
+
+[group~=photos] {
+    position: absolute;
+    width: 80%;
+    height: auto;
+    top:5%;
+    left: 10%;
 }
 
 [group~=closeButton] {
@@ -198,7 +206,7 @@ strong {
 
 .mylist::-webkit-scrollbar-thumb {
   background-color: #4b86b4;
-  height: 30px;
+  height: 20px;
   box-shadow: inset 1px 1px 0 rgba(0,0,0,.2),inset 0 -1px 0 rgba(0,0,0,.1);
 }
 
@@ -213,6 +221,11 @@ strong {
  background: linear-gradient(to right,  rgba(216,224,222,0.48) 0%,rgba(189,203,200,0.48) 14%,rgba(174,191,188,0.53) 22%,rgba(153,175,171,0.6) 33%,rgba(142,166,162,0.7) 50%,rgba(130,157,152,0.8) 67%,rgba(78,92,90,0.89) 82%,rgba(14,14,14,1) 100%);
  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7ad8e0de', endColorstr='#0e0e0e',GradientType=1 );
 
+}
+
+.street-view {
+  width: 100%;
+  height: auto;
 }
 
 .btn-toolbar-img {
@@ -230,12 +243,11 @@ strong {
   border-bottom: 1px solid #E0E0E0;
   display: block;
   padding: 1em 0;
-  font-size: 20px; 
+  font-size: 20px;
   overflow: hidden;
   text-overflow: ellipsis;
 
 }
-
 
 .infolist {
   font-size: 13px;
@@ -357,7 +369,7 @@ strong {
 }
 
 .row {
-  height: 10vh;
+  /* height: 10vh; */
   margin-top: 3px;
 }
 
@@ -387,8 +399,8 @@ strong {
   white-space: normal;
 }
 
-.nytimes-header {
-  font-size: 15px;
+.nytimes-header,.wiki-header {
+  font-size: 16px;
   font-weight: bold;
 }
 
@@ -404,6 +416,12 @@ strong {
 }
 
 @media screen and (max-width: 969px) {
+
+  .results {
+    width: 25%;
+    max-width: 350px;
+    height: 50%;
+  }
 
   .infoWindow {
     font-size: 12px;
@@ -430,7 +448,7 @@ strong {
   }
 
   [group~=lists] {
-    width: 80%; 
+    width: 80%;
     left: 10%;
   }
 
@@ -438,18 +456,18 @@ strong {
     font-size: 11px;
   }
 
-  .nytimes-header {
+  .nytimes-header,.wiki-header {
       font-size: 14px;
   }
-
 
   .btn-toolbar-button {
     width: 15px;
   }
-
+  /*
   body {
     overflow: hidden;
   }
+  */
 
   button {
     width: 35px;
@@ -457,14 +475,9 @@ strong {
   }
 
   p,a {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    font-size: 12px;
-  }
-
-  span {
-    font-size: 11px;
     white-space: normal;
+    text-overflow: ellipsis;
+    font-size: 13px;
   }
 
   h2 {
@@ -474,6 +487,8 @@ strong {
   h3 {
     font-size: 1.2em;
   }
+
+
 }
 
 @media screen and (max-width: 750px) {
@@ -481,18 +496,9 @@ strong {
   [group~=lists] {
     width: 80%;
     left: 10%;
-    font-size: 14px;
-  }  
-}
-
-/*
-@media screen and (min-width: 750px) {
-
-  #search-box {
-    width: 30%;
-    max-width: 300px;
+    font-size: 18px;
   }
 }
-*/
+
 
 
