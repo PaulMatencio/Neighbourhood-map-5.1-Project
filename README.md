@@ -2,10 +2,9 @@
 
 ###Setting up Project:
 
-  Readable and commented HTML/CSS/JavaScript/image files are in the '<project folder>/src' folder. Gulp is isued to minify html, js and css files , to cmpress images, and to deploy the resulting files into the <project folder>.
-  Check ['src'](https://github.com/PaulMatencio/Neighbourhood-Maps-Project/tree/master/src) folder for commented readable codes.
+  The Readable and commented HTML/CSS/JavaScript files are in the '<project folder>/src' folder. Gulp is used to minify html, javasript and css files , to cmpress images, and to deploy the resulting files into the <project folder>. Check ['src'](https://github.com/PaulMatencio/Neighbourhood-Maps-Project/tree/master/src) folder for commented readable codes.
 
- For the working page check this link: ( https://http://paulmatencio.github.io/Neighbourhood-Maps-Project )
+ For the working page check this link: ( http://paulmatencio.github.io/Neighbourhood-Maps-Project )
 
 ###Project Overview:
 
@@ -45,21 +44,28 @@
 * Wiki pedia
 
 
-* This application is designed to work on mobile and desktop. Pages are responsive
+* The application is responsive. It has been tested on Nexus 5x, 6, 6P, Laptop and Desktop
 
 ###Resources and tools that are used
 
+* [Intoduction to Ajax Udacity ] (https://www.udacity.com/course/intro-to-ajax--ud110)
+* [Javascript design pattern Udacity] (https://www.udacity.com/course/javascript-design-patterns--ud989)
+* [Discussion forum Udacity]  (https://discussions.udacity.com/c/nd001-project-5-neighborhood-map-project)
 * [knockoutjs](http://knockoutjs.com/)
-* [bootstrap] (http://getbootstrap.com/)
+* [bootstraps] (http://getbootstrap.com/)
 * [JQuery](https://jquery.com/)
 * [Google Maps APIs](https://developers.google.com/maps/?hl=en)
 * [Dev Tools](https://developer.chrome.com/devtools/docs/rendering-settings)
-* [project5] (http://devrob.github.io/Udacity-WebDev-project5)
+* [Convert command] (http://www.imagemagick.org/script/convert.php)
+
+###Inspired by the project 5 below. I reused the buuton toolbar
+* [Project5] (http://devrob.github.io/Udacity-WebDev-project5)
+
 
 * [Gulp plugins](http://gulpjs.com/plugins/)
     * [compress images with gulp-imagemin](https://www.npmjs.com/package/gulp-imagemin)
     * [compress javascript with gulp-uglify](https://www.npmjs.com/package/gulp-uglify/)
     * [compress CSS with gulp-minify-css](https://www.npmjs.com/package/gulp-minify-css)
     * [compress HTML with gulp-minify-html](https://www.npmjs.com/package/gulp-minify-html)
-    * [pipe exeption handler gulp-plumber](https://www.npmjs.com/package/gulp-plumber)
-    * [reload page upon change gulp-livereload](https://www.npmjs.com/package/gulp-livereload)
+   
+

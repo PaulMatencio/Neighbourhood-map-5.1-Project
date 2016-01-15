@@ -55,6 +55,17 @@ p {
   margin: 0 0 0 6px;
 }
 
+p a {
+  text-decoration: none;
+  color: #616161;
+  padding: 1.5em;
+}
+
+p a:hover {
+  text-decoration: underline;
+  color: #212121;
+}
+
 strong {
   color: #787676;
 }
@@ -66,12 +77,14 @@ strong {
 
 [group~=lists] {
   position: absolute;
-  background-color: #fffae3;
-  padding: 15px;
+  /*background-color: #fffae3; */
+  background-color: white;
+  padding: 10px;
   top: 5%;
   max-width: 60%;
-  height: 80%;
-  left: 25%;
+  height: 70%;
+  left: 20%;
+  font-size: 15px;
 }
 
 [type~=core] {
@@ -210,8 +223,19 @@ strong {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 14px;
+  font-size: 16px;
 }
+
+.article {
+  border-bottom: 1px solid #E0E0E0;
+  display: block;
+  padding: 1em 0;
+  font-size: 20px; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+}
+
 
 .infolist {
   font-size: 13px;
@@ -237,7 +261,7 @@ strong {
   box-shadow: inset 1px 1px 0 rgba(0,0,0,.2),inset 0 -1px 0 rgba(0,0,0,.1);
 }
 
-.infolist li {
+.infolist li, .list-group-item {
   padding: 0px 2px 3px 2px;
   padding-bottom: 3px;
   margin-bottom: 4px;
@@ -245,11 +269,11 @@ strong {
   cursor: pointer;
 }
 
-.infolist li:hover {
+.infolist li:hover, .list-group-item:hover{
   background-color: #d1e1ec;
 }
 
-.infolist li:active {
+.infolist li:active, .list-group-item:active {
   background-color: #b3cde0;
 }
 
@@ -331,12 +355,6 @@ strong {
   vertical-align: middle;
   padding-bottom: 15px;
 }
-/*
-.prev-element,
-.next-element {
-  display: none;
-}
-*/
 
 .row {
   height: 10vh;
@@ -370,7 +388,7 @@ strong {
 }
 
 .nytimes-header {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: bold;
 }
 
@@ -412,9 +430,8 @@ strong {
   }
 
   [group~=lists] {
-    max-width: 80%;
-    left: 15%;
-    font-size: 12px;
+    width: 80%; 
+    left: 10%;
   }
 
   .infolist {
@@ -422,7 +439,7 @@ strong {
   }
 
   .nytimes-header {
-      font-size: 12px;
+      font-size: 14px;
   }
 
 
@@ -459,14 +476,23 @@ strong {
   }
 }
 
+@media screen and (max-width: 750px) {
 
+  [group~=lists] {
+    width: 80%;
+    left: 10%;
+    font-size: 14px;
+  }  
+}
+
+/*
 @media screen and (min-width: 750px) {
 
   #search-box {
     width: 30%;
     max-width: 300px;
   }
-
 }
+*/
 
 

@@ -5,6 +5,7 @@ function gMaps(mapoptions, mapStyle) {
   this.map = new google.maps.Map(document.querySelector('#map-canvas'), mapOptions);
   this.infoWindow = new google.maps.InfoWindow({
     pixelOffset: new google.maps.Size(-23, -10),
+    maxWidth: 300
   });
 
   this.marker_animation = google.maps.Animation.DROP;
@@ -220,18 +221,13 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
       var website = self.getWebsite(place);
       var reviewsTemplate = $('script[data-template="reviews"]').html();
       var rev = reviewsTemplate.replace(/{{name}}/,place.name).replace(/{{formatted_address}}/,place.formatted_address).replace(/{{opening}}/,Map.getOpenings(place)).replace(/{{rating}}/,Map.getRating(place)).replace(/{{photos}}/,Map.getPhotoes(place));
-      //console.log(rev);
-
-      infoWindow.setContent(rev.replace(/{{website}}/g,website).replace(/{{phone}}/,Map.getPhone(place)));
+      infoWindow.setContent(rev.replace(/{{website}}/g,website).replace(/{{phone}}/,Map.getPhone(place))); 
       infoWindow.open(Map.map, marker);
       $('.infoWindow').fadeIn(500);
-
 
       /*
          Open the photo-page  dom when photo link is clicked
       */
-
-
       self.placePhotos(place.photos);
       var numberPhotos = place.photos.length;
       $('#photos').click( function() {
@@ -273,8 +269,6 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
         });
       });
 
-
-
       /**
            * Opens the review-page  dom  when the reviews is clicked
       */
@@ -310,6 +304,22 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
               $('#nytimes-page').show();
               $('#close-nytimes').click(function() {
                   $("#nytimes-page").hide();
+              });
+           });
+      }; /* end nyt */
+
+
+      /*
+        Open the wikit article when the nyt link is clicked
+      */
+      var $nytlink = $('#wikiLink') ;
+
+      if ($nytlink) {
+           $nytlink.click( function() {
+              self.nytarticles(self.openSearchWikipedia(place));
+              $('#wiki-page').show();
+              $('#close-wiki').click(function() {
+                  $("#wiki-page").hide();
               });
            });
       }; /* end nyt */
