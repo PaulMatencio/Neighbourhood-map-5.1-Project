@@ -3,7 +3,7 @@ var gulp = require('gulp'),
     minifycss = require('gulp-minify-css'),
     imagemin = require('gulp-imagemin'),
     plumber = require('gulp-plumber'),
-    minifyinline = require('gulp-minify-inline');
+    minifyinline = require('gulp-minify-inline'),
     minifyhtml = require('gulp-minify-html');
 
 // HTML minifier
@@ -33,7 +33,7 @@ gulp.task('mini-inline', function() {
   gulp.src('*.html')
     .pipe(minifyinline())
     .pipe(gulp.dest(''))
-})
+});
 
 
 // JavaScript  minifier
@@ -74,8 +74,6 @@ gulp.task('critical', function () {
   });
 });
 
-
-
 // Image optimize
 gulp.task('optimize-image', function() {
     gulp.src('src/images/*')
@@ -101,9 +99,10 @@ gulp.task('compress-image', function() {
 // I watching U workin'
 gulp.task('watch', function() {
   gulp.watch('src/*.html', ['mini-html']);
+  gulp.watch('src/*.html', ['mini-inline']);
   gulp.watch('src/js/*.js', ['mini-js']);
   gulp.watch('src/css/*.css', ['mini-css']);
   gulp.watch('src/images/*', ['optimize-image']);
 });
 
-gulp.task('default', ['mini-html', 'mini-js','mini-css', 'compress-image', 'watch']);
+gulp.task('default', ['mini-html','mini-inline', 'mini-js','mini-css', 'compress-image','watch']);

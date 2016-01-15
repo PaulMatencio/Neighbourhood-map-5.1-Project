@@ -1,13 +1,14 @@
 ##Neighborhood map project
 
 
-This project is the fifth project of the Udacity Front-end developer nanodegree. To complete this project, I have been using following.
+This is the fifth project of the Udacity Front-end developer nanodegree. To complete this project, I have been using following.
 
 * Javasctipt
 * Javscript OO
 * HTML 5
 * CSS 3
 * CSS Media query
+* Jquery
 * Bootstrap
 * Google MAPS API
 * AJAX
@@ -20,9 +21,9 @@ This project is the fifth project of the Udacity Front-end developer nanodegree.
 
 ## issues with knockout.js
 
-I got a strange behaviour between Knockout.js and observable array with Ajax that is described below:
+I got a problem with Knockout.js's observable array and Ajax.
 
-Eventhougth the KO modelview  object contains the observable array, as for instance "nytarticles", when I want to access the observable array, I got an error telling that "nytarticles"  is undefined. A mean to circumvent this issue is to use a javascript array , as for instance "articles" and  assign the javascript array "articles" to the ko observable array "nyarticles" when the operation is completed.
+Eventhougth the KO modelview object contains an observable array, as for instance "nytarticles", I got "undefined" when I want to access that observable array. A mean to circumvent this issue is to use a regular javascript array , as for instance "articles" and  assign the javascript it to the ko observable array "nyarticles" at the end of the request..
 
 
 ###Setting up Project:
@@ -66,8 +67,8 @@ Develop a single page application featuring a map of a neighborhood you would li
 * Photo viewer for dispaying photos for a place  [click on Photos]
 * List  of the reviews for a place [click on Reviews]
 * New york times headline  and latest news for a city and country ( based of the address of the place)  [Click on NYT articles]
-* Wiki pedia
-* Street views
+* Wiki pedia [ click on W link]
+* Street views [ click on view icon]
 
 
 * The application is responsive. It has been tested on Nexus 5x, 6, 6P, Laptop and Desktop
@@ -84,14 +85,15 @@ Develop a single page application featuring a map of a neighborhood you would li
 * [Dev Tools](https://developer.chrome.com/devtools/docs/rendering-settings)
 * [Convert command] (http://www.imagemagick.org/script/convert.php)
 
-###Inspired by the UI of project 5 below. I reused litterally its button toolbar.
+###Inspired by the UI of project 5 below. I litterally reuse the button toolbar.
 * [Project5] (http://devrob.github.io/Udacity-WebDev-project5)
 
 
 * [Gulp plugins](http://gulpjs.com/plugins/)
     * [compress images with gulp-imagemin](https://www.npmjs.com/package/gulp-imagemin)
-    * [compress javascript with gulp-uglify](https://www.npmjs.com/package/gulp-uglify/)
-    * [compress CSS with gulp-minify-css](https://www.npmjs.com/package/gulp-minify-css)
-    * [compress HTML with gulp-minify-html](https://www.npmjs.com/package/gulp-minify-html)
+    * [minify javascript with gulp-uglify](https://www.npmjs.com/package/gulp-uglify/)
+    * [minify inline javascript] (https://www.npmjs.com/package/gulp-minify-inline)
+    * [minify CSS with gulp-minify-css](https://www.npmjs.com/package/gulp-minify-css)
+    * [minify HTML with gulp-minify-html](https://www.npmjs.com/package/gulp-minify-html)
 
 

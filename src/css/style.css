@@ -1,3 +1,7 @@
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
 html,
 body {
   height: 100%;
@@ -12,8 +16,9 @@ button {
 
 h1 {
   font-size: 25px;
-  font-weight: 500;
-  font-family: "Helvetica Neue",Helvetica,sans-serif;
+  font-weight: 300;
+  /*font-family: "Helvetica Neue",Helvetica,sans-serif;*/
+ /* nt-family: 'Roboto', sans-serif; */
 }
 
 h2 {
@@ -418,7 +423,7 @@ strong {
 @media screen and (max-width: 969px) {
 
   .results {
-    width: 25%;
+    width: 33%;
     max-width: 350px;
     height: 50%;
   }
@@ -496,7 +501,7 @@ strong {
   [group~=lists] {
     width: 80%;
     left: 10%;
-    font-size: 18px;
+    font-size: 16x;
   }
 }
 

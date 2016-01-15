@@ -2,10 +2,13 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <!--meta name="viewport" content="initial-scale=1.0, user-scalable=no"-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content=" Front-end developer Project 5">
     <link rel="stylesheet"  type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet"  type="text/css" href="css/style.css" media="screen" title="no title">
-    <title>Your neighborhood</title>
+    <meta name="author" content="Paul Matencio">
+    <title>Project 5 Neighborhood-Map</title>
   </head>
   <body>
     <!--div tag that holds the google map-->
@@ -100,7 +103,7 @@
               </div>
             </div>
             <p>
-              <span class="review" data-bind="text: $data.text"></span>
+              <span data-bind="text: $data.text"></span>
             </p>
           </div>
         </div>
@@ -198,6 +201,19 @@
       <p class="article"><a href="{{articleUrl}}" target="_blank">{{wikiarticle}}</p>
     </script>
     <!-- load scripts -->
+    <script>
+      WebFontConfig = {
+        google: {
+        families: ['Roboto:100,300']  
+      }
+    };
+    (function(d) {
+       var wf = d.createElement('script'), s = d.scripts[0];
+       // wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js';
+       wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js';
+       s.parentNode.insertBefore(wf, s);
+     })(document);
+    </script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places" defer></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script>
