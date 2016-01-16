@@ -58,11 +58,36 @@ $(function() {
       }
     };
 
-    self.getCity = function(place) {
-      var city = place.formatted_address.split(" ");
-      return city.slice(-2);
-    }
+    self.getLocality = function(place) {
+      var add = place.adr_address,
+       clocality = 'class="locality">',
+       ccountry = 'class="country-name">',
+       start = 0,
+       location = {},
+       idx1 = add.indexOf(clocality),
+       idx2 = 0,
+       idx3 = 0,
+       idx4 = 0;
 
+      if (idx1) {
+        start = idx1+clocality.length;
+        idx2 = add.indexOf('</span>',start) ;
+      }
+      if (idx2) {
+        location.locality = add.slice(start,idx2);
+        idx3 = add.indexOf('class="country-name"',idx2);
+      }
+      if (idx3) {
+        start = idx3 + ccountry.length;
+        var idx4 = add.indexOf('</span>',start) ;
+        location.country = add.slice(start,idx4);
+      }
+      console.log(location) ;
+      return location;
+    }
+    /*
+    span class="street-address">Prinsengracht 263-267</span>, <span class="postal-code">1016 GV</span> <span class="locality">Amsterdam</span>, <span class="country-name">Pays-Bas</span>"
+    adr_address: "<span class="street-address">210 Ave of the Americas</span>, <span class="locality">New York</span>, <span class="region">NY</span> <span class="postal-code">10014</span>, <span class="country-name">États-Unis</span>" */
     /**
       hide/show  the places  returned by google Map places API nearby search services
       This showResults is used by the data-bind: "invisible" of the result  <div>
@@ -172,10 +197,10 @@ $(function() {
     */
     self.getNytArticle = function(place) {
 
-      var city = self.getCity(place),
+      var location = self.getLocality(place),
         url = nyturl;
-      var query = city[1], // country
-        filter = city[0]; // city
+      var query = location.locality;
+      var  filter = location.country;
       var articles = [];
       var nytTemplate = $('script[data-template="nytimes"]').html();
       self.nytInFocus("about " + filter + " " + query);
@@ -195,9 +220,9 @@ $(function() {
           if (data.status == "OK") {
             $.each(data.response.docs, function(key, value) {
               var headline = value.headline.main;
-              if (headline != null) {
-                articles.push(nytTemplate.replace(/{{headline}}/, headline).replace(/{{articleUrl}}/, value.web_url));
-              }
+              if  (headline != null) {
+                 articles.push(nytTemplate.replace(/{{headline}}/, headline).replace(/{{articleUrl}}/, value.web_url));
+              } else articles.push(nytTemplate.replace(/{{headline}}/, "There are no recents articles").replace(/{{articleUrl}}/,"#"));
             });
           };
           this.nytarticles(articles);
@@ -215,10 +240,10 @@ $(function() {
     */
     self.openSearchWikipedia = function(place) {
 
-      var city = self.getCity(place),
+      var location = self.getLocality(place),
         articles = [];
       // var query = city[0] + " " + city[1];
-      var query = city[0];
+      var query = location.locality ;
       var url = wikiOpenSearchURL.replace("%data%", query);
       var wikiarticle = 'http://fr.wikipedia.org/wiki/';
       var wikiTemplate = $('script[data-template="wiki"]').html();

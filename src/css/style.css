@@ -168,6 +168,10 @@ strong {
   padding-left: 10px;
 }
 
+.review-title {
+  font-size: 16px;
+}
+
 .results {
   width: 30%;
   height: 72%;

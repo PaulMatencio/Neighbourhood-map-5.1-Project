@@ -19,7 +19,6 @@ function gMaps(mapOptions, mapStyle) {
   this.map.setMapTypeId('map_style');
   this.markers = [];
 
-
 };
 
 
