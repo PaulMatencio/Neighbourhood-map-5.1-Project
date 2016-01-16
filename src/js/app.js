@@ -241,7 +241,7 @@ $(function() {
     };
 
     /**
-      Based on which the icon is pressed, map API nearby search is called with altered categories
+      Based on which icon is pressed, map API nearby search is called with altered categories
     */
     $('#filters').on('click', 'button', function() {
 
@@ -253,6 +253,8 @@ $(function() {
         if (value.toLowerCase().indexOf(rawCategory.substring(0, 4)) != -1) return value;
       };
       myCategories = mapPlaceTypes.filter(Category);
+      // save filters to local storage to be reused 
+      localStorage.myCategories = JSON.stringify(myCategories);
       myMaps.nearbySearch(map.getCenter());
     });
 
@@ -261,7 +263,9 @@ $(function() {
      * re-request Nearby places with google API
      */
     $('#reset').on('click', function() {
+      // reset the filters
       myCategories = [];
+      localStorage.myCategories = JSON.stringify(myCategories);
       myMaps.nearbySearch(map.getCenter());
     });
   };

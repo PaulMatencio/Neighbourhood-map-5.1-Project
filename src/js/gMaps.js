@@ -1,6 +1,10 @@
-function gMaps(mapoptions, mapStyle) {
-
-  this.mapCenter = mapOptions.mapCenter;
+function gMaps(mapOptions, mapStyle) {
+  // console.log(localStorage.mapCenter);
+  if (localStorage.mapCenter) {
+    mapOptions.center = JSON.parse(localStorage.mapCenter);
+  } 
+  this.mapCenter = mapOptions.center;
+  console.log(mapOptions.center);
   this.map = new google.maps.Map(document.querySelector('#map-canvas'), mapOptions);
   this.infoWindow = new google.maps.InfoWindow({
     pixelOffset: new google.maps.Size(-23, -10),
@@ -14,6 +18,8 @@ function gMaps(mapoptions, mapStyle) {
   this.map.mapTypes.set('map_style', this.styledMap);
   this.map.setMapTypeId('map_style');
   this.markers = [];
+  
+
 };
 
 
@@ -54,7 +60,7 @@ gMaps.prototype.getCurrentLocation = function() {
 
 /**
  * The method  nearbySearch call google maps places API and search pagination request
- *  based on the Latitude and longitude of th eposition
+ *  based on the Latitude and longitude of the position
  */
 gMaps.prototype.nearbySearch = function(position) {
   var Map = this;
@@ -68,13 +74,12 @@ gMaps.prototype.nearbySearch = function(position) {
 
 /**
     get the places with types != "politcal"
-
 */
 gMaps.prototype.getResults = function(results, status, pagination) {
   var bounds = new google.maps.LatLngBounds();
   var self = this.self;
   self.nearByPlaces([]);
-  myCategories = [];
+  // myCategories = [];
 
   function isPolitical(value) {
     return value == "political";
@@ -109,20 +114,24 @@ gMaps.prototype.initAutocomplete = function() {
   });
 
   // Search a new place or  more details for that place.
+  // 
   function boxSearch() {
-    myCategories = [];
+    // myCategories = [];
     var searchedPlaces = searchBox.getPlaces();
     var places = searchedPlaces.length;
     if (places > 0) {
       if (places == 1) {
-        Map.nearbySearch(searchedPlaces[0].geometry.location);
+        Map.mapCenter = searchedPlaces[0].geometry.location;
+        Map.nearbySearch(Map.mapCenter);   
+        localStorage.mapCenter = JSON.stringify(Map.mapCenter);
+        //console.log(localStorage.mapCenter);
       } else {
         self.nearByPlaces(searchedPlaces);
         Map.createMarkers(searchedPlaces);
       }
     };
     searchInput.value = "";
-  }
+  };
   searchBox.addListener('places_changed', boxSearch);
 };
 
@@ -569,11 +578,19 @@ var mapPlaceTypes = [
   winWidth = $(window).width(),
   myCategories = [],
   radius = 2000,
-  today = new Date(),
+  today = new Date();
+
+/*
+   reuse previous filters stored in local Storage 
+*/
+if (localStorage.myCategories) {
+    myCategories = JSON.parse(localStorage.myCategories);
+} ;
+
   /*
     initMap option
   */
-  mapOptions = {
+var  mapOptions = {
     center: mapCenter,
     zoomControl: true,
     zoom: 14,

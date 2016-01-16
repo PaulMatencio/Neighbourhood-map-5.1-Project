@@ -16,6 +16,7 @@ This is the fifth project of the Udacity Front-end developer nanodegree. To comp
 * Newyork times API
 * Wikipedia API ( )
 * Street view API
+* Local Storage
 * Gulp
 
 
@@ -41,24 +42,39 @@ Develop a single page application featuring a map of a neighborhood you would li
 * Search box:
 
    Use the search box to find a neighborhood you want to visit. Type city name or district. The app will focus on that area and request the 10-20 most popular places in the area.
-   You can filter the places returned by the search simple typing in the search box it will update the markers and the placelist on keydown (can search for name or type "bar, chinese restaurant, takeaway , sushi near Paris....").
+
+   You can filter the places returned by the search simple typing in the search box it will update the markers and the placelist on keydown (can search for name or type "bar, chinese restaurant, takeaway , sushi bar near ....").
+   
+   If you search with one keyword, the application will use this keyword to set the new location.
+   if you serach with multiple keywords, the application will search the neighbourhood of the previous location
+
+   The application will save the new location in your browser's local storage, however if you reload the application, your geo location will take over the previous location which was saved into the local storage of your browser (if your browser support geolocation)
+
    The search-box support the autocomplete feature.
 
 * Place list:
 
-   On the right you can find the places correspond to the markers. Clicking on the will focus the map on the place and will open an infowindow.
-   You can hide the Place list with the hamburger button located on the top right corner.
+   On the right you can find the places corresponding to the markers. Clicking on one place will focus the map on the place and will open an infowindow.
+
+   Use the hamburger button located at top-right of your application window to  hide the Place list. It can be useful for devices with small screen.
 
 * Humbuger button:
 
-  This button is on the upper right corner of the Place list. Use it to hide or show the Place list. It is useful when the sĉreen width is reduced.
-
+  This button is at the top-rigth of the Place list. Use it to hide or show the Place list. 
 
 * Button toolbar:
 
-   This toolbar dynamically changes with the neighborhood. It will show the set of the markers returned be the search. If you press one of the icon it will re-request the search in the area with different category setting. For example if you have a coffee icon it will return the 10-20 most popular coffee-shop in the area.
-   you can reset the search with the refresh button and it will clear the category filter and return the 10-20 most popular places in the area.
+   This toolbar dynamically changes with the neighborhood. It will show the set of the markers returned be the search. 
+   If you press one of the icon, it will re-request the search in the area with different category setting and save your categories bth in memory and in your local storage. These filters will be reused when you move into a new location ( as for instance City). When your re-load your application, these filters will be reused to filter the categories of your new location.
 
+   For example if you have a coffee icon it will return the 10-20 most popular coffee-shop in the area. If you move into a new location, the application will use these categories to filter the nearbysearch.
+
+   Important: You can reset the search with the refresh button. This will clear the category filters ( both memory and local storage copies) and return the 10-20 most popular places in the area.
+
+* Local Storage 
+
+  To reset your local storage, go to the console of your browser and type localStorage.clear() . This will clear the localStorage.mapCenter and localStorage.myCategories leaved by this application
+  
 
 * Info window:
 
@@ -85,7 +101,7 @@ Develop a single page application featuring a map of a neighborhood you would li
 * [Dev Tools](https://developer.chrome.com/devtools/docs/rendering-settings)
 * [Convert command] (http://www.imagemagick.org/script/convert.php)
 
-###Inspired by the UI of project 5 below. I litterally reuse the button toolbar.
+###Inspired by the UI of project 5 below. I litterally reuse the UI button toolbar.
 * [Project5] (http://devrob.github.io/Udacity-WebDev-project5)
 
 
