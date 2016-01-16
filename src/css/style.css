@@ -80,8 +80,7 @@ strong {
 
 [group~=lists] {
   position: absolute;
-  /*background-color: #fffae3; */
-  background-color: white;
+  background-color: #fffae3; 
   padding: 10px;
   top: 5%;
   max-width: 60%;

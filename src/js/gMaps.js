@@ -1,8 +1,5 @@
 function gMaps(mapOptions, mapStyle) {
   // console.log(localStorage.mapCenter);
-  if (localStorage.mapCenter) {
-    mapOptions.center = JSON.parse(localStorage.mapCenter);
-  }
   this.mapCenter = mapOptions.center;
   console.log(mapOptions.center);
   this.map = new google.maps.Map(document.querySelector('#map-canvas'), mapOptions);
@@ -18,7 +15,6 @@ function gMaps(mapOptions, mapStyle) {
   this.map.mapTypes.set('map_style', this.styledMap);
   this.map.setMapTypeId('map_style');
   this.markers = [];
-
 };
 
 
@@ -569,11 +565,7 @@ var mapPlaceTypes = [
   }, {
     "featureType": "landscape.natural"
   }],
-
-  mapCenter = {
-    lat: 52.3702,
-    lng: 4.8953
-  },
+  mapCenter = {},
   winWidth = $(window).width(),
   myCategories = [],
   radius = 2000,
@@ -582,9 +574,17 @@ var mapPlaceTypes = [
 /*
    reuse previous filters stored in local Storage
 */
+
+if (localStorage.mapCenter) {
+    mapCenter = JSON.parse(localStorage.mapCenter);
+} else mapCenter = {
+    lat: 52.3702,
+    lng: 4.8953
+};
+
 if (localStorage.myCategories) {
     myCategories = JSON.parse(localStorage.myCategories);
-} ;
+};
 
   /*
     initMap option

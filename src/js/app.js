@@ -23,7 +23,7 @@ $(function() {
     self.placePhotos = ko.observableArray([]); //ko array for place photo urls returned by google map places API getDetails() service
     self.placeInFocus = ko.observable(); //place object container when opening photos and reviews via infowindows
     self.nytarticles = ko.observableArray([]); //ko array for place new york times artcicle (search API)
-    self.nytInFocus = ko.observable();
+    self.nytInFocus = ko.observable(); //  
     self.wikiarticles = ko.observableArray([]); //ko array for place wikipedia  artcicle  ( opensearch API)
     self.wikiInFocus = ko.observable();
     self.streetView = ko.observable(); // photo returned by streetview APU
@@ -39,12 +39,6 @@ $(function() {
       streeViewURL = "http://maps.googleapis.com/maps/api/streetview?";
 
     /**
-      nytArtSearchKey = "befcd9ed183aa5edba4a379ed537e27f:10:73683129",
-      streetViewApiKey = "AIzaSyAUYlUoaLYjM8hidnMVQ05zXiEXJ87dFiY",
-      wikiOpenSearchURL = "http://en.wikipedia.org/w/api.php?action=opensearch&search=%data%&format=json&callback=wikiCallback",
-      streeViewURL = "http://maps.googleapis.com/maps/api/streetview?";
-    **/
-    /**
       return the address of the place
       used by ko to display rating in the nearbyplaces
     **/
@@ -58,38 +52,46 @@ $(function() {
       }
     };
 
+    /* 
+      return an object containing the locality, region and country of a place
+    */
     self.getLocality = function(place) {
+      console.log(place);
       var add = place.adr_address,
-       clocality = 'class="locality">',
-       ccountry = 'class="country-name">',
-       start = 0,
-       location = {},
-       idx1 = add.indexOf(clocality),
-       idx2 = 0,
-       idx3 = 0,
-       idx4 = 0;
-
-      if (idx1) {
+        clocality = 'class="locality">',
+        ccountry = 'class="country-name">',
+        cregion  = 'class="region">',
+        start = 0, location = {}, 
+        idx2 = 0;
+      //console.log(add);
+      // extract the locailty
+      idx1 = add.indexOf(clocality)
+      if (idx1 >0) {
         start = idx1+clocality.length;
         idx2 = add.indexOf('</span>',start) ;
-      }
-      if (idx2) {
-        location.locality = add.slice(start,idx2);
-        idx3 = add.indexOf('class="country-name"',idx2);
-      }
-      if (idx3) {
-        start = idx3 + ccountry.length;
-        var idx4 = add.indexOf('</span>',start) ;
-        location.country = add.slice(start,idx4);
-      }
-      console.log(location) ;
+        location.locality= add.slice(start,idx2);
+      };
+      // extract region 
+      idx1 = add.indexOf('class="region"',idx2+7);
+      if (idx1 >0) {
+        start = idx1+cregion.length;
+        idx2 = add.indexOf('</span>',start)
+        location.region = add.slice(start,idx2);
+      };
+      // extract the country-name
+      idx1 = add.indexOf('class="country-name"',idx2+7);
+      if (idx1 >0) {
+        start = idx1+ccountry.length;
+        idx2 = add.indexOf('</span>',start)
+        location.country = add.slice(start,idx2);
+      };
+      //console.log(location);
       return location;
     }
-    /*
-    span class="street-address">Prinsengracht 263-267</span>, <span class="postal-code">1016 GV</span> <span class="locality">Amsterdam</span>, <span class="country-name">Pays-Bas</span>"
-    adr_address: "<span class="street-address">210 Ave of the Americas</span>, <span class="locality">New York</span>, <span class="region">NY</span> <span class="postal-code">10014</span>, <span class="country-name">États-Unis</span>" */
+     
     /**
-      hide/show  the places  returned by google Map places API nearby search services
+    <span class="street-address">97 Song Hành Quốc Lộ 22</span>, <span class="region">Tân Hưng Thuận</span>, <span class="locality">12</span>, <span class="region">Hồ Chí Minh</span>, <span class="country-name">Vietnam</span>
+      hide/show  the list of places returned by google Map places API nearby search services
       This showResults is used by the data-bind: "invisible" of the result  <div>
     **/
     self.toggleResults = function() {
@@ -179,7 +181,11 @@ $(function() {
       });
     };
 
-    /* There a strange behaviour between Knockout.js and observable array with Ajax that is described below:
+    /*  Serach for   New york times articles
+      query : City
+      filter : Country
+
+    There a strange behaviour between Knockout.js and observable array with Ajax that is described below:
 
        Eventhougth the KO modelview  object contains the observable array "nytarticles", when I want to access
        the observable  array, I got an error that the array is undefined
@@ -199,7 +205,11 @@ $(function() {
 
       var location = self.getLocality(place),
         url = nyturl;
-      var query = location.locality;
+      var query = location.locality + " ";
+      if (location.region) {
+         query += location.region;
+      }
+      //var query = location.locality;
       var  filter = location.country;
       var articles = [];
       var nytTemplate = $('script[data-template="nytimes"]').html();
@@ -235,15 +245,17 @@ $(function() {
     };
 
     /*
-
+        Search wikipedia for the  City
 
     */
     self.openSearchWikipedia = function(place) {
 
       var location = self.getLocality(place),
         articles = [];
-      // var query = city[0] + " " + city[1];
-      var query = location.locality ;
+      var query = location.locality + " ";  
+      if (location.region) {
+         query += location.region;
+      };
       var url = wikiOpenSearchURL.replace("%data%", query);
       var wikiarticle = 'http://fr.wikipedia.org/wiki/';
       var wikiTemplate = $('script[data-template="wiki"]').html();
@@ -272,11 +284,15 @@ $(function() {
     };
 
 
+    /* 
+       Display the view of the street based on the formatted address of the place
+       if street view fail, text Sorry .... will replaced the alt= attribute of the <img> element
+    */
+
     self.getStreetView = function(place) {
       var street = streeViewURL + 'size=600x400&location=' + place.formatted_address;
-      self.noimage = "No image for " + place.formatted_address;
+      self.noimage = "Sorry no image for " + place.formatted_address;
       return street;
-
     };
 
     /**
