@@ -5,8 +5,8 @@ This is the fifth project of the Udacity Front-end developer nanodegree. To comp
 
 * Javasctipt
 * Javscript OO
-* HTML 5
-* CSS 3
+* HTML 5 (Element Errors due to KO)
+* CSS 3 (validated)
 * CSS Media query
 * Jquery
 * Bootstrap

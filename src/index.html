@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8">
     <!--meta name="viewport" content="initial-scale=1.0, user-scalable=no"-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content=" Front-end developer Project 5">
+    <meta name="description" content="Front-end developer Project 5">
     <link rel="stylesheet"  type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet"  type="text/css" href="css/style.css" media="screen" title="no title">
     <meta name="author" content="Paul Matencio">
@@ -172,7 +172,7 @@
     <div id="street-page" class="viewport" style="display: none;">
       <img id="close-street"  group="closeButton" class="navButton" src="images/stepbackward.png" alt="X">
       <div class="Container" group="photos">
-        <img  class="street-view" data-bind="attr:{src: streetview}" alt="street-photo">
+        <img  class="street-view" data-bind="attr:{src: streetView, alt: noimage}" >
       </div>
     </div>
     <!-- template scripts  for reviews page-->
@@ -204,7 +204,7 @@
     <script>
       WebFontConfig = {
         google: {
-        families: ['Roboto:100,300']  
+        families: ['Roboto:100,300']
       }
     };
     (function(d) {

@@ -3,11 +3,19 @@ $(function() {
   function ViewModel() {
 
     var self = this;
+    /*
+      init Google Map
+    */
+
     var myMaps = new gMaps(mapOptions, mapStyle);
     var map = myMaps.map;
     var infoWindow = myMaps.infoWindow;
     var position = myMaps.getCurrentLocation();
     var marker_animation = myMaps.marker_animation;
+
+    /*
+    create KO observable
+    */
 
     self.nearByPlaces = ko.observableArray([]); // ko array for object returned by google map places API nearby search service
     self.showResults = ko.observable(true); // boolean to hide or show the places returned by google Map places API nearby search services
@@ -18,7 +26,8 @@ $(function() {
     self.nytInFocus = ko.observable();
     self.wikiarticles = ko.observableArray([]); //ko array for place wikipedia  artcicle  ( opensearch API)
     self.wikiInFocus = ko.observable();
-    self.streetview = ko.observable(); // photo returned by streetview APU
+    self.streetView = ko.observable(); // photo returned by streetview APU
+    self.noimage = ko.observable();    // used for the attribute alt= of <img> to handle street view errors.
 
     myMaps.self = self;
 
@@ -30,9 +39,16 @@ $(function() {
       streeViewURL = "http://maps.googleapis.com/maps/api/streetview?";
 
     /**
+      nytArtSearchKey = "befcd9ed183aa5edba4a379ed537e27f:10:73683129",
+      streetViewApiKey = "AIzaSyAUYlUoaLYjM8hidnMVQ05zXiEXJ87dFiY",
+      wikiOpenSearchURL = "http://en.wikipedia.org/w/api.php?action=opensearch&search=%data%&format=json&callback=wikiCallback",
+      streeViewURL = "http://maps.googleapis.com/maps/api/streetview?";
+    **/
+    /**
       return the address of the place
       used by ko to display rating in the nearbyplaces
     **/
+
     self.getAddress = function(place) {
       if (place.vicinity) {
         var idx = place.vicinity.indexOf(",");
@@ -74,12 +90,12 @@ $(function() {
           "icon": icon
         });
       });
-      return iconDict.slice(0, 20);
+      return iconDict.slice(0, 19); // limit the number of icons to 20
     });
 
     /**
-       * The @function rateStar() chains together the rating stars based on place rating.
-       used by ko to control rating display
+       The rateStar() function chains together the rating stars based on place rating.
+       It is used by KO to control the display of rating
     */
 
     self.rateStar = function(rating) {
@@ -110,11 +126,11 @@ $(function() {
      * @example art_gallery => Art gallery
      */
     self.formattedType = function(data) {
-
       var formattedType = data.types[0].replace(/[_-]/g, " ");
       return formattedType.charAt(0).toUpperCase() + formattedType.substr(1, formattedType.length);
     };
 
+    /*  */
 
     myMaps.nearbySearch(position);
     myMaps.initAutocomplete();
@@ -232,10 +248,8 @@ $(function() {
 
 
     self.getStreetView = function(place) {
-
-      console.log(place);
       var street = streeViewURL + 'size=600x400&location=' + place.formatted_address;
-      console.log(street);
+      self.noimage = "No image for " + place.formatted_address;
       return street;
 
     };
@@ -253,7 +267,7 @@ $(function() {
         if (value.toLowerCase().indexOf(rawCategory.substring(0, 4)) != -1) return value;
       };
       myCategories = mapPlaceTypes.filter(Category);
-      // save filters to local storage to be reused 
+      // save filters to local storage to be reused
       localStorage.myCategories = JSON.stringify(myCategories);
       myMaps.nearbySearch(map.getCenter());
     });

@@ -17,8 +17,6 @@ button {
 h1 {
   font-size: 25px;
   font-weight: 300;
-  /*font-family: "Helvetica Neue",Helvetica,sans-serif;*/
- /* nt-family: 'Roboto', sans-serif; */
 }
 
 h2 {
@@ -39,7 +37,7 @@ ul {
   padding: 0;
   margin: 0 3px 0;
   height: 98%;
-  overflow-y  : scroll;
+  overflow-y: scroll;
 }
 
 li {
@@ -224,8 +222,7 @@ strong {
  background: -moz-linear-gradient(left,  rgba(216,224,222,0.48) 0%, rgba(189,203,200,0.48) 14%, rgba(174,191,188,0.53) 22%, rgba(153,175,171,0.6) 33%, rgba(142,166,162,0.7) 50%, rgba(130,157,152,0.8) 67%, rgba(78,92,90,0.89) 82%, rgba(14,14,14,1) 100%);
  background: -webkit-linear-gradient(left,  rgba(216,224,222,0.48) 0%,rgba(189,203,200,0.48) 14%,rgba(174,191,188,0.53) 22%,rgba(153,175,171,0.6) 33%,rgba(142,166,162,0.7) 50%,rgba(130,157,152,0.8) 67%,rgba(78,92,90,0.89) 82%,rgba(14,14,14,1) 100%);
  background: linear-gradient(to right,  rgba(216,224,222,0.48) 0%,rgba(189,203,200,0.48) 14%,rgba(174,191,188,0.53) 22%,rgba(153,175,171,0.6) 33%,rgba(142,166,162,0.7) 50%,rgba(130,157,152,0.8) 67%,rgba(78,92,90,0.89) 82%,rgba(14,14,14,1) 100%);
- filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7ad8e0de', endColorstr='#0e0e0e',GradientType=1 );
-
+ /* filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7ad8e0de', endColorstr='#0e0e0e',GradientType=1 ); */
 }
 
 .street-view {
@@ -501,7 +498,7 @@ strong {
   [group~=lists] {
     width: 80%;
     left: 10%;
-    font-size: 16x;
+    font-size: 16px;
   }
 }
 

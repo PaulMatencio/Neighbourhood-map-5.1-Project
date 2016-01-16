@@ -2,7 +2,7 @@ function gMaps(mapOptions, mapStyle) {
   // console.log(localStorage.mapCenter);
   if (localStorage.mapCenter) {
     mapOptions.center = JSON.parse(localStorage.mapCenter);
-  } 
+  }
   this.mapCenter = mapOptions.center;
   console.log(mapOptions.center);
   this.map = new google.maps.Map(document.querySelector('#map-canvas'), mapOptions);
@@ -18,7 +18,7 @@ function gMaps(mapOptions, mapStyle) {
   this.map.mapTypes.set('map_style', this.styledMap);
   this.map.setMapTypeId('map_style');
   this.markers = [];
-  
+
 
 };
 
@@ -114,7 +114,7 @@ gMaps.prototype.initAutocomplete = function() {
   });
 
   // Search a new place or  more details for that place.
-  // 
+  //
   function boxSearch() {
     // myCategories = [];
     var searchedPlaces = searchBox.getPlaces();
@@ -122,7 +122,7 @@ gMaps.prototype.initAutocomplete = function() {
     if (places > 0) {
       if (places == 1) {
         Map.mapCenter = searchedPlaces[0].geometry.location;
-        Map.nearbySearch(Map.mapCenter);   
+        Map.nearbySearch(Map.mapCenter);
         localStorage.mapCenter = JSON.stringify(Map.mapCenter);
         //console.log(localStorage.mapCenter);
       } else {
@@ -348,7 +348,7 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
       var $streetLink = $('#streetLink');
       if ($streetLink) {
         $streetLink.click(function() {
-          self.streetview(self.getStreetView(place));
+          self.streetView(self.getStreetView(place));
           var $streetpage = $('#street-page');
           $streetpage.show();
           $('#close-street').click(function() {
@@ -581,7 +581,7 @@ var mapPlaceTypes = [
   today = new Date();
 
 /*
-   reuse previous filters stored in local Storage 
+   reuse previous filters stored in local Storage
 */
 if (localStorage.myCategories) {
     myCategories = JSON.parse(localStorage.myCategories);
