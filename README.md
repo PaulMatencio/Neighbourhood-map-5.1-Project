@@ -39,61 +39,62 @@ Develop a single page application featuring a map of a neighborhood you would li
 
 ###How to use the app
 
-* Search box:
+* SEARCH BOX:
 
    Use the search box to find a neighborhood you want to visit. Type city name or district. The app will focus on that area and request the 10-20 most popular places in the area.
 
    You can filter the places returned by the search simple typing in the search box it will update the markers and the placelist on keydown (can search for name or type "bar, chinese restaurant, takeaway , sushi bar near ....").
-   
-   If you search with one keyword, the application will use this keyword to set the new location.
-   if you serach with multiple keywords, the application will search the neighbourhood of the previous location
 
-   The application will save the new location in your browser's local storage, however if you reload the application, your geo location will take over the previous location which was saved into the local storage of your browser (if your browser support geolocation)
+   If you search with one keyword, the application will use this keyword to set a new location. New location is saved in your browser's local storage, however when you reload the application, your geo location will take over the previous saved location (if your browser support geolocation)
+
+   If you search with multiple keywords , neighbourhood places of the previous location are returned  unless your keyword contains teh name of a  city or country or both.
+   Multiple keywords containing city or Country  name will change your location, however previous saved filters remain.
 
    The search-box support the autocomplete feature.
 
-* Place list:
+* PLACE LIST:
 
    On the right you can find the places corresponding to the markers. Clicking on one place will focus the map on the place and will open an infowindow.
 
    Use the hamburger button located at top-right of your application window to  hide the Place list. It can be useful for devices with small screen.
 
-* Humbuger button:
+* HAMBURGER BUTTON:
 
-  This button is at the top-rigth of the Place list. Use it to hide or show the Place list. 
+  This button is at the top-rigth of the Place list. Use it to hide or show the Place list.
 
-* Button toolbar:
+* BUTTON TOOLBAR:
 
-   This toolbar dynamically changes with the neighborhood. It will show the set of the markers returned be the search. 
+   This toolbar dynamically changes with the neighborhood. It will show the set of the markers returned be the search.
    If you press one of the icon, it will re-request the search in the area with different category setting and save your categories bth in memory and in your local storage. These filters will be reused when you move into a new location ( as for instance City). When your re-load your application, these filters will be reused to filter the categories of your new location.
 
    For example if you have a coffee icon it will return the 10-20 most popular coffee-shop in the area. If you move into a new location, the application will use these categories to filter the nearbysearch.
 
-   Important: You can reset the search with the refresh button. This will clear the category filters ( both memory and local storage copies) and return the 10-20 most popular places in the area.
+   Important: You can reset the search with the refresh button. This will clear the category filters ( both memory and local storage copies) and return the 10-20 most popular places in the area. Ĝoogle Maps may
 
-* Local Storage 
+
+* INFO WINDOW:
+
+   You can find useful information here like the name of the place, address, opening hours, newyork times headline/link(if existing), wikipedia link for the city, newyork times articles and street views
+
+* Photo viewer for dispaying photos for a place  [click on Photos link of the info window]
+* List  of the reviews for a place [click on Reviews link of the info window]
+* New york times headline  and latest news for a city and country ( based of the address of the place)  [Click on NYT articles of the info window]
+* Wiki pedia [ click on W link of the info window]
+* Street views [ click on view icon of the info window]
+
+* LOCAL STORAGE
 
   To reset your local storage, go to the console of your browser and type localStorage.clear() . This will clear the localStorage.mapCenter and localStorage.myCategories leaved by this application
-  
 
-* Info window:
+* RESPONSIVE APPLICATION
 
-   You can find useful information here like the name of the place, address, opening hours, newyork times headline/link(if existing)
-
-* Photo viewer for dispaying photos for a place  [click on Photos]
-* List  of the reviews for a place [click on Reviews]
-* New york times headline  and latest news for a city and country ( based of the address of the place)  [Click on NYT articles]
-* Wiki pedia [ click on W link]
-* Street views [ click on view icon]
-
-
-* The application is responsive. It has been tested on Nexus 5x, 6, 6P, Laptop and Desktop
+  The application is responsive. It has been tested on Nexus 5x, 6, 6P, Chromebook, Laptop and Desktop
 
 ###Resources and tools that are used
 
-* [Intoduction to Ajax Udacity ] (https://www.udacity.com/course/intro-to-ajax--ud110)
-* [Javascript design pattern Udacity] (https://www.udacity.com/course/javascript-design-patterns--ud989)
-* [Discussion forum Udacity]  (https://discussions.udacity.com/c/nd001-project-5-neighborhood-map-project)
+* [Intoduction to Ajax - Udacity ] (https://www.udacity.com/course/intro-to-ajax--ud110)
+* [Javascript design pattern - Udacity] (https://www.udacity.com/course/javascript-design-patterns--ud989)
+* [Discussion forum - Udacity]  (https://discussions.udacity.com/c/nd001-project-5-neighborhood-map-project)
 * [knockoutjs](http://knockoutjs.com/)
 * [bootstraps] (http://getbootstrap.com/)
 * [JQuery](https://jquery.com/)
@@ -102,8 +103,11 @@ Develop a single page application featuring a map of a neighborhood you would li
 * [Convert command] (http://www.imagemagick.org/script/convert.php)
 
 ###Inspired by the UI of project 5 below. I litterally reuse the UI button toolbar.
+
 * [Project5] (http://devrob.github.io/Udacity-WebDev-project5)
 
+
+## TOOLS
 
 * [Gulp plugins](http://gulpjs.com/plugins/)
     * [compress images with gulp-imagemin](https://www.npmjs.com/package/gulp-imagemin)
@@ -112,4 +116,5 @@ Develop a single page application featuring a map of a neighborhood you would li
     * [minify CSS with gulp-minify-css](https://www.npmjs.com/package/gulp-minify-css)
     * [minify HTML with gulp-minify-html](https://www.npmjs.com/package/gulp-minify-html)
 
+* pixlr to manipulate images
 
