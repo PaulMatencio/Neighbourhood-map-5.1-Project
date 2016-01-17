@@ -280,7 +280,7 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
       /**
        * Opens the review-page  dom  when the reviews is clicked
        */
-
+      /*
       var $reviews = $('#reviews');
       if ($reviews) {
         $reviews.click(function() {
@@ -291,6 +291,7 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
               self.placeReviews.push(review);
             }
           });
+
           var $reviewpage = $('#review-page');
           var $reviews = $('#reviews');
           $reviewpage.show();
@@ -300,6 +301,19 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
             $reviews.children().hide();
             $reviewpage.hide();
           });
+
+        });
+      };
+      */
+      var $reviews = $('#reviews');
+      if ($reviews) {
+        $reviews.click(function() {
+          self.placeInFocus(place);
+          place.reviews.forEach(function(review) {
+            if (review.text !== "") {
+              self.placeReviews.push(review);
+            }
+          });         
         });
       };
 
@@ -307,15 +321,9 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
         Open the nyt article when the nyt link is clicked
       */
       var $nytlink = $('#nytLink');
-
       if ($nytlink) {
         $nytlink.click(function() {
-          self.nytarticles(self.getNytArticle(place));
-          var $nytimespage = $('#nytimes-page');
-          $nytimespage.show();
-          $('#close-nytimes').click(function() {
-            $nytimespage.hide();
-          });
+          self.getNytArticle(place);
         });
       }; /* end nyt */
 
@@ -323,48 +331,24 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
       /*
         Open the wikit article when the nyt link is clicked
       */
-      var $nytlink = $('#wikiLink');
-
-      if ($nytlink) {
-        $nytlink.click(function() {
-          var $wikipage = $('#wiki-page');
-          self.nytarticles(self.openSearchWikipedia(place));
-          $wikipage.show();
-          $('#close-wiki').click(function() {
-            $wikipage.hide();
+      var $wikilink = $('#wikiLink');
+      if ($wikilink) {
+        $wikilink.click(function() {
+          self.openSearchWikipedia(place);
           });
-        });
-      }; /* end nyt */
+      };
 
       /*
         Open the street view page when it is clicked
       */
 
-      var $streetLink = $('#streetLink');
+      var $streetLink = $('#streetLink');      
       if ($streetLink) {
         $streetLink.click(function() {
-          self.streetView(self.getStreetView(place));
-          var $streetpage = $('#street-page');
-          $streetpage.show();
-          $('#close-street').click(function() {
-            $streetpage.hide();
-          });
+          self.getStreetView(place);
         });
       };
-
-
-      var foursquareLink = document.getElementById('fourLink');
-      if (foursquareLink) {
-        foursquareLink.addEventListener("click", function() {
-          self.foursquarePlaces(getFourSquare(place));
-
-          $('#foursquare-page').show();
-          $('#close-foursquare').click(function() {
-            $('#foursquare').children().hide();
-            $('#foursquare-page').hide();
-          });
-        });
-      }; /* end 4square */
+       
 
     }
   });

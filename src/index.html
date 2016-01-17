@@ -17,7 +17,7 @@
     <div id="search-box" class="input-group" group="controls">
       <input id="search-input"  type="text" class="form-control" placeholder="Looking for...">
     </div>
-    <!-- button to hide or show the serach result list -->
+    <!-- button to hide or show the search result list -->
     <div class="hide-result" group="controls" >
       <a data-bind="click: toggleResults">
         <svg xmls="http://www/w3/org/2000/svg" viewbox="0 0 24 24">
@@ -35,7 +35,7 @@
           <h2>Places near by</h2>
         </div>
       </div>
-      <ul class="list-group infolist" data-bind="foreach: nearByPlaces">
+      <ul class="infolist" data-bind="foreach: nearByPlaces">
         <li  data-bind="click: $parent.clickMarker">
           <!-- picture -->
           <div class="col-md-4">
@@ -76,40 +76,44 @@
     </div>
     <!-- end of place search result -->
     <!--Review page -->
-    <div id="review-page"  class="viewport" style="display: none;">
-      <img id="close-review"  group="closeButton" src="images/stepbackward.png" alt="X">
-      <div class="Container" group="lists">
-        <div class="review-title" data-bind="with: placeInFocus">
-          <p>
-          <div class="longtext">
-            <h2 data-bind="text: $data.name"></h2>
-          </div>
-          <div style="float: right;">
-            <span class="rating-number" style="font-size: 16px;" data-bind="text: $data.rating"></span>
-            <div style="display: inline;" data-bind="foreach: $parent.rateStar($data.rating)">
-              <img style="height: 16px;" class="rate-star" data-bind="attr:{src: star}" alt="*">
+    <div data-bind="visible: okreview">
+      <div id="review-page"  class="viewport">
+        <button data-bind= "click: closeReview">
+        <img id="close-review"  group="closeButton" src="images/stepbackward.png" alt="X">
+        </button>
+        <div class="Container" group="lists">
+          <div class="review-title" data-bind="with: placeInFocus">
+            <p>
+            <div class="longtext">
+              <h2 data-bind="text: $data.name"></h2>
             </div>
-          </div>
-          </p>
-          <p class="greytext"><span data-bind="text: $data.formatted_address"></span></p>
-        </div>
-        <div class="list-group mylist" data-bind="foreach: placeReviews">
-          <div class="list-group-item ">
-            <strong style="display: inline" data-bind="text: $data.author_name"></strong>
-            <div style="display: inline">
-              <span class="rating-number" data-bind="text: $data.rating"></span>
+            <div style="float: right;">
+              <span class="rating-number" style="font-size: 16px;" data-bind="text: $data.rating"></span>
               <div style="display: inline;" data-bind="foreach: $parent.rateStar($data.rating)">
-                <img class="rate-star" data-bind="attr:{src: star}" alt="*">
+                <img style="height: 16px;" class="rate-star" data-bind="attr:{src: star}" alt="*">
               </div>
             </div>
-            <p>
-              <span data-bind="text: $data.text"></span>
             </p>
+            <p class="greytext"><span data-bind="text: $data.formatted_address"></span></p>
           </div>
-        </div>
-        <div class="logo">
-          <span>powered by </span>
-          <img src="images/googlelogo.jpg" alt="Google" />
+          <div class="list-group mylist" data-bind="foreach: placeReviews">
+            <div class="list-group-item ">
+              <strong style="display: inline" data-bind="text: $data.author_name"></strong>
+              <div style="display: inline">
+                <span class="rating-number" data-bind="text: $data.rating"></span>
+                <div style="display: inline;" data-bind="foreach: $parent.rateStar($data.rating)">
+                  <img class="rate-star" data-bind="attr:{src: star}" alt="*">
+                </div>
+              </div>
+              <p>
+                <span data-bind="text: $data.text"></span>
+              </p>
+            </div>
+          </div>
+          <div class="logo">
+            <span>powered by </span>
+            <img src="images/googlelogo.jpg" alt="Google" />
+          </div>
         </div>
       </div>
     </div>
@@ -140,39 +144,51 @@
       </button>
     </div>
     <!-- New york times page -->
-    <div id="nytimes-page" class="viewport" style="display: none;">
-      <img id="close-nytimes"  group="closeButton" class="navButton" src="images/stepbackward.png" alt="X">
-      <div class="Container" group="lists">
-        <div class="review-title">
-          <span class="nytimes-header">New York Times Articles</span>
-          <span class="nytimes-header" data-bind="text:nytInFocus"></span>
-        </div>
-        <div class="mylist" data-bind="foreach: nytarticles">
-          <div>
-            <span class="review list-group-item" data-bind="html:$data"></span>
+    <div data-bind="visible: oknyt">
+      <div id="nytimes-page" class="viewport">
+        <button data-bind= "click: closeNyt">
+        <img id="close-nytimes"  group="closeButton" class="navButton" src="images/stepbackward.png" alt="X">
+        </button>
+        <div class="Container" group="lists">
+          <div class="review-title">
+            <span class="nytimes-header">New York Times Articles</span>
+            <span class="nytimes-header" data-bind="text:nytInFocus"></span>
+          </div>
+          <div class="mylist" data-bind="foreach: nytarticles">
+            <div>
+              <span class="review list-group-item" data-bind="html:$data"></span>
+            </div>
           </div>
         </div>
       </div>
     </div>
     <!-- Wiki page -->
-    <div id="wiki-page" class="viewport" style="display: none;">
-      <img id="close-wiki"  group="closeButton" class="navButton" src="images/stepbackward.png" alt="X">
-      <div class="Container" group="lists">
-        <div class="review-title">
-          <span class="wiki-header">Wikipedia Articles</span>
-          <span class="wiki-header" data-bind="text:wikiInFocus"></span>
-        </div>
-        <div class="mylist" data-bind="foreach: wikiarticles">
-          <div>
-            <span class="review list-group-item" data-bind="html:$data"></span>
+    <div data-bind="visible: okwiki">
+      <div id="wiki-page" class="viewport">
+        <button data-bind= "click: closeWiki">
+        <img id="close-wiki"  group="closeButton" class="navButton" src="images/stepbackward.png" alt="X">
+        </button>
+        <div class="Container" group="lists">
+          <div class="review-title">
+            <span class="wiki-header">Wikipedia Articles</span>
+            <span class="wiki-header" data-bind="text:wikiInFocus"></span>
+          </div>
+          <div class="mylist" data-bind="foreach: wikiarticles">
+            <div>
+              <span class="review list-group-item" data-bind="html:$data"></span>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div id="street-page" class="viewport" style="display: none;">
-      <img id="close-street"  group="closeButton" class="navButton" src="images/stepbackward.png" alt="X">
-      <div class="Container" group="photos">
-        <img  class="street-view" data-bind="attr:{src: streetView, alt: noimage}" >
+    <div data-bind="visible: showView">
+      <div id="street-page" class="viewport">
+        <button data-bind= "click: closeView">
+        <img id="close-street"  group="closeButton" class="navButton" src="images/stepbackward.png" alt="X">
+        </button>
+        <div class="Container" group="photos">
+          <img  class="street-view" data-bind="attr:{src: streetView, alt: noimage}" >
+        </div>
       </div>
     </div>
     <!-- template scripts  for reviews page-->
@@ -206,13 +222,13 @@
         google: {
         families: ['Roboto:100,300']
       }
-    };
-    (function(d) {
+      };
+      (function(d) {
        var wf = d.createElement('script'), s = d.scripts[0];
        // wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js';
        wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js';
        s.parentNode.insertBefore(wf, s);
-     })(document);
+      })(document);
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places" defer></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

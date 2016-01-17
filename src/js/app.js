@@ -28,6 +28,7 @@ $(function() {
     self.wikiInFocus = ko.observable();
     self.streetView = ko.observable(); // photo returned by streetview APU
     self.noimage = ko.observable();    // used for the attribute alt= of <img> to handle street view errors.
+    self.showView = ko.observable(false);  
 
     myMaps.self = self;
 
@@ -35,6 +36,7 @@ $(function() {
       streetViewApiKey = "AIzaSyAUYlUoaLYjM8hidnMVQ05zXiEXJ87dFiY",
       nytArtSearchKey = "befcd9ed183aa5edba4a379ed537e27f:10:73683129",
       wikiOpenSearchURL = "http://en.wikipedia.org/w/api.php?action=opensearch&search=%data%&format=json&callback=wikiCallback",
+      //wikiOpenSearchURL = "http://en.wikipedia.org/w/api.php?action=openseach&search=%data%&format=json&callback=wikiCallback",
       wikiarticle = 'http://fr.wikipedia.org/wiki/',
       streeViewURL = "http://maps.googleapis.com/maps/api/streetview?";
 
@@ -120,6 +122,13 @@ $(function() {
       return iconDict.slice(0, 19); // limit the number of icons to 20
     });
 
+    /* 
+    self.showerror = ko.computed(function() {
+      console.log(self.aerror().length);
+      return true;
+    });
+    */
+
     /**
        The rateStar() function chains together the rating stars based on place rating.
        It is used by KO to control the display of rating
@@ -161,7 +170,7 @@ $(function() {
 
     myMaps.nearbySearch(position);
     myMaps.initAutocomplete();
-
+  
 
     self.getWebsite = function(place) {
 
@@ -181,6 +190,16 @@ $(function() {
       });
     };
 
+    self.okreview = ko.computed(function() {
+      if (self.placeReviews().length > 0 ) {
+        return true;
+      } else return false;
+    });
+
+    self.closeReview = function() {
+       self.placeReviews([]);
+    };
+
     /*  Serach for   New york times articles
       query : City
       filter : Country
@@ -190,7 +209,7 @@ $(function() {
        Eventhougth the KO modelview  object contains the observable array "nytarticles", when I want to access
        the observable  array, I got an error that the array is undefined
        As for instance
-       console.log(self)  => modelview object which contains the function nyarticles()
+       console.log(self)  => modelview object which contains the function nytarticles()
        console.log(self.nytarticles())  ==> undefined
        self.nytarticles.push(headline)  ==> Error  ( can't push on undefined )
 
@@ -201,8 +220,9 @@ $(function() {
       end_of_loop:self.nytarticles( articles)
 
     */
-    self.getNytArticle = function(place) {
 
+    self.getNytArticle = function(place) {
+      self.nytarticles([]);
       var location = self.getLocality(place),
         url = nyturl;
       var query = location.locality + " ";
@@ -216,7 +236,8 @@ $(function() {
       self.nytInFocus("about " + filter + " " + query);
       var wikiRequestTimeout = setTimeout(function() {
         articles.push("<p>failed to query New York times resources</p>");
-      }, 5000);
+        this.nytarticles(articles);
+      }.bind(self), 5000);
 
       $.getJSON(url, {
           "q": query,
@@ -228,16 +249,18 @@ $(function() {
         })
         .done(function(data) {
           if (data.status == "OK") {
+            console.log(this,self);
             $.each(data.response.docs, function(key, value) {
               var headline = value.headline.main;
               if  (headline != null) {
                  articles.push(nytTemplate.replace(/{{headline}}/, headline).replace(/{{articleUrl}}/, value.web_url));
-              } else articles.push(nytTemplate.replace(/{{headline}}/, "There are no recents articles").replace(/{{articleUrl}}/,"#"));
+              } 
             });
           };
           this.nytarticles(articles);
           clearTimeout(wikiRequestTimeout);
         }.bind(self)) /* "self" is passed to the function as "this" */
+
         .fail(function(e) {
           articles.push("<p>New York Times Articles could bot be loaded</p>");
           this.nytarticles(articles);
@@ -245,11 +268,27 @@ $(function() {
     };
 
     /*
-        Search wikipedia for the  City
+        show the New York times articles page only when there are some
+    */
+    self.oknyt = ko.computed(function() {
+      if (self.nytarticles().length > 0 ) {
+        return true;
+      } else return false;
+    });
 
+    /*
+       Reset the number of articles, then KO will hide the page
+    */
+    self.closeNyt = function() {
+       self.nytarticles([]);
+    };
+
+
+    /*
+        Search wikipedia for the  City
     */
     self.openSearchWikipedia = function(place) {
-
+      self.wikiarticles([]);
       var location = self.getLocality(place),
         articles = [];
       var query = location.locality + " ";  
@@ -261,7 +300,8 @@ $(function() {
       var wikiTemplate = $('script[data-template="wiki"]').html();
       self.wikiInFocus("about " + query);
       var wikiRequestTimeout = setTimeout(function() {
-        articles.push("<p>failed to query wiki resources</p>");
+         articles.push("<p>failed to query wiki resources</p>");   
+         this.nytarticles(articles);
       }, 5000);
 
       $.ajax({
@@ -275,25 +315,46 @@ $(function() {
             articles.push(wikiTemplate.replace(/{{wikiarticle}}/, value).replace(/{{articleUrl}}/, articleurl));
           });
           this.wikiarticles(articles);
+          console.log(this.wikiarticles().length);
           clearTimeout(wikiRequestTimeout);
         }.bind(self)) /* "self" is passed to the function as "this" */
         .fail(function(e) {
-          articles.push("<p>wiki pages could not be found</p>");
-          this.wikiarticles(articles);
+          articles.push("<p>Wiki could bot be loaded</p>");
+          this.nytarticles(articles);
         }.bind(self)); /* "self" is passed to the function as "this" */
     };
 
+     /*
+        show the wikipedia articles page only when there are some
+    */
+    self.okwiki = ko.computed(function() {
+      if (self.wikiarticles().length > 0 ) {
+        return true;
+      } else return false;
+    });
 
+    /*
+      
+    */
+    self.closeWiki = function() {
+       self.wikiarticles([]);
+    };
+
+    
     /* 
        Display the view of the street based on the formatted address of the place
        if street view fail, text Sorry .... will replaced the alt= attribute of the <img> element
     */
 
-    self.getStreetView = function(place) {
-      var street = streeViewURL + 'size=600x400&location=' + place.formatted_address;
+    self.getStreetView = function(place) {  
+      self.streetView(streeViewURL + 'size=600x400&location=' + place.formatted_address);
       self.noimage = "Sorry no image for " + place.formatted_address;
-      return street;
+      self.showView(true);
     };
+
+    self.closeView = function(){
+      self.showView(false);
+    }
 
     /**
       Based on which icon is pressed, map API nearby search is called with altered categories
