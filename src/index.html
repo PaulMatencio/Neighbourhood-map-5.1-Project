@@ -118,16 +118,24 @@
       </div>
     </div>
     <!--end review page -->
+
     <!-- Photos display -->
-    <div id="photo-page"  class="viewport" style="display: none;">
-      <img id="close-photo"  group="closeButton" class="navButton" src="images/stepbackward.png" alt="X">
-      <div id="frame" data-bind="foreach: placePhotos">
-        <img class="photo" style="margin: 0 1px 0 1px;" data-bind="attr:{id: $index, src: $data.getUrl({maxHeight: 600})}" alt="photo">
+    <div data-bind="visible: okphoto" >
+    <div id="photo-page"  class="viewport">
+      <img id="close-photo" class="navButton" data-bind= "click: closePhoto"  group="closeButton" src="images/stepbackward.png" alt="X">
+      <div  data-bind="with: currentPhoto">
+        <img  class="photo" data-bind="attr:{ src: getUrl({maxHeight: 800})}" alt="photo">
       </div>
-      <span id="photoCounter" class="navButton"></span>
-      <img id="backward" class="navButton" src="images/stepbackward.png" alt="<">
-      <img id="forward" class="navButton" src="images/stepforward.png" alt=">">
+      <div id="photoCounter" >
+       <span  data-bind="text: photoIndex"></span>
+       <span> / </span>
+       <span  data-bind="text: numberPhotos"></span>
+      </div>
+      <img data-bind="click: photoBackward" id="backward" class="navButton" src="images/stepbackward.png" alt="<">
+      <img data-bind="click: photoForward" id="forward"  class="navButton" src="images/stepforward.png" alt=">">
     </div>
+  </div>
+
     <!-- Tools bar -->
     <div id="btn-toolbar" group="controls">
       <button id="reset" type="core" class="btn" style="display: block">
@@ -143,12 +151,11 @@
       <span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span>
       </button>
     </div>
+
     <!-- New york times page -->
     <div data-bind="visible: oknyt">
       <div id="nytimes-page" class="viewport">
-        <button data-bind= "click: closeNyt">
-        <img id="close-nytimes"  group="closeButton" class="navButton" src="images/stepbackward.png" alt="X">
-        </button>
+        <img id="close-nytimes"  group="closeButton" class="navButton" src="images/stepbackward.png" alt="X" data-bind= "click: closeNyt">
         <div class="Container" group="lists">
           <div class="review-title">
             <span class="nytimes-header">New York Times Articles</span>
@@ -162,12 +169,11 @@
         </div>
       </div>
     </div>
-    <!-- Wiki page -->
+
+    <!-- Wikipedia page -->
     <div data-bind="visible: okwiki">
       <div id="wiki-page" class="viewport">
-        <button data-bind= "click: closeWiki">
-        <img id="close-wiki"  group="closeButton" class="navButton" src="images/stepbackward.png" alt="X">
-        </button>
+        <img id="close-wiki"  group="closeButton" class="navButton" src="images/stepbackward.png" alt="X" data-bind= "click: closeWiki">
         <div class="Container" group="lists">
           <div class="review-title">
             <span class="wiki-header">Wikipedia Articles</span>
@@ -181,12 +187,11 @@
         </div>
       </div>
     </div>
+
     <div data-bind="visible: showView">
       <div id="street-page" class="viewport">
-        <button data-bind= "click: closeView">
-        <img id="close-street"  group="closeButton" class="navButton" src="images/stepbackward.png" alt="X">
-        </button>
-        <div class="Container" group="photos">
+        <img id="close-street"  group="closeButton" class="navButton" src="images/stepbackward.png" alt="X" data-bind= "click: closeView">
+        <div id="streeview">
           <img  class="street-view" data-bind="attr:{src: streetView, alt: noimage}" >
         </div>
       </div>

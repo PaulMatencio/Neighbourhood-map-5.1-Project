@@ -209,18 +209,22 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
   var Map = this;
   var self = this.self;
   var infoWindow = this.infoWindow;
+  var  winwidth = window.innerWidth;
+
+
+
   service.getDetails({
     placeId: place.place_id
   }, function(place, status) {
 
-    // self.getFourSquare(place);
-    // getWikiExtract(place);
-    // self.getNytArticle(place);
-
     if (status === google.maps.places.PlacesServiceStatus.OK) {
 
+      if ( winWidth < 750) {
+        self.showResults(false);
+      }
+
       /* set infoWinoow content */
-      var website = self.getWebsite(place);
+      var website = Map.getWebsite(place);
       var reviewsTemplate = $('script[data-template="reviews"]').html();
       var rev = reviewsTemplate.replace(/{{name}}/, place.name).replace(/{{formatted_address}}/, place.formatted_address).replace(/{{opening}}/, Map.getOpenings(place)).replace(/{{rating}}/, Map.getRating(place)).replace(/{{photos}}/, Map.getPhotoes(place));
       infoWindow.setContent(rev.replace(/{{website}}/g, website).replace(/{{phone}}/, Map.getPhone(place)));
@@ -230,80 +234,20 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
       /*
          Open the photo-page  dom when photo link is clicked
       */
-      self.placePhotos(place.photos);
+
       if (place.photos) {
         var numberPhotos = place.photos.length;
 
         $('#photos').click(function() {
-          $('#photo-page').show();
-          $('#backward').show();
-          $('#forward').show();
-          var current = 0;
-          navigate(0);
-          $('#forward').click(function() {
-            navigate(1);
-          });
-          $('#backward').click(function() {
-            navigate(-1);
-          });
-
-          /*
-              show photo in circular list manner when the navButtons
-              backward or forward are clicked
-          */
-          function navigate(direction) {
-            previous = current;
-            current = (current + direction) % numberPhotos;
-            current = current < 0 ? numberPhotos - 1 : current;
-            var $children = $('#frame').children();
-            $children.eq(previous).hide();
-            $children.eq(current).show();
-            updCounter(current);
-          }
-          /*
-            circular update the  photo counter
-          */
-          function updCounter(current) {
-            $('#photoCounter').text(current + "/" + numberPhotos);
-          }
-
-          $('#close-photo').click(function() {
-            $('#frame').children().hide();
-            $('#backward').hide();
-            $('#backward').hide();
-            $('#photo-page').hide();
-
-          });
+          self.placePhotos(place.photos);
+          self.currentIndex(0);
+          self.currentPhoto(self.placePhotos()[0]);
         });
+
       };
 
-      /**
-       * Opens the review-page  dom  when the reviews is clicked
-       */
       /*
-      var $reviews = $('#reviews');
-      if ($reviews) {
-        $reviews.click(function() {
-          self.placeReviews([]);
-          self.placeInFocus(place);
-          place.reviews.forEach(function(review) {
-            if (review.text !== "") {
-              self.placeReviews.push(review);
-            }
-          });
-
-          var $reviewpage = $('#review-page');
-          var $reviews = $('#reviews');
-          $reviewpage.show();
-          $reviews.children().show();
-
-          $('#close-review').click(function() {
-            $reviews.children().hide();
-            $reviewpage.hide();
-          });
-
-        });
-      };
+         Open the reviews page when reviews is clicked
       */
       var $reviews = $('#reviews');
       if ($reviews) {
@@ -313,7 +257,7 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
             if (review.text !== "") {
               self.placeReviews.push(review);
             }
-          });         
+          });
         });
       };
 
@@ -342,14 +286,12 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
         Open the street view page when it is clicked
       */
 
-      var $streetLink = $('#streetLink');      
+      var $streetLink = $('#streetLink');
       if ($streetLink) {
         $streetLink.click(function() {
           self.getStreetView(place);
         });
       };
-       
-
     }
   });
 
@@ -357,9 +299,23 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
     Map.markers.forEach(function(marker) {
       marker.setAnimation(null);
     }.bind(this));
+    /*
+    if (window.innerWidth < 750) {
+      self.showResults(true);
+    }
+    */
   });
 };
 
+
+gMaps.prototype.getWebsite = function(place) {
+
+      if (place.website) {
+        return place.website;
+      } else {
+        return "";
+      }
+};
 
 /**
  * Get rating from place object and dinamically chain together the rating tag

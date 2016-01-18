@@ -77,10 +77,21 @@ Develop a single page application featuring a map of a neighborhood you would li
    You can find useful information here like the name of the place, address, opening hours, newyork times headline/link(if existing), wikipedia link for the city, newyork times articles and street views
 
 * Photo viewer for dispaying photos for a place  [click on Photos link of the info window]
+
 * List  of the reviews for a place [click on Reviews link of the info window]
+
+  Nothing happen if there is no reviews
+
 * New york times headline  and latest news for a city and country ( based of the address of the place)  [Click on NYT articles of the info window]
+
+  Nothing happen if there is no articles
+
 * Wiki pedia [ click on W link of the info window]
+
+  Nothing happen if there is no wiki
+
 * Street views [ click on view icon of the info window]
+
 
 * LOCAL STORAGE
 

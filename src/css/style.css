@@ -80,7 +80,7 @@ strong {
 
 [group~=lists] {
   position: absolute;
-  background-color: #fffae3; 
+  background-color: #fffae3;
   padding: 10px;
   top: 5%;
   max-width: 60%;
@@ -96,10 +96,10 @@ strong {
 
 [group~=photos] {
     position: absolute;
-    width: 80%;
-    height: auto;
-    top:5%;
-    left: 10%;
+    max-width: 60%;
+    max-height: 80%;
+    top:50%;
+    left: 50%;
 }
 
 [group~=closeButton] {
@@ -135,25 +135,24 @@ strong {
 }
 
 #backward {
-  display: none;
-  left: 20%;
+  left: 15%;
   top: 50%;
 }
 
 #forward {
-  display: none;
-  right: 20%;
+  right: 15%;
   top: 50%;
 }
 
 #photoCounter {
-  width: 10%;
-  font-size: 30px;
+  width: 20%;
+  font-size: 25px;
   color: black;
-  left: 54%;
-  margin-right: -50%;
-  transform: translate(-50%, -50%);
-  bottom: 60px;
+  left: 45%;
+  position: absolute;
+  z-index: 110;
+  bottom: 10%;
+  cursor: pointer;
 }
 
 #btn-toolbar {
@@ -226,11 +225,6 @@ strong {
  background: -webkit-linear-gradient(left,  rgba(216,224,222,0.48) 0%,rgba(189,203,200,0.48) 14%,rgba(174,191,188,0.53) 22%,rgba(153,175,171,0.6) 33%,rgba(142,166,162,0.7) 50%,rgba(130,157,152,0.8) 67%,rgba(78,92,90,0.89) 82%,rgba(14,14,14,1) 100%);
  background: linear-gradient(to right,  rgba(216,224,222,0.48) 0%,rgba(189,203,200,0.48) 14%,rgba(174,191,188,0.53) 22%,rgba(153,175,171,0.6) 33%,rgba(142,166,162,0.7) 50%,rgba(130,157,152,0.8) 67%,rgba(78,92,90,0.89) 82%,rgba(14,14,14,1) 100%);
  /* filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7ad8e0de', endColorstr='#0e0e0e',GradientType=1 ); */
-}
-
-.street-view {
-  width: 100%;
-  height: auto;
 }
 
 .btn-toolbar-img {
@@ -320,18 +314,26 @@ strong {
   height: inherit;
 }
 
-.photo {
-    display: none;
-    position: absolute;
-    margin: 0;
-    max-height: 60%;
-    max-width: 80%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-    -webkit-user-select: none;
+img.photo {
+  position: absolute;
+  max-height: 60%;
+  max-width: 60%;
+  top: 25%;
+  left: 20%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto
+}
+
+img.street-view {
+  position: absolute;
+  max-height: 80%;
+  max-width: 80%;
+  top: 10%;
+  left: 10%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto
 }
 
 .navButton {
@@ -437,7 +439,7 @@ strong {
   }
 
   #photoCounter {
-    top: 92%;
+   bottom: 10%;
   }
 
   .col-md-4, .col-md-2 {

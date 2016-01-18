@@ -23,12 +23,14 @@ $(function() {
     self.placePhotos = ko.observableArray([]); //ko array for place photo urls returned by google map places API getDetails() service
     self.placeInFocus = ko.observable(); //place object container when opening photos and reviews via infowindows
     self.nytarticles = ko.observableArray([]); //ko array for place new york times artcicle (search API)
-    self.nytInFocus = ko.observable(); //  
+    self.nytInFocus = ko.observable(); //
     self.wikiarticles = ko.observableArray([]); //ko array for place wikipedia  artcicle  ( opensearch API)
     self.wikiInFocus = ko.observable();
     self.streetView = ko.observable(); // photo returned by streetview APU
     self.noimage = ko.observable();    // used for the attribute alt= of <img> to handle street view errors.
-    self.showView = ko.observable(false);  
+    self.showView = ko.observable(false);
+    self.currentPhoto = ko.observable();
+    self.currentIndex = ko.observable(0);
 
     myMaps.self = self;
 
@@ -40,10 +42,85 @@ $(function() {
       wikiarticle = 'http://fr.wikipedia.org/wiki/',
       streeViewURL = "http://maps.googleapis.com/maps/api/streetview?";
 
-    /**
-      return the address of the place
-      used by ko to display rating in the nearbyplaces
-    **/
+    /*
+    *   control the display of wiki page
+    */
+    self.okwiki = ko.computed(function() {
+      if (self.wikiarticles().length > 0 ) {
+        return true;
+      } else return false;
+    });
+
+    self.closeWiki = function() {
+       self.wikiarticles([]);
+    };
+
+    /*
+    *   control the display of new york times page
+    */
+    self.oknyt = ko.computed(function() {
+      if (self.nytarticles().length > 0 ) {
+        return true;
+      } else return false;
+    });
+
+    self.closeNyt = function() {
+       self.nytarticles([]);
+    };
+
+
+    /*
+    *   control the display of reviews page
+    */
+    self.okreview = ko.computed(function() {
+      if (self.placeReviews().length > 0 ) {
+        return true;
+      } else return false;
+    });
+
+    self.closeReview = function() {
+       self.placeReviews([]);
+    };
+
+    /*
+    *   control the display of photo page page
+    */
+    self.okphoto = ko.computed( function() {
+      if (self.placePhotos().length > 0) {
+        return true;
+      } else return false;
+    });
+
+    self.numberPhotos = ko.computed(function() {
+      return self.placePhotos().length;
+    });
+
+    self.photoIndex = ko.computed(function() {
+      return self.currentIndex()+1;
+    });
+
+    self.closePhoto = function() {
+      self.placePhotos([]);
+      self.currentIndex(0);
+    }
+
+
+    /*  definition of the functions  of the Viewmodel
+    *
+       getAdddress()
+       getLocality()
+       toggleResults()
+       rateStar()
+       formattedtype()
+       photoForward()
+       photBackward()
+       navgigate()
+       getNytArticle()
+       getWikiArticle()
+
+    */
+
+
 
     self.getAddress = function(place) {
       if (place.vicinity) {
@@ -54,7 +131,7 @@ $(function() {
       }
     };
 
-    /* 
+    /*
       return an object containing the locality, region and country of a place
     */
     self.getLocality = function(place) {
@@ -63,7 +140,7 @@ $(function() {
         clocality = 'class="locality">',
         ccountry = 'class="country-name">',
         cregion  = 'class="region">',
-        start = 0, location = {}, 
+        start = 0, location = {},
         idx2 = 0;
       //console.log(add);
       // extract the locailty
@@ -73,7 +150,7 @@ $(function() {
         idx2 = add.indexOf('</span>',start) ;
         location.locality= add.slice(start,idx2);
       };
-      // extract region 
+      // extract region
       idx1 = add.indexOf('class="region"',idx2+7);
       if (idx1 >0) {
         start = idx1+cregion.length;
@@ -90,7 +167,7 @@ $(function() {
       //console.log(location);
       return location;
     }
-     
+
     /**
     <span class="street-address">97 Song Hành Quốc Lộ 22</span>, <span class="region">Tân Hưng Thuận</span>, <span class="locality">12</span>, <span class="region">Hồ Chí Minh</span>, <span class="country-name">Vietnam</span>
       hide/show  the list of places returned by google Map places API nearby search services
@@ -122,7 +199,7 @@ $(function() {
       return iconDict.slice(0, 19); // limit the number of icons to 20
     });
 
-    /* 
+    /*
     self.showerror = ko.computed(function() {
       console.log(self.aerror().length);
       return true;
@@ -170,8 +247,8 @@ $(function() {
 
     myMaps.nearbySearch(position);
     myMaps.initAutocomplete();
-  
 
+    /*
     self.getWebsite = function(place) {
 
       if (place.website) {
@@ -180,25 +257,40 @@ $(function() {
         return "";
       }
     };
+    */
 
     self.clickMarker = function(place) {
       var name = place.name.toLowerCase();
       myMaps.markers.forEach(function(marker) {
         if (marker.title.toLowerCase() === name) {
           google.maps.event.trigger(marker, 'click');
+          if (window.innerWidth < 750) {
+            self.showResults(false);
+          }
         }
       });
     };
 
-    self.okreview = ko.computed(function() {
-      if (self.placeReviews().length > 0 ) {
-        return true;
-      } else return false;
-    });
+    self.photoBackward = function() {
+      navigate(-1);
+    }
 
-    self.closeReview = function() {
-       self.placeReviews([]);
-    };
+    self.photoForward = function() {
+      navigate(1);
+
+    }
+
+    function navigate(direction){
+      var numberPhotos = self.numberPhotos();
+      var current = self.currentIndex();
+      var next = (current + direction) % numberPhotos;
+      if (next < 0) {
+        next = numberPhotos - 1;
+      } ;
+      self.currentPhoto(self.placePhotos()[next]);
+      self.currentIndex(next);
+    }
+
 
     /*  Serach for   New york times articles
       query : City
@@ -254,7 +346,7 @@ $(function() {
               var headline = value.headline.main;
               if  (headline != null) {
                  articles.push(nytTemplate.replace(/{{headline}}/, headline).replace(/{{articleUrl}}/, value.web_url));
-              } 
+              }
             });
           };
           this.nytarticles(articles);
@@ -267,22 +359,6 @@ $(function() {
         }.bind(self)); /* "self" is passed to the function as "this" */
     };
 
-    /*
-        show the New York times articles page only when there are some
-    */
-    self.oknyt = ko.computed(function() {
-      if (self.nytarticles().length > 0 ) {
-        return true;
-      } else return false;
-    });
-
-    /*
-       Reset the number of articles, then KO will hide the page
-    */
-    self.closeNyt = function() {
-       self.nytarticles([]);
-    };
-
 
     /*
         Search wikipedia for the  City
@@ -291,7 +367,7 @@ $(function() {
       self.wikiarticles([]);
       var location = self.getLocality(place),
         articles = [];
-      var query = location.locality + " ";  
+      var query = location.locality + " ";
       if (location.region) {
          query += location.region;
       };
@@ -300,8 +376,8 @@ $(function() {
       var wikiTemplate = $('script[data-template="wiki"]').html();
       self.wikiInFocus("about " + query);
       var wikiRequestTimeout = setTimeout(function() {
-         articles.push("<p>failed to query wiki resources</p>");   
-         this.nytarticles(articles);
+         articles.push("<p>failed to query wiki resources</p>");
+         this.wikiarticles(articles);
       }, 5000);
 
       $.ajax({
@@ -320,33 +396,18 @@ $(function() {
         }.bind(self)) /* "self" is passed to the function as "this" */
         .fail(function(e) {
           articles.push("<p>Wiki could bot be loaded</p>");
-          this.nytarticles(articles);
+          this.wikiarticles(articles);
         }.bind(self)); /* "self" is passed to the function as "this" */
     };
 
-     /*
-        show the wikipedia articles page only when there are some
-    */
-    self.okwiki = ko.computed(function() {
-      if (self.wikiarticles().length > 0 ) {
-        return true;
-      } else return false;
-    });
+
 
     /*
-      
-    */
-    self.closeWiki = function() {
-       self.wikiarticles([]);
-    };
-
-    
-    /* 
        Display the view of the street based on the formatted address of the place
        if street view fail, text Sorry .... will replaced the alt= attribute of the <img> element
     */
 
-    self.getStreetView = function(place) {  
+    self.getStreetView = function(place) {
       self.streetView(streeViewURL + 'size=600x400&location=' + place.formatted_address);
       self.noimage = "Sorry no image for " + place.formatted_address;
       self.showView(true);
@@ -405,4 +466,5 @@ $(function() {
     }, 500);
     $(this).children('span').attr('class', glyph);
   });
+
 });
