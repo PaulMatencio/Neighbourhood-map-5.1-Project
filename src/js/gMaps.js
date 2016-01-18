@@ -1,7 +1,6 @@
 function gMaps(mapOptions, mapStyle) {
   // console.log(localStorage.mapCenter);
   this.mapCenter = mapOptions.center;
-  console.log(mapOptions.center);
   this.map = new google.maps.Map(document.querySelector('#map-canvas'), mapOptions);
   this.infoWindow = new google.maps.InfoWindow({
     pixelOffset: new google.maps.Size(-23, -10),
@@ -170,8 +169,8 @@ gMaps.prototype.createMarkers = function(places) {
       offsetX = 150,
       offsetY = -height / 5;
 
-    if (width < 750) {
-      offsetX = -20;
+    if (width < 800) {
+      offsetX = -30;
       offsetY = -1 * (height / 2 - 100);
     }
 
@@ -209,20 +208,19 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
   var Map = this;
   var self = this.self;
   var infoWindow = this.infoWindow;
-  var  winwidth = window.innerWidth;
-
-
+  var  $winWidth = $(window).width();
 
   service.getDetails({
     placeId: place.place_id
   }, function(place, status) {
 
     if (status === google.maps.places.PlacesServiceStatus.OK) {
-
-      if ( winWidth < 750) {
+       
+      // console.log($winWidth);
+      if ( $winWidth < 800) {
         self.showResults(false);
-      }
-
+      } ;
+       
       /* set infoWinoow content */
       var website = Map.getWebsite(place);
       var reviewsTemplate = $('script[data-template="reviews"]').html();
@@ -299,11 +297,11 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
     Map.markers.forEach(function(marker) {
       marker.setAnimation(null);
     }.bind(this));
-    /*
+    /* 
     if (window.innerWidth < 750) {
       self.showResults(true);
     }
-    */
+    */ 
   });
 };
 

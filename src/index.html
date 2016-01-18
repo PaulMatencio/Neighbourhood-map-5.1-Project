@@ -15,7 +15,7 @@
     <div id="map-canvas"></div>
     <!--  search box -->
     <div id="search-box" class="input-group" group="controls">
-      <input id="search-input"  type="text" class="form-control" placeholder="Looking for...">
+      <input id="search-input"  type="text" class="form-control" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: print" placeholder="Looking for...">
     </div>
     <!-- button to hide or show the search result list -->
     <div class="hide-result" group="controls" >
@@ -137,6 +137,7 @@
   </div>
 
     <!-- Tools bar -->
+  <div data-bind="visible: showResults">
     <div id="btn-toolbar" group="controls">
       <button id="reset" type="core" class="btn" style="display: block">
       <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
@@ -151,6 +152,7 @@
       <span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span>
       </button>
     </div>
+  </div>
 
     <!-- New york times page -->
     <div data-bind="visible: oknyt">

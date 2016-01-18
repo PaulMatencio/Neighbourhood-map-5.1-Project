@@ -254,6 +254,7 @@ strong {
   /* text-align: center; */
   overflow-x: hidden;
   overflow-y: scroll;
+  max-height: 72%;
   margin: 5px 0 5px 0;
   padding: 2px;
 
@@ -427,7 +428,11 @@ img.street-view {
   .results {
     width: 33%;
     max-width: 350px;
-    height: 50%;
+    height: 65%;
+  }
+
+  .infolist {
+    max-height: 65%;
   }
 
   .infoWindow {

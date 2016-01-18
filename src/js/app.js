@@ -2,6 +2,60 @@ $(function() {
 
   function ViewModel() {
 
+    var ENTER_KEY = 13;
+    var ESCAPE_KEY = 27;
+
+    // A factory function we can use to create binding handlers for specific
+    // keycodes.
+    function keyhandlerBindingFactory(keyCode) {
+      return {
+        init: function(element, valueAccessor, allBindingsAccessor, data, bindingContext) {
+          var wrappedHandler, newValueAccessor;
+
+          // wrap the handler with a check for the enter key
+          wrappedHandler = function(data, event) {
+            if (event.keyCode === keyCode) {
+              valueAccessor().call(this, data, event);
+            }
+          };
+
+          // create a valueAccessor with the options that we would want to pass to the event binding
+          newValueAccessor = function() {
+            return {
+              keyup: wrappedHandler
+            };
+          };
+
+          // call the real event binding's init function
+          ko.bindingHandlers.event.init(element, newValueAccessor, allBindingsAccessor, data, bindingContext);
+        }
+      };
+    }
+
+    // a custom binding to handle the enter key
+    ko.bindingHandlers.enterKey = keyhandlerBindingFactory(ENTER_KEY);
+
+    // another custom binding, this time to handle the escape key
+    ko.bindingHandlers.escapeKey = keyhandlerBindingFactory(ESCAPE_KEY);
+
+    // wrapper to hasFocus that also selects text and applies focus async
+    ko.bindingHandlers.selectAndFocus = {
+      init: function(element, valueAccessor, allBindingsAccessor, bindingContext) {
+        ko.bindingHandlers.hasFocus.init(element, valueAccessor, allBindingsAccessor, bindingContext);
+        ko.utils.registerEventHandler(element, 'focus', function() {
+          element.focus();
+        });
+      },
+      update: function(element, valueAccessor) {
+        ko.utils.unwrapObservable(valueAccessor()); // for dependency
+        // ensure that element is visible before trying to focus
+        setTimeout(function() {
+          ko.bindingHandlers.hasFocus.update(element, valueAccessor);
+        }, 0);
+      }
+    };
+
+
     var self = this;
     /*
       init Google Map
@@ -27,65 +81,60 @@ $(function() {
     self.wikiarticles = ko.observableArray([]); //ko array for place wikipedia  artcicle  ( opensearch API)
     self.wikiInFocus = ko.observable();
     self.streetView = ko.observable(); // photo returned by streetview APU
-    self.noimage = ko.observable();    // used for the attribute alt= of <img> to handle street view errors.
-    self.showView = ko.observable(false);
-    self.currentPhoto = ko.observable();
-    self.currentIndex = ko.observable(0);
+    self.noimage = ko.observable(); // used for the attribute alt= of <img> to handle street view errors.
+    self.showView = ko.observable(false); // control the street view page
+    self.currentPhoto = ko.observable(); // current photo holder
+    self.currentIndex = ko.observable(0); // cirrent photo index holder
+    self.keyword = ko.observable();
 
     myMaps.self = self;
 
-    var nyturl = "http://api.nytimes.com/svc/search/v2/articlesearch.json?",
-      streetViewApiKey = "AIzaSyAUYlUoaLYjM8hidnMVQ05zXiEXJ87dFiY",
-      nytArtSearchKey = "befcd9ed183aa5edba4a379ed537e27f:10:73683129",
-      wikiOpenSearchURL = "http://en.wikipedia.org/w/api.php?action=opensearch&search=%data%&format=json&callback=wikiCallback",
-      //wikiOpenSearchURL = "http://en.wikipedia.org/w/api.php?action=openseach&search=%data%&format=json&callback=wikiCallback",
-      wikiarticle = 'http://fr.wikipedia.org/wiki/',
-      streeViewURL = "http://maps.googleapis.com/maps/api/streetview?";
+
 
     /*
-    *   control the display of wiki page
-    */
+     *   control the display of wiki page
+     */
     self.okwiki = ko.computed(function() {
-      if (self.wikiarticles().length > 0 ) {
+      if (self.wikiarticles().length > 0) {
         return true;
       } else return false;
     });
 
     self.closeWiki = function() {
-       self.wikiarticles([]);
+      self.wikiarticles([]);
     };
 
     /*
-    *   control the display of new york times page
-    */
+     *   control the display of new york times page
+     */
     self.oknyt = ko.computed(function() {
-      if (self.nytarticles().length > 0 ) {
+      if (self.nytarticles().length > 0) {
         return true;
       } else return false;
     });
 
     self.closeNyt = function() {
-       self.nytarticles([]);
+      self.nytarticles([]);
     };
 
 
     /*
-    *   control the display of reviews page
-    */
+     *   control the display of reviews page
+     */
     self.okreview = ko.computed(function() {
-      if (self.placeReviews().length > 0 ) {
+      if (self.placeReviews().length > 0) {
         return true;
       } else return false;
     });
 
     self.closeReview = function() {
-       self.placeReviews([]);
+      self.placeReviews([]);
     };
 
     /*
-    *   control the display of photo page page
-    */
-    self.okphoto = ko.computed( function() {
+     *   control the display of photo page page
+     */
+    self.okphoto = ko.computed(function() {
       if (self.placePhotos().length > 0) {
         return true;
       } else return false;
@@ -96,7 +145,7 @@ $(function() {
     });
 
     self.photoIndex = ko.computed(function() {
-      return self.currentIndex()+1;
+      return self.currentIndex() + 1;
     });
 
     self.closePhoto = function() {
@@ -104,6 +153,14 @@ $(function() {
       self.currentIndex(0);
     }
 
+
+    var nyturl = "http://api.nytimes.com/svc/search/v2/articlesearch.json?",
+      streetViewApiKey = "AIzaSyAUYlUoaLYjM8hidnMVQ05zXiEXJ87dFiY",
+      nytArtSearchKey = "befcd9ed183aa5edba4a379ed537e27f:10:73683129",
+      wikiOpenSearchURL = "http://en.wikipedia.org/w/api.php?action=opensearch&search=%data%&format=json&callback=wikiCallback",
+      //wikiOpenSearchURL = "http://en.wikipedia.org/w/api.php?action=openseach&search=%data%&format=json&callback=wikiCallback",
+      wikiarticle = 'http://fr.wikipedia.org/wiki/',
+      streeViewURL = "http://maps.googleapis.com/maps/api/streetview?";
 
     /*  definition of the functions  of the Viewmodel
     *
@@ -120,7 +177,11 @@ $(function() {
 
     */
 
+    self.print = function() {
+      var keyword = self.keyword().trim();
+      console.log(keyword);
 
+    };
 
     self.getAddress = function(place) {
       if (place.vicinity) {
@@ -139,30 +200,31 @@ $(function() {
       var add = place.adr_address,
         clocality = 'class="locality">',
         ccountry = 'class="country-name">',
-        cregion  = 'class="region">',
-        start = 0, location = {},
+        cregion = 'class="region">',
+        start = 0,
+        location = {},
         idx2 = 0;
       //console.log(add);
       // extract the locailty
       idx1 = add.indexOf(clocality)
-      if (idx1 >0) {
-        start = idx1+clocality.length;
-        idx2 = add.indexOf('</span>',start) ;
-        location.locality= add.slice(start,idx2);
+      if (idx1 > 0) {
+        start = idx1 + clocality.length;
+        idx2 = add.indexOf('</span>', start);
+        location.locality = add.slice(start, idx2);
       };
       // extract region
-      idx1 = add.indexOf('class="region"',idx2+7);
-      if (idx1 >0) {
-        start = idx1+cregion.length;
-        idx2 = add.indexOf('</span>',start)
-        location.region = add.slice(start,idx2);
+      idx1 = add.indexOf('class="region"', idx2 + 7);
+      if (idx1 > 0) {
+        start = idx1 + cregion.length;
+        idx2 = add.indexOf('</span>', start)
+        location.region = add.slice(start, idx2);
       };
       // extract the country-name
-      idx1 = add.indexOf('class="country-name"',idx2+7);
-      if (idx1 >0) {
-        start = idx1+ccountry.length;
-        idx2 = add.indexOf('</span>',start)
-        location.country = add.slice(start,idx2);
+      idx1 = add.indexOf('class="country-name"', idx2 + 7);
+      if (idx1 > 0) {
+        start = idx1 + ccountry.length;
+        idx2 = add.indexOf('</span>', start)
+        location.country = add.slice(start, idx2);
       };
       //console.log(location);
       return location;
@@ -198,13 +260,6 @@ $(function() {
       });
       return iconDict.slice(0, 19); // limit the number of icons to 20
     });
-
-    /*
-    self.showerror = ko.computed(function() {
-      console.log(self.aerror().length);
-      return true;
-    });
-    */
 
     /**
        The rateStar() function chains together the rating stars based on place rating.
@@ -264,7 +319,7 @@ $(function() {
       myMaps.markers.forEach(function(marker) {
         if (marker.title.toLowerCase() === name) {
           google.maps.event.trigger(marker, 'click');
-          if (window.innerWidth < 750) {
+          if (window.innerWidth < 800) {
             self.showResults(false);
           }
         }
@@ -280,17 +335,30 @@ $(function() {
 
     }
 
-    function navigate(direction){
+    /*  
+     *  Navigate photo viewer 
+     */
+    function navigate(direction) {
       var numberPhotos = self.numberPhotos();
       var current = self.currentIndex();
       var next = (current + direction) % numberPhotos;
       if (next < 0) {
         next = numberPhotos - 1;
-      } ;
+      };
       self.currentPhoto(self.placePhotos()[next]);
       self.currentIndex(next);
     }
 
+
+    function screenResize() {
+      var $winWidth = $(window).width();
+      if ($winWidth > 800) {
+        self.showResults(true);
+
+      } else {
+        self.showResults(false);
+      }
+    }
 
     /*  Serach for   New york times articles
       query : City
@@ -319,10 +387,10 @@ $(function() {
         url = nyturl;
       var query = location.locality + " ";
       if (location.region) {
-         query += location.region;
+        query += location.region;
       }
       //var query = location.locality;
-      var  filter = location.country;
+      var filter = location.country;
       var articles = [];
       var nytTemplate = $('script[data-template="nytimes"]').html();
       self.nytInFocus("about " + filter + " " + query);
@@ -341,11 +409,11 @@ $(function() {
         })
         .done(function(data) {
           if (data.status == "OK") {
-            console.log(this,self);
+            console.log(this, self);
             $.each(data.response.docs, function(key, value) {
               var headline = value.headline.main;
-              if  (headline != null) {
-                 articles.push(nytTemplate.replace(/{{headline}}/, headline).replace(/{{articleUrl}}/, value.web_url));
+              if (headline != null) {
+                articles.push(nytTemplate.replace(/{{headline}}/, headline).replace(/{{articleUrl}}/, value.web_url));
               }
             });
           };
@@ -353,10 +421,10 @@ $(function() {
           clearTimeout(wikiRequestTimeout);
         }.bind(self)) /* "self" is passed to the function as "this" */
 
-        .fail(function(e) {
-          articles.push("<p>New York Times Articles could bot be loaded</p>");
-          this.nytarticles(articles);
-        }.bind(self)); /* "self" is passed to the function as "this" */
+      .fail(function(e) {
+        articles.push("<p>New York Times Articles could bot be loaded</p>");
+        this.nytarticles(articles);
+      }.bind(self)); /* "self" is passed to the function as "this" */
     };
 
 
@@ -369,15 +437,15 @@ $(function() {
         articles = [];
       var query = location.locality + " ";
       if (location.region) {
-         query += location.region;
+        query += location.region;
       };
       var url = wikiOpenSearchURL.replace("%data%", query);
       var wikiarticle = 'http://fr.wikipedia.org/wiki/';
       var wikiTemplate = $('script[data-template="wiki"]').html();
       self.wikiInFocus("about " + query);
       var wikiRequestTimeout = setTimeout(function() {
-         articles.push("<p>failed to query wiki resources</p>");
-         this.wikiarticles(articles);
+        articles.push("<p>failed to query wiki resources</p>");
+        this.wikiarticles(articles);
       }, 5000);
 
       $.ajax({
@@ -391,7 +459,7 @@ $(function() {
             articles.push(wikiTemplate.replace(/{{wikiarticle}}/, value).replace(/{{articleUrl}}/, articleurl));
           });
           this.wikiarticles(articles);
-          console.log(this.wikiarticles().length);
+          // console.log(this.wikiarticles().length);
           clearTimeout(wikiRequestTimeout);
         }.bind(self)) /* "self" is passed to the function as "this" */
         .fail(function(e) {
@@ -413,9 +481,13 @@ $(function() {
       self.showView(true);
     };
 
-    self.closeView = function(){
+    self.closeView = function() {
       self.showView(false);
     }
+
+    $(window).resize(function() {
+      screenResize();
+    })
 
     /**
       Based on which icon is pressed, map API nearby search is called with altered categories
@@ -446,6 +518,7 @@ $(function() {
       myMaps.nearbySearch(map.getCenter());
     });
   };
+
 
   ko.applyBindings(new ViewModel());
 
