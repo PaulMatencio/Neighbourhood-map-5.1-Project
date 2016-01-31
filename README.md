@@ -128,7 +128,8 @@ Develop a single page application featuring a map of a neighborhood you would li
 * [Dev Tools](https://developer.chrome.com/devtools/docs/rendering-settings)
 * [Convert command] (http://www.imagemagick.org/script/convert.php)
 
-###I was Inspired by the UI of project 5 below. However my application is totally different. For manipulating the location list, I am inspired by the todo-ko that I have enhanced below.
+###I was Inspired by
+*The toolbar of the Project 5 below and the todo-ko that I have modified below.
 
 * [Project5] (http://devrob.github.io/Udacity-WebDev-project5)
 * [todo-ko] (https://github.com/PaulMatencio/todomvc-ko)
@@ -144,4 +145,5 @@ Develop a single page application featuring a map of a neighborhood you would li
     * [minify HTML with gulp-minify-html](https://www.npmjs.com/package/gulp-minify-html)
 
 * pixlr to manipulate images
+
 
