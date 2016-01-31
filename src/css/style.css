@@ -78,15 +78,24 @@ strong {
   background-color: white;
 }
 
+[group~=review-lists] {
+  position: absolute;
+  background-color: #fffae3;
+  top: 5%;
+  max-width: 80%;
+  height: 90%;
+  left: 10%;
+}
+
 [group~=lists] {
   position: absolute;
   background-color: #fffae3;
   padding: 10px;
   top: 5%;
   max-width: 60%;
-  height: 70%;
-  left: 20%;
-  font-size: 20px;
+  height: 90%;
+  left: 10%;
+  font-size: 18px;
 }
 
 [type~=core] {
@@ -129,9 +138,9 @@ strong {
 
 #search-box {
   display: inline;
-  width: 40%;
-  top: 2vw;
-  left: 5vw;
+  width: 45%;
+  top:  1vw;
+  left: 4vw;
 }
 
 #backward {
@@ -151,7 +160,7 @@ strong {
   left: 45%;
   position: absolute;
   z-index: 110;
-  bottom: 10%;
+  bottom: 5%;
   cursor: pointer;
 }
 
@@ -166,15 +175,22 @@ strong {
   padding-left: 10px;
 }
 
+.p2 {
+    font-size: 20px;
+    padding:  10px;
+    font-weight: bold;
+}
+
 .review-title {
-  font-size: 16px;
+  font-size: 15px;
+  height: 10%;
 }
 
 .results {
-  width: 30%;
+  width: 25%;
   height: 72%;
   border-radius: 5px;
-  z-index: 102;
+  z-index: 105;
   position: fixed;
   top: 0px;
   right: 0px;
@@ -192,10 +208,11 @@ strong {
   width: 20px;
 }
 
+/*
 .search-input {
   background-color: #f4e2d2;
 }
-
+*/
 
 .mylist {
   overflow-y: scroll;
@@ -250,8 +267,6 @@ strong {
 
 .infolist {
   font-size: 13px;
-  /* list-style: none; */
-  /* text-align: center; */
   overflow-x: hidden;
   overflow-y: scroll;
   max-height: 72%;
@@ -260,20 +275,33 @@ strong {
 
 }
 
-.infolist::-webkit-scrollbar {
+.list-review {
+  font-size: 14px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  /* max-height: 72%; */
+  margin: 5px 0 5px 0;
+  padding: 2px;
+}
+
+.infolist::-webkit-scrollbar,
+.list-review::-webkit-scrollbar,
+  {
   width: 12px;
   overflow: visible;
   margin: 10px;
   background-color: white;
 }
 
-.infolist::-webkit-scrollbar-thumb {
+.infolist::-webkit-scrollbar-thumb,
+.list-review::-webkit-scrollbar-thumb
+ {
   background-color: #4b86b4;
   height: 30px;
   box-shadow: inset 1px 1px 0 rgba(0,0,0,.2),inset 0 -1px 0 rgba(0,0,0,.1);
 }
 
-.infolist li, .list-group-item {
+.infolist li  {
   padding: 0px 2px 3px 2px;
   padding-bottom: 3px;
   margin-bottom: 4px;
@@ -281,11 +309,20 @@ strong {
   cursor: pointer;
 }
 
-.infolist li:hover, .list-group-item:hover{
+.list-review li {
+  padding: 2px 2px 3px 2px;
+  padding-bottom: 3px;
+  margin-bottom: 6px;
+  color: #989696;
+  background-color: #fffae3;;
+  cursor: pointer;
+}
+
+.infolist li:hover, .list-review li:hover{
   background-color: #d1e1ec;
 }
 
-.infolist li:active, .list-group-item:active {
+.infolist li:active, .list-review li:active {
   background-color: #b3cde0;
 }
 
@@ -371,9 +408,14 @@ img.street-view {
 }
 
 .greytext {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  float: left;
   color: #989696;
   vertical-align: middle;
+  margin-left: 20px;
   padding-bottom: 15px;
+  font-size: 16px;
 }
 
 .row {
@@ -381,9 +423,10 @@ img.street-view {
   margin-top: 3px;
 }
 
-.list {
-  width: 80%;
-  margin: 0 10% 0 10%;
+.list-review {
+  width: 95%;
+  height: 70% ;
+  margin: 0 2.5% 0 2.5% ;
 }
 
 .list-photo {
@@ -398,8 +441,9 @@ img.street-view {
 }
 
 .infoWindow {
-  font-size: 14px;
+  font-size: 13px;
   display: block;
+  width: 280px;
 }
 
 .opening, .rating{
@@ -412,11 +456,105 @@ img.street-view {
   font-weight: bold;
 }
 
+.show-location {
+  z-index: 105;
+  top: 10px;
+  right: 45%;
+  height: 20px;
+  width: 20px;
+}
+
+#close-location {
+  width: 20px;
+  height: 20px;
+}
+
+#location {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  padding: 0;
+  margin: 0;
+  top: 30%;
+  width: 30%;
+  max-width: 300px;
+  height: 35%;
+  left: 40%;
+  font-size: 14px;
+  z-index:105;
+}
+
+#location-list {
+  background-color: #fffae3;
+  /*
+  padding: 0;
+  margin: 0;
+  top: 30%;
+  */
+  /*width: 250px; */
+  /* max-width: 30%; */
+
+  width: 100%;
+  height: 100%;
+  /*
+  left: 40%;
+  font-size: 14px;
+  */
+  list-style: none;
+  /*z-index:105; */
+}
+
+#location-list li {
+  position: relative;
+  font-size: 14px;
+  border-bottom: 2px solid #ededed;
+}
+/*
+#location-list li:last-child {
+  border-bottom: none;
+}
+*/
+
+#location-list li label {
+  color: #d9d9d9;
+  white-space: pre-line;
+  word-break: break-all;
+ /* padding: 10px 20px 10px 10px; */
+  padding: 0 0 0 10px;
+  margin-left: 35px;
+  line-height: 1.2;
+  transition: color 0.4s;
+}
+
+#location-list li.selected label{
+  /* color: #d9d9d9; */
+  color: gray;
+}
+
+
+#location-list li .toggle {
+  text-align: center;
+  width: 24px;
+  height: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+  border: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+#location-list li .toggle:after {
+  content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-10 -18 100 135"><circle cx="50" cy="50" r="50" fill="none" stroke="#ededed" stroke-width="3"/></svg>');
+}
+
+#location-list li .toggle:checked:after {
+  content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-10 -18 100 135"><circle cx="50" cy="50" r="50" fill="none" stroke="#bddad5" stroke-width="3"/><path fill="#5dc2af" d="M72 25L42 71 27 56l-4 4 20 20 34-52z"/></svg>');
+}
 
 /* Media query */
-
 @media screen and (min-width: 1170px) {
-
   .results {
     width: 25%;
     max-width: 350px;
@@ -426,7 +564,7 @@ img.street-view {
 @media screen and (max-width: 969px) {
 
   .results {
-    width: 33%;
+    width: 28%;
     max-width: 350px;
     height: 65%;
   }
@@ -437,6 +575,7 @@ img.street-view {
 
   .infoWindow {
     font-size: 12px;
+    widows: 180px;
   }
 
   #btn-toolbar {
@@ -444,10 +583,11 @@ img.street-view {
   }
 
   #photoCounter {
-   bottom: 10%;
+   bottom: 2%;
+    font-size: 18px;
   }
 
-  .col-md-4, .col-md-2 {
+  .col-md-4 {
     display: none;
   }
 
@@ -460,9 +600,8 @@ img.street-view {
   }
 
   [group~=lists] {
-    width: 80%;
-    left: 10%;
-  }
+    height: 92%;
+  };
 
   .infolist {
     font-size: 11px;
@@ -475,11 +614,6 @@ img.street-view {
   .btn-toolbar-button {
     width: 15px;
   }
-  /*
-  body {
-    overflow: hidden;
-  }
-  */
 
   button {
     width: 35px;
@@ -492,12 +626,17 @@ img.street-view {
     font-size: 13px;
   }
 
+  .p2 {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
   h2 {
-    font-size: 1.3em;
+    font-size: 1.1em;
   }
 
   h3 {
-    font-size: 1.2em;
+    font-size: 1.1em;
   }
 
 
@@ -505,12 +644,24 @@ img.street-view {
 
 @media screen and (max-width: 750px) {
 
+   .results {
+    width: 30%;
+    max-width: 350px;
+    height: 65%;
+  }
+
+  #location{
+    left:15%;
+    width: 70%;
+  }
+
   [group~=lists] {
-    width: 80%;
-    left: 10%;
     font-size: 16px;
   }
+
+  .review-title {
+    font-size: 13px;
+    height: 10%;
+  }
 }
-
-
 

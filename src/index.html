@@ -1,227 +1,281 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8">
     <!--meta name="viewport" content="initial-scale=1.0, user-scalable=no"-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Front-end developer Project 5">
-    <link rel="stylesheet"  type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <link rel="stylesheet"  type="text/css" href="css/style.css" media="screen" title="no title">
+    <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css" media="screen" title="no title">
     <meta name="author" content="Paul Matencio">
     <title>Project 5 Neighborhood-Map</title>
-  </head>
-  <body>
+</head>
+
+<body>
     <!--div tag that holds the google map-->
     <div id="map-canvas"></div>
     <!--  search box -->
-    <div id="search-box" class="input-group" group="controls">
-      <input id="search-input"  type="text" class="form-control" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: print" placeholder="Looking for...">
+
+    <div id="search-box" group="controls">
+        <input id="search-input" type="text" class="form-control" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlaces" placeholder="Looking for places (separated by blank)  or :location ...">
     </div>
+
+    <div class="show-location" group="controls">
+        <a data-bind="click: $root.toggleLocation">
+            <svg xmls="http://www/w3/org/2000/svg" viewbox="0 0 24 24">
+                <path d="M2 6h20v3H2zm0 5h20v3H2zm0 5h20v3H2z"></path>
+            </svg>
+        </a>
+    </div>
+
+    <!-- location list-->
+    <div data-bind="visible: $root.showLocation">
+        <div id="location" group="controls">
+            <img id="close-location" class="navButton" data-bind="click: $root.hideLocation" src="images/stepbackward.png" alt="X">
+            <ul id="location-list" group="controls" data-bind="foreach: $root.filteredLocations">
+                <span data-bind="with:$parent.displayLocation($data)"></span>
+                <li data-bind="css:{selected:selected}">
+                    <input class="toggle" data-bind="checked: $data.selected" type="checkbox">
+                    <label data-bind="text: $data.name, event: { click: $root.selectItem }"></label>
+                </li>
+            </ul>
+        </div>
+    </div>
+
     <!-- button to hide or show the search result list -->
-    <div class="hide-result" group="controls" >
-      <a data-bind="click: toggleResults">
-        <svg xmls="http://www/w3/org/2000/svg" viewbox="0 0 24 24">
-          <path d="M2 6h20v3H2zm0 5h20v3H2zm0 5h20v3H2z"></path>
-        </svg>
-      </a>
+    <div class="hide-result" group="controls">
+        <a data-bind="click: $root.toggleResults">
+            <svg xmls="http://www/w3/org/2000/svg" viewbox="0 0 24 24">
+                <path d="M2 6h20v3H2zm0 5h20v3H2zm0 5h20v3H2z"></path>
+            </svg>
+        </a>
     </div>
+
     <!-- place search result -->
-    <div class="results container-fluide" group="controls" data-bind="visible: showResults">
-      <div class="info row">
-        <div class="col-md-2">
-          <img src="images/info.jpg" alt="info">
-        </div>
-        <div class="col-sm-12 col-md-10">
-          <h2>Places near by</h2>
-        </div>
-      </div>
-      <ul class="infolist" data-bind="foreach: nearByPlaces">
-        <li  data-bind="click: $parent.clickMarker">
-          <!-- picture -->
-          <div class="col-md-4">
-            <div data-bind="if: $data.photos">
-              <img class="list-photo"  data-bind="attr:{src: photos[0].getUrl({maxWidth: 80})}" alt="place-photo">
+    <div class="results container-fluide" group="controls" data-bind="visible: $root.showResults">
+        <div class="info row">
+            <div class="col-md-2">
+                <img src="images/info.jpg" alt="info">
             </div>
-            <div data-bind="ifnot: $data.photos">
-              <img class="list-photo" src="images/nophoto.jpg" alt="no-photo">
+            <div class="col-md-10">
+                <h2 data-bind="text: $root.myCity"></h2>
+                <!--span data-bind="text:currentLocation"></span!-->
             </div>
-          </div>
-          <!-- end picture -->
-          <!-- place information-->
-          <div class="col-sm-12 col-md-8">
-            <h3 class="longtext" data-bind="text: $data.name"></h3>
-            <p class="place-category"><span data-bind="text: $parent.formattedType($data)"></span></p>
+        </div>
+
+        <ul class="infolist" data-bind="foreach: $root.myLocations">
+            <span data-bind="foreach: $data.nearByPlaces">
+                <li data-bind="click: $root.clickMarker">
+                    <!-- picture -->
+                    <div class="col-md-4">
+                        <div data-bind="if: $data.photos">
+                            <img class="list-photo" data-bind="attr:{src: photos[0].getUrl({maxWidth: 80})}" alt="place-photo">
+                        </div>
+                        <div data-bind="ifnot: $data.photos">
+                            <img class="list-photo" src="images/nophoto.jpg" alt="no-photo">
+                        </div>
+                    </div>
+                    <!-- end picture -->
+                    <!-- place information-->
+                    <div class="col-sm-12 col-md-8">
+                        <h3 class="longtext" data-bind="text: $data.name"></h3>
+                        <p class="place-category"><span data-bind="text: $root.formattedType($data)"></span></p>
             <p>
-            <div data-bind="if: $data.rating">
-              <div>
-                <span class="rating-number" data-bind="text: $data.rating"></span>
-                <div style="display: inline;" data-bind="foreach: $parent.rateStar($data.rating)">
-                  <img class="rate-star" data-bind="attr:{src: star}" alt="*">
+                <div data-bind="if: $data.rating">
+                    <div>
+                        <span class="rating-number" data-bind="text: $data.rating"></span>
+                        <div style="display: inline;" data-bind="foreach: $root.rateStar($data.rating)">
+                            <img class="rate-star" data-bind="attr:{src: star}" alt="*">
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-            <span data-bind="ifnot: $data.rating">
-            <em>no rating available.</em>
-            </span>
+                <span data-bind="ifnot: $data.rating">
+                    <em>no rating available.</em>
+                  </span>
             </p>
-            <p class="place-address"><span data-bind="text: $parent.getAddress($data)"></span></p>
-          </div>
-          <!-- end of place inforantion -->
-        </li>
-      </ul>
-      <div class="logo">
+            <p class="place-address"><span data-bind="text: $root.getAddress($data)"></span></p>
+    </div>
+    <!-- end of place inforantion -->
+    </li>
+    </span>
+    </ul>
+    <div class="logo">
         <span>powered by </span>
         <img src="images/googlelogo.jpg" alt="Google" />
-      </div>
     </div>
+    </div>
+
     <!-- end of place search result -->
+
     <!--Review page -->
-    <div data-bind="visible: okreview">
-      <div id="review-page"  class="viewport">
-        <button data-bind= "click: closeReview">
-        <img id="close-review"  group="closeButton" src="images/stepbackward.png" alt="X">
-        </button>
-        <div class="Container" group="lists">
-          <div class="review-title" data-bind="with: placeInFocus">
-            <p>
-            <div class="longtext">
-              <h2 data-bind="text: $data.name"></h2>
-            </div>
-            <div style="float: right;">
-              <span class="rating-number" style="font-size: 16px;" data-bind="text: $data.rating"></span>
-              <div style="display: inline;" data-bind="foreach: $parent.rateStar($data.rating)">
-                <img style="height: 16px;" class="rate-star" data-bind="attr:{src: star}" alt="*">
-              </div>
-            </div>
-            </p>
-            <p class="greytext"><span data-bind="text: $data.formatted_address"></span></p>
-          </div>
-          <div class="list-group mylist" data-bind="foreach: placeReviews">
-            <div class="list-group-item ">
-              <strong style="display: inline" data-bind="text: $data.author_name"></strong>
-              <div style="display: inline">
-                <span class="rating-number" data-bind="text: $data.rating"></span>
-                <div style="display: inline;" data-bind="foreach: $parent.rateStar($data.rating)">
-                  <img class="rate-star" data-bind="attr:{src: star}" alt="*">
+    <div data-bind="visible: placeReviews().length">
+
+        <div id="review-page" class="viewport">
+            <img id="close-review" data-bind="click: closeReview " class="navButton" group="closeButton" src="images/stepbackward.png" alt="X">
+
+            <div group="review-lists">
+
+                <div class="review-title" data-bind="with: placeInFocus">
+                    <div class="longtext">
+                        <span class="p2" data-bind="text: $data.name"></span>
+                    </div>
+                    <div style="float: left;">
+                        <span class="rating-number" style="font-size: 16px;" data-bind="text: $data.rating"></span>
+                        <div style="display: inline;" data-bind="foreach: $parent.rateStar($data.rating)">
+                            <img style="height: 16px;" class="rate-star" data-bind="attr:{src: star}" alt="*">
+                        </div>
+                    </div>
+                    <div class="greytext" data-bind="text: $data.formatted_address"> </div>
                 </div>
-              </div>
-              <p>
-                <span data-bind="text: $data.text"></span>
-              </p>
+
+                <ul class="list-review" data-bind="foreach: placeReviews">
+                    <li>
+                        <div>
+                            <strong data-bind="text: $data.author_name"></strong>
+                            <span class="rating-number" data-bind="text: $data.rating"></span>
+                            <div style="display: inline;" data-bind="foreach: $parent.rateStar($data.rating)">
+                                <img class="rate-star" data-bind="attr:{src: star}" alt="*">
+                            </div>
+                        </div>
+                        <div data-bind="text: $data.text"></div>
+                    </li>
+                </ul>
             </div>
-          </div>
-          <div class="logo">
-            <span>powered by </span>
-            <img src="images/googlelogo.jpg" alt="Google" />
-          </div>
+            <!-- container -->
         </div>
-      </div>
+        <!-- viewport -->
     </div>
     <!--end review page -->
 
     <!-- Photos display -->
-    <div data-bind="visible: okphoto" >
-    <div id="photo-page"  class="viewport">
-      <img id="close-photo" class="navButton" data-bind= "click: closePhoto"  group="closeButton" src="images/stepbackward.png" alt="X">
-      <div  data-bind="with: currentPhoto">
-        <img  class="photo" data-bind="attr:{ src: getUrl({maxHeight: 800})}" alt="photo">
-      </div>
-      <div id="photoCounter" >
-       <span  data-bind="text: photoIndex"></span>
-       <span> / </span>
-       <span  data-bind="text: numberPhotos"></span>
-      </div>
-      <img data-bind="click: photoBackward" id="backward" class="navButton" src="images/stepbackward.png" alt="<">
-      <img data-bind="click: photoForward" id="forward"  class="navButton" src="images/stepforward.png" alt=">">
+
+    <div id="photo-page" class="viewport" data-bind="visible: placePhotos().length">
+        <img id="close-photo" class="navButton" data-bind="click: closePhoto" group="closeButton" src="images/stepbackward.png" alt="X">
+        <div data-bind="with: currentPhoto">
+            <img class="photo" data-bind="attr:{ src: getUrl({maxHeight: 800})}" alt="photo">
+        </div>
+        <div id="photoCounter">
+            <span data-bind="text: photoIndex"></span>
+            <span> / </span>
+            <span data-bind="text: placePhotos().length"></span>
+        </div>
+        <img data-bind="click: photoBackward" id="backward" class="navButton" src="images/stepbackward.png" alt="<">
+        <img data-bind="click: photoForward" id="forward" class="navButton" src="images/stepforward.png" alt=">">
     </div>
-  </div>
+
 
     <!-- Tools bar -->
-  <div data-bind="visible: showResults">
-    <div id="btn-toolbar" group="controls">
-      <button id="reset" type="core" class="btn" style="display: block">
-      <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-      </button>
-      <div id="filters" class="btn-group" data-bind="foreach: icons" role="group" aria-label="plane">
-        <!--placeholder for filter buttons-->
-        <button type="button" class="btn">
-        <img class="btn-toolbar-img" data-bind="attr: {src: icon}" alt="icon">
-        </button><br>
-      </div>
-      <button id="hide" type="core" class="btn" style="display: block">
-      <span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span>
-      </button>
+    <div data-bind="visible: showResults">
+        <div id="btn-toolbar" group="controls">
+
+            <button type="core" class="btn" style="display: block" data-bind="click: $root.resetIcons">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+            </button>
+
+            <div id="filters" class="btn-group" data-bind="foreach: icons" role="group" aria-label="plane">
+                <!--placeholder for filter buttons-->
+                <button type="button" class="btn">
+                    <!--img class="btn-toolbar-img" data-bind="attr: {src: icon , alt: type}"-->
+                    <img class="btn-toolbar-img" data-bind="click: $root.myIcons, attr: {src: icon}" alt="icon">
+                </button>
+                <br>
+            </div>
+
+            <button id="hide" type="core" class="btn" style="display: block">
+                <span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span>
+            </button>
+        </div>
     </div>
-  </div>
 
     <!-- New york times page -->
-    <div data-bind="visible: oknyt">
-      <div id="nytimes-page" class="viewport">
-        <img id="close-nytimes"  group="closeButton" class="navButton" src="images/stepbackward.png" alt="X" data-bind= "click: closeNyt">
+    <!--div data-bind="visible: nytarticles().length"-->
+    <div id="nytimes-page" class="viewport" data-bind="visible: nytarticles().length">
+        <img id="close-nytimes" group="closeButton" class="navButton" src="images/stepbackward.png" alt="X" data-bind="click: closeNyt">
         <div class="Container" group="lists">
-          <div class="review-title">
-            <span class="nytimes-header">New York Times Articles</span>
-            <span class="nytimes-header" data-bind="text:nytInFocus"></span>
-          </div>
-          <div class="mylist" data-bind="foreach: nytarticles">
-            <div>
-              <span class="review list-group-item" data-bind="html:$data"></span>
+            <div class="review-title">
+                <span class="nytimes-header">New York Times Articles</span>
+                <span class="nytimes-header" data-bind="text:nytInFocus"></span>
             </div>
-          </div>
+            <div class="mylist" data-bind="foreach: nytarticles">
+                <div>
+                    <span class="review list-group-item" data-bind="html:$data"></span>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
+    <!--/div-->
 
     <!-- Wikipedia page -->
-    <div data-bind="visible: okwiki">
-      <div id="wiki-page" class="viewport">
-        <img id="close-wiki"  group="closeButton" class="navButton" src="images/stepbackward.png" alt="X" data-bind= "click: closeWiki">
+
+    <div id="wiki-page" class="viewport" data-bind="visible: wikiarticles().length">
+        <img id="close-wiki" group="closeButton" class="navButton" src="images/stepbackward.png" alt="X" data-bind="click: closeWiki">
         <div class="Container" group="lists">
-          <div class="review-title">
-            <span class="wiki-header">Wikipedia Articles</span>
-            <span class="wiki-header" data-bind="text:wikiInFocus"></span>
-          </div>
-          <div class="mylist" data-bind="foreach: wikiarticles">
-            <div>
-              <span class="review list-group-item" data-bind="html:$data"></span>
+            <div class="review-title">
+                <span class="wiki-header">Wikipedia Articles</span>
+                <span class="wiki-header" data-bind="text:wikiInFocus"></span>
             </div>
-          </div>
+            <div class="mylist" data-bind="foreach: wikiarticles">
+                <div>
+                    <span class="review list-group-item" data-bind="html:$data"></span>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
 
+
     <div data-bind="visible: showView">
-      <div id="street-page" class="viewport">
-        <img id="close-street"  group="closeButton" class="navButton" src="images/stepbackward.png" alt="X" data-bind= "click: closeView">
-        <div id="streeview">
-          <img  class="street-view" data-bind="attr:{src: streetView, alt: noimage}" >
+        <div id="street-page" class="viewport">
+            <img id="close-street" group="closeButton" class="navButton" src="images/stepbackward.png" alt="X" data-bind="click: closeView">
+            <div id="streeview">
+                <img class="street-view" data-bind="attr:{src: streetView, alt: noimage}">
+            </div>
         </div>
-      </div>
     </div>
     <!-- template scripts  for reviews page-->
     <script type="text/template" data-template="reviews">
-      <div id="infoWindow" class="infoWindow">
-        <p><h3>{{name}}</h3></p>
-        <hr>
-        <p><span>{{formatted_address}} </span></p>
-        <p><span class="opening">{{opening}}</span></p>
-        <div id="wiki" style="white-space: normal;"><span></span></div>
-           <hr>{{rating}} {{photos}}
-        </div></p>
+        <div id="infoWindow" class="infoWindow">
+            <p class="longtext">
+                <h3>{{name}}</h3></p>
+            <hr>
+            <p class="longtext"><span>{{formatted_address}} </span></p>
+            <p><span class="opening">{{opening}}</span></p>
+            <div id="wiki" style="white-space: normal;"><span></span></div>
+            <hr>{{rating}} {{photos}}
+        </div>
+        </p>
         <p><span>{{phone}} </span></p>
-        <p><div class="longtext"><a href="{{website}}" target="_blank">{{website}}<a></div></p>
+        <p>
+            <div class="longtext"><a class="longtext" href="{{website}}" target="_blank">{{website}}<a></div></p>
         <hr style="background: #ffbccd;">
         <img style="width: 20px;" src= "images/NYT-logo.png"><a href="#" id="nytLink" style="display: inline;"> NYT articles</a>
+                <span style="font-size :20px; color:black; font-weight: bold;">&#87;</span><a href="#" id="wikiLink" style="display: inline;"> Wikipedia articles</a>
+                <img style="width: 20px;" src="images/streetview.png"><a href="#" id="streetLink" style="display: inline;">View</a>
+            </div>
+    </script>
+    <script type="text/template" data-template="review-short">
+        <div id="infoWindow" class="infoWindow">
+            <p class="longtext">
+                <h3>{{name}}</h3></p>
+            <hr>
+            <p class="longtext"><span>{{formatted_address}} </span></p>
+            <div id="wiki" style="white-space: normal;"><span></span></div>
+            <hr>{{rating}} {{photos}}
+        </div>
+        </p>
+        <p><span>{{phone}} </span></p>
+        <p>
+            <div class="longtext"><a class="longtext" href="{{website}}" target="_blank">{{website}}<a></div></p>
+        <hr style="background: #ffbccd;">
         <span style="font-size :20px; color:black; font-weight: bold;">&#87;</span><a href="#" id="wikiLink" style="display: inline;"> Wikipedia articles</a>
-        <img style="width: 20px;" src= "images/streetview.png"><a href="#" id="streetLink" style="display: inline;">View</a>
-      </div>
+            </div>
     </script>
     <!-- template for newyork times page -->
     <script type="text/template" data-template="nytimes">
-      <p class="article"><a href="{{articleUrl}}" target="_blank">{{headline}}</a></p>
+        <p class="article"><a href="{{articleUrl}}" target="_blank">{{headline}}</a></p>
     </script>
     <script type="text/template" data-template="wiki">
-      <p class="article"><a href="{{articleUrl}}" target="_blank">{{wikiarticle}}</p>
+        <p class="article"><a href="{{articleUrl}}" target="_blank">{{wikiarticle}}</p>
     </script>
     <!-- load scripts -->
     <script>
@@ -232,16 +286,64 @@
       };
       (function(d) {
        var wf = d.createElement('script'), s = d.scripts[0];
-       // wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js';
        wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js';
        s.parentNode.insertBefore(wf, s);
       })(document);
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places" defer></script>
+    <script>
+        // callback function when google Maps API is loaded
+        var map,
+        mapOptions = {
+            center: {lat: 48.852729, lng: 2.350564},
+            zoomControl: true,
+            zoom: 14,
+            minZoom: 5,
+            maxZoom: 20,
+            disableDefaultUI: true,
+            streetViewControl: true
+        },
+        mapStyle = [{
+            "featureType": "road.local",
+            "elementType": "labels",
+            "stylers": [{
+                "hue": "#00a1ff"
+            }, {
+                "gamma": 0.8
+            }]
+            }, {
+            "featureType": "road.highway",
+            "stylers": [{
+                "lightness": 12
+            }, {
+                "gamma": 1.31
+            }, {
+                "hue": "#ffa200"
+            }]
+            }, {
+            "featureType": "landscape.natural"
+            }];
+
+        function initMap() {
+            map = new google.maps.Map(document.querySelector('#map-canvas'), mapOptions);
+            var styledMap = new google.maps.StyledMapType(mapStyle, {
+                 name: "Styled Map"
+            });
+            map.mapTypes.set('map_style', styledMap);
+            map.setMapTypeId('map_style');
+            // append the app.js script  when the MAPS API is loaded
+            (function(d) {
+
+                var wf = d.createElement('script'),
+                       s = d.scripts[d.scripts.length-1];
+                wf.src = 'js/app.js';
+                s.parentNode.insertBefore(wf, s.nextSibling);
+            })(document);
+        }
+    </script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script>
     <script type="text/javascript" src="http://knockoutjs.com/downloads/knockout-3.3.0.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places&callback=initMap" async></script>
     <script type="text/javascript" src="js/gMaps.js"></script>
-    <script type="text/javascript" src="js/app.js"></script>
   </body>
 </html>
