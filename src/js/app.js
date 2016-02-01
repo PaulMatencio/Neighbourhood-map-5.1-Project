@@ -37,8 +37,13 @@ $(function() {
         /*
         create KO observable
         */
-        //self.nearByPlaces = ko.observableArray([]);
         self.myLocations = ko.observableArray([]); // ko array for hard coded locations
+        /* map array of passed in locations to an observableArray of location objects
+        self.myLocations = ko.observableArray(myLocations.map(function (location) {
+            return new Location(location);
+        }))
+         */
+
         self.showLocation = ko.observable(false);
         self.showResults = ko.observable(true); // boolean to hide or show the places returned by google Map places API nearby search services
         self.placeReviews = ko.observableArray([]); // ko array for place review objects returned by google map places API getDetails() service
@@ -68,6 +73,7 @@ $(function() {
             this.mapcenter = ko.observable(location.mapcenter);
             this.selected = ko.observable(location.selected);
             this.nearByPlaces = ko.observableArray([]); // ko array for object returned by google map places API nearby search service
+            this.savePlaces= [];
             this.markers = [];
             this.self = self;
         };
@@ -181,10 +187,19 @@ $(function() {
          *
          */
         self.selectItem = function(item) {
+            // toogle selected status
             if (item.selected() == true) {
                 item.selected(false);
             } else item.selected(true);
 
+            if (!item.selected()) {
+                item.savePlaces = item.nearByPlaces();
+                item.nearByPlaces([]);
+                item.createMarkers(item.nearByPlaces());
+            } else {
+                 item.nearByPlaces(item.savePlaces);
+                 item.createMarkers(item.nearByPlaces());
+            }
         }.bind(this);
 
         /* computed observable to return the City name of a location */
@@ -274,6 +289,21 @@ $(function() {
                 myMaps.setCenter(self.myLocations()[0]);
             }
         };
+
+        /* Init the self.myLocations() observable array
+        *  For each new location (only one for for the moment)
+        *  Used by the search box when keyword start with a semi colon :
+        *
+        */
+        self.setnewLocation = function(location) {
+            myLocations.push(location);
+            self.initLocations(myLocations);
+            self.myLocations().forEach(function(location){
+                self.displayLocation(location)  ;
+            });
+
+        };
+
 
         /* get the address of a place */
         self.getAddress = function(place) {
@@ -547,25 +577,15 @@ $(function() {
         self.myIcons = function(image) {
             marker_animation = google.maps.Animation.DROP;
             var rawCategory = image.icon.split("/").slice(-1)[0].split("-").slice(0, 1)[0];
-
             function Category(value) {
                 var val = value.split('_')[0];
                 if (rawCategory.indexOf(val) != -1) return value;
             };
             myCategories = mapPlaceTypes.filter(Category);
-            //self.nearByPlaces([]);
-
             self.myLocations().forEach(function(location) {
                 // nearby places search for the location and display the results
                 self.displayLocation(location);
             });
-
-            /*
-            self.myLocations().forEach(function(location) {
-               location.removeMarker();
-            });
-            */
-
         };
 
         /**
@@ -574,7 +594,6 @@ $(function() {
          **/
         self.resetIcons = function() {
             myCategories = [];
-            //self.nearByPlaces([]);
             //localStorage.myCategories = JSON.stringify(myCategories);
             self.myLocations().forEach(function(location) {
                 self.displayLocation(location);

@@ -29,15 +29,6 @@
         </a>
     </div>
 
-    <!-- button to hide or show the search result list -->
-    <div class="hide-result" group="controls">
-        <a data-bind="click: $root.toggleResults">
-            <svg xmls="http://www/w3/org/2000/svg" viewbox="0 0 24 24">
-                <path d="M2 6h20v3H2zm0 5h20v3H2zm0 5h20v3H2z"></path>
-            </svg>
-        </a>
-    </div>
-
     <!-- location list-->
     <div data-bind="visible: $root.showLocation">
         <div id="location" group="controls">
@@ -48,6 +39,9 @@
                     <input class="toggle" data-bind="checked: $data.selected" type="checkbox">
                     <label data-bind="text: $data.name, event: { click: $root.selectItem }"></label>
                 </li>
+
+
+
             </ul>
         </div>
     </div>
@@ -121,7 +115,7 @@
     <div data-bind="visible: placeReviews().length">
 
         <div id="review-page" class="viewport">
-            <img id="-revicloseew" data-bind="click: closeReview " class="navButton" group="closeButton" src="images/stepbackward.png" alt="X">
+            <img id="close-review" data-bind="click: closeReview " class="navButton" group="closeButton" src="images/stepbackward.png" alt="X">
 
             <div group="review-lists">
 

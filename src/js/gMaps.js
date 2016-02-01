@@ -65,6 +65,7 @@ gMaps.prototype.setCenter = function(location) {
 gMaps.prototype.nearbySearch = function() {
     var self = this.self;
     var service = new google.maps.places.PlacesService(this.map);
+    console.log("start nearby searchfor location:",this.name() );
     service.nearbySearch({
         location: this.mapcenter(),
         radius: radius,
@@ -79,24 +80,25 @@ gMaps.prototype.getResults = function(results, status, pagination) {
 
     var bounds = new google.maps.LatLngBounds();
     var self = this.self;
-
     function isPolitical(value) {
         return value == "political";
     }
 
     if (status == google.maps.places.PlacesServiceStatus.OK) {
+        var nearByPlaces=[];
         results.forEach(function(place) {
             if (place.types.filter(isPolitical).length == 0) {
-                this.nearByPlaces.push(place);
-                //self.nearByPlaces.push(place);
+                nearByPlaces.push(place);
                 bounds.extend(place.geometry.location);
             }
-        }.bind(this));
+        });
 
         map.fitBounds(bounds);
+        this.nearByPlaces(nearByPlaces);
+        console.log("Results OK:", results.length," for location:",this.name(),"with categorie:",myCategories, "Nearby Places:",this.nearByPlaces());
         this.createMarkers(this.nearByPlaces());
+        console.log(this.nearByPlaces(),this.markers);
     };
-
     this.setCenter(self.filteredLocations()[0])
 };
 
@@ -116,45 +118,44 @@ gMaps.prototype.initAutocomplete = function() {
         searchBox.setBounds(map.getBounds());
         mapCenter = map.getCenter();
     });
+
     /*
-     * Search for new place is handled by the modelview getPlaces  function
-     * When the searck keyword startwith ":", the modelview getPlaces function just exit and the boxsearch is triggered
-     * Only search for a new location is valid, as for instance
+     * Search for new place is handled by the modelview getPlaces function
+     * However, if the searck keyword startwith ":", the modelview getPlaces function just exit, the boxsearch is used to
+     * for a new location
+     *
+     * boysearch: only search for a new location is valid, as for instance
      *
      *  :Newyork Central Square
      *  :London Picadilly Circus
      *
-     *  Other type of searches will be ignored
+     *  Other type of searches are ignored
      */
     function boxSearch() {
         var searchedPlaces = [];
-        var map = this.map;
+        // var map = this.map;
         var self = this.self;
+        console.log(self);
         if (searchInput.value.substring(0, 1) == ":") {
             searchInput.value = searchInput.value.slice(1);
             searchedPlaces = searchBox.getPlaces();
         }
         var places = searchedPlaces.length;
         if (places == 1) {
-            var place = searchedPlaces[0];
+            var place = searchedPlaces[0]; // take the first result
             this.mapCenter = place.geometry.location;
-            // clear the hard coded location table
-            // Note we could could just unselected the
-            myLocations = [];
-            var nLocation = {};
-            nLocation.name = searchInput.value,
-                nLocation.city = searchInput.value,
-                nLocation.mapcenter = {
+            myLocations = []; // reset the hard coded location array
+            // create a new location based on information returned by searchBox.getPlaces()
+            var newLocation = {};
+            newLocation.name = searchInput.value,
+                newLocation.city = searchInput.value,
+                newLocation.mapcenter = {
                     lat: place.geometry.location.lat(),
                     lng: place.geometry.location.lng(),
                 };
-            nLocation.selected = true;
-            myLocations.push(nLocation);
-            //self.nearByPlaces([]);
-            self.initLocations(myLocations); // init self.myLocations  with the mylocations array
-            self.displayLocation(self.myLocations()[0]); // display the self.locations array
-            map.setCenter(this.mapCenter);
-            map.setZoom(15);
+            newLocation.selected = true;
+            // set a new location and search places for nearby this location
+            self.setnewLocation(newLocation);
         };
         searchInput.value = "";
     };
@@ -621,3 +622,4 @@ function inherit(subClass, superClass) {
     subClass.prototype = Object.create(superClass.prototype); // delegate to prototype
     subClass.prototype.Constructor = subClass; // update constructor on prototype
 }
+

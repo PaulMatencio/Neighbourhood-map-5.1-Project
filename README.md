@@ -114,7 +114,13 @@ Develop a single page application featuring a map of a neighborhood you would li
 
 * RESPONSIVE APPLICATION
 
-  The application is responsive. It has been tested on Nexus 5x, 6, 6P, Chromebook, Laptop and Desktop
+  The application is responsive. It has been tested on Nexus 5x, 6, 6P, Chromebook, Laptop and Desktop.
+
+  On smaller screen size:
+
+  The infowiew of a marker provides less information about a place.
+  The listview and tool bars are hidden when user click on a marker. Use the hambuger menu on the top right corner to display them back.
+
 
 ###Resources and tools that are used
 
