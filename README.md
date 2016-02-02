@@ -42,7 +42,7 @@ Develop a single page application featuring a map of a neighborhood you would li
 
 ###How to use the app
 
-* SEARCH BOX:
+* SEARCH BOX ( filter for google Maps categories or add a new Location)
 
    Use the search box to find nearby places of locations ( cafe, restaurant, movie , atm , shopping). You can type multiple place types must be separated by blan. There are 6 hard coded locations of Paris. When you type places in the serach box, the application will look for nearby places around the current locations.
 
@@ -54,12 +54,15 @@ Develop a single page application featuring a map of a neighborhood you would li
 
   Places returned by nearby places services or search-box are used to display the Place list and to make google maps markers.
 
-* BUTTON ( Hamburger) to show/hide the list of locations. User can check/uncheck or click on the label to select/unselect a location
+* BUTTON ( background color yellow) to show/hide the list of locations. By default, location list is hidden.
 
-* LOCATION LIST
+* LOCATION LIST ( Location filter)
+
   You can check/uncheck a location. To add a new location, use the SEARCH BOX.
   Right now, the new location replace the existing list of locations.
   in the final version, I will add the new location on top the current location
+  When user uncheck a location, markers (map) and places (list view) of that location will disapear . They will reappear when user check the location.
+  You can check or click on the label of the location to check/uncheck a location.
 
 * PLACEs LIST:
 
@@ -74,9 +77,9 @@ Develop a single page application featuring a map of a neighborhood you would li
   This button is at the top-rigth of the Place list.
   You can use this button to hide or show the Placse list and the Button toolbar.
 
-* BUTTON TOOLBAR:
+* TOOLBAR ( filter place categories)
 
-   This toolbar dynamically changes with the neighborhood. It will show the set of the markers returned be the near by search or searchbox.
+   This toolbar dynamically changes with the neighborhood. It will show the set of the markers returned be the near by search or searchbox. The number of icons is limited to 9, use the search-box to filter other google Maps categories
 
    If you press one of the icon, it will re-request the search in the area with different category setting and save your categories both in memory and in your local storage. These filters will be reused when you move into a new location. When your re-load your application, these filters will be reused to filter the categories of your new location.
 

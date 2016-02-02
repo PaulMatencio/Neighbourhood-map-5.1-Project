@@ -38,6 +38,7 @@ $(function() {
         create KO observable
         */
         self.myLocations = ko.observableArray([]); // ko array for hard coded locations
+
         /* map array of passed in locations to an observableArray of location objects
         self.myLocations = ko.observableArray(myLocations.map(function (location) {
             return new Location(location);
@@ -60,8 +61,6 @@ $(function() {
         self.currentIndex = ko.observable(0); // cirrent photo index holder
         self.keyword = ko.observable();
 
-        self.showMode = ko.observable('all');
-
         /*
          *  Location is a subclass of the gMaps class
          */
@@ -74,17 +73,24 @@ $(function() {
             this.selected = ko.observable(location.selected);
             this.nearByPlaces = ko.observableArray([]); // ko array for object returned by google map places API nearby search service
             this.savePlaces= [];
-            this.markers = [];
+            this.markers = []; // array of markers for nearby places of this location
+            this.marker  = null ; // maker for this location
             this.self = self;
         };
 
         /* initialize the self.myLocations based on the locations array
          *  locations is the array of the hard codes location
+         *  mark the location on the map if it is selected
          */
         self.initLocations = function(locations) {
             self.myLocations([]);
             locations.forEach(function(location) {
-                self.myLocations().push(new Location(location));
+                var loc = new Location(location);
+                self.myLocations().push(loc);
+                loc.markLocation();
+                if (!loc.selected()){
+                    loc.marker.setMap(null);
+                }
             });
         }
 
@@ -166,19 +172,12 @@ $(function() {
             } else self.showLocation(true);
         };
 
-        /* right now, only the default option is supported
+        /*
             Return all the locations which are selected
-            filtered was already done during the initLocation function
+            during the initLocations function
         */
         self.filteredLocations = ko.computed(function() {
-            switch (self.showMode()) {
-                case 'selected':
-                    return self.myLocations().filter(function(location) {
-                        return location.selected();
-                    });
-                default:
                     return self.myLocations();
-            }
         }, myMaps);
 
 
@@ -192,17 +191,21 @@ $(function() {
                 item.selected(false);
             } else item.selected(true);
 
+            self.showLocation(false);
+
             if (!item.selected()) {
                 item.savePlaces = item.nearByPlaces();
                 item.nearByPlaces([]);
+                item.marker.setMap(null);
                 item.createMarkers(item.nearByPlaces());
             } else {
                  item.nearByPlaces(item.savePlaces);
+                 item.marker.setMap(map);
                  item.createMarkers(item.nearByPlaces());
             }
         }.bind(this);
 
-        /* computed observable to return the City name of a location */
+        /* computed observable to return the city name of a location */
         /* it is used to display the header of the list view  of the places */
         self.myCity = ko.computed(function() {
             if (self.myLocations().length > 0) {
@@ -226,7 +229,6 @@ $(function() {
             self.nytarticles([]);
         };
 
-
         /*
          *  close the review view
          */
@@ -241,8 +243,9 @@ $(function() {
         self.closePhoto = function() {
                 self.placePhotos([]);
                 self.currentIndex(0);
-            }
-            // return the current photo index
+        };
+
+        // return the current photo index
         self.photoIndex = ko.pureComputed(function() {
             return self.currentIndex() + 1;
         });
@@ -363,8 +366,9 @@ $(function() {
         };
 
         /**
-         *   Add the firt 10 icons of the nearby places to the  iconDict arrray
+         *   Add the firt 9 icons of the nearby places to the  iconDict arrray
          *   which are displayed in the btn-toolbar
+         *   use the search-box for other google Maps categories
          */
         self.icons = ko.computed(function() {
             var iconSet = new Set();
@@ -382,7 +386,7 @@ $(function() {
                     "icon": icon
                 });
             });
-            return iconDict.slice(0, 9);
+            return iconDict.slice(0, 8);
         });
 
 
@@ -599,11 +603,8 @@ $(function() {
                 self.displayLocation(location);
             });
         };
-
         self.hideIcons = function() {
-
         }
-
     }; // end model
 
     ko.applyBindings(new ViewModel());

@@ -10,7 +10,7 @@ body {
 }
 
 button {
-  width: 40px;
+  width: 35px;
   height: 35px;
 }
 
@@ -140,7 +140,7 @@ strong {
   display: inline;
   width: 45%;
   top:  2%;
-  left: 5vw;
+  left: 5%;
 }
 
 #backward {
@@ -207,12 +207,6 @@ strong {
   height: 20px;
   width: 20px;
 }
-
-/*
-.search-input {
-  background-color: #f4e2d2;
-}
-*/
 
 .mylist {
   overflow-y: scroll;
@@ -376,7 +370,7 @@ img.street-view {
 }
 
 .navButton {
-  width: 35px;
+  width: 30px;
   height: 30px;
   position: absolute;
   z-index: 110;
@@ -389,6 +383,14 @@ img.street-view {
 
 .navButton:active {
   opacity: 0.2;
+}
+
+.btn-toolbar-img {
+    width: 17px;
+}
+
+.btn {
+    padding: 4px;
 }
 
 .rate-star {
@@ -459,10 +461,11 @@ img.street-view {
 
 .show-location {
   z-index: 105;
-  top: 10px;
-  right: 45%;
-  height: 20px;
-  width: 20px;
+  top: 2.3%;
+  left: 52%;
+  height: 30px;
+  width: 30px;
+  display: inline;
 }
 
 #close-location {
@@ -560,17 +563,17 @@ img.street-view {
     widows: 180px;
   }
 
-  #btn-toolbar {
-    bottom: 7%;
-  }
-
   #photoCounter {
    bottom: 2%;
     font-size: 18px;
   }
 
-  .col-md-4 {
+  .col-md-4, .col-md-2 {
     display: none;
+  }
+
+   #btn-toolbar {
+    bottom: 7%;
   }
 
   .btn-toolbar-img {
@@ -598,7 +601,7 @@ img.street-view {
   }
 
   .btn-toolbar-button {
-    width: 15px;
+    width: 25px;
   }
 
   button {

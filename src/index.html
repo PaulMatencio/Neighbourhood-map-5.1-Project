@@ -21,12 +21,14 @@
         <input id="search-input" type="text" class="form-control" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlaces" placeholder="Looking for places (separated by blank)  or :location ...">
     </div>
 
-    <div class="show-location" group="controls">
-        <a data-bind="click: $root.toggleLocation">
-            <svg xmls="http://www/w3/org/2000/svg" viewbox="0 0 24 24">
+    <div class="show-location" group="controls" style="background-color:yellow;" >
+        <!--a data-bind="click: $root.toggleLocation"-->
+        <img id="close-location" style="background-color:yellow;" class="navButton" data-bind="click: $root.toggleLocation" src="images/location.png" alt="Location">
+
+            <!--svg xmls="http://www/w3/org/2000/svg" viewbox="0 0 24 24">
                 <path d="M2 6h20v3H2zm0 5h20v3H2zm0 5h20v3H2z"></path>
-            </svg>
-        </a>
+            </svg-->
+        <!--/a-->
     </div>
 
     <!-- button to hide or show the search result list -->
@@ -67,7 +69,7 @@
             <div class="col-md-2">
                 <img src="images/info.jpg" alt="info">
             </div>
-            <div class="col-md-10">
+            <div class="col-xs-12 col-md-10">
                 <h2 data-bind="text: $root.myCity"></h2>
                 <!--span data-bind="text:currentLocation"></span!-->
             </div>

@@ -40,7 +40,8 @@ gMaps.prototype.searchResults = function(results, status) {
     };
 };
 
-gMaps.prototype.createLocMarker = function(place) {
+/* create a marker for a location */
+gMaps.prototype.createLocMarker= function(place) {
     var name = place.formatted_address;
     var bounds = window.mapBounds; // current boundaries of the map window
     var marker = new google.maps.Marker({
@@ -50,9 +51,22 @@ gMaps.prototype.createLocMarker = function(place) {
     });
 }
 
+/* create a marker for a location */
+gMaps.prototype.markLocation = function() {
+    var name = this.name();
+    var position = new google.maps.LatLng(this.mapcenter().lat, this.mapcenter().lng);
+    var bounds = window.mapBounds; // current boundaries of the map window
+    var marker = new google.maps.Marker({
+        map: map,
+        position: position,
+        title: name
+    });
+    this.marker = marker;
+}
+
 // center the map around a location
 gMaps.prototype.setCenter = function(location) {
-    var map = this.map;
+    //var map = this.map;
     map.setCenter(new google.maps.LatLng(location.mapcenter().lat, location.mapcenter().lng));
     map.setZoom(13);
 };
