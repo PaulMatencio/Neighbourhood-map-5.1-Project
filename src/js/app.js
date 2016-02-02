@@ -46,6 +46,7 @@ $(function() {
          */
 
         self.showLocation = ko.observable(false);
+        self.showCategory = ko.observable(false);
         self.showResults = ko.observable(true); // boolean to hide or show the places returned by google Map places API nearby search services
         self.placeReviews = ko.observableArray([]); // ko array for place review objects returned by google map places API getDetails() service
         self.placePhotos = ko.observableArray([]); //ko array for place photo urls returned by google map places API getDetails() service
@@ -60,6 +61,8 @@ $(function() {
         self.currentPhoto = ko.observable(); // current photo holder
         self.currentIndex = ko.observable(0); // cirrent photo index holder
         self.keyword = ko.observable();
+        self.mapPlaceTypes= ko.observableArray(mapPlaceTypes);
+        self.myCategories= ko.observableArray(myCategories) ;
 
         /*
          *  Location is a subclass of the gMaps class
@@ -167,11 +170,15 @@ $(function() {
 
         /* show or hide the location view */
         self.toggleLocation = function() {
-            if (self.showLocation() == true) {
-                self.showLocation(false);
-            } else self.showLocation(true);
+            self.showLocation(!self.showLocation());
+            self.showCategory(false);
         };
 
+         /* show or hide the catgories selection lists*/
+        self.toggleCategory = function() {
+             self.showCategory(!self.showCategory());
+             self.showLocation(false);
+        };
         /*
             Return all the locations which are selected
             during the initLocations function
@@ -186,13 +193,15 @@ $(function() {
          *
          */
         self.selectItem = function(item) {
+
             // toogle selected status
-            if (item.selected() == true) {
-                item.selected(false);
-            } else item.selected(true);
-
+            item.selected(!item.selected());
+            /* hide the location list */
             self.showLocation(false);
-
+            /* if unselect
+            *  remove the markers from the map for this location
+            *  if not set markers
+            */
             if (!item.selected()) {
                 item.savePlaces = item.nearByPlaces();
                 item.nearByPlaces([]);
@@ -257,8 +266,23 @@ $(function() {
           if keyword start with : the application will use the keywords ( location) to search for new location
           ( Google Maps searchBox is trigger to serach for a new location)
         */
-        self.getPlaces = function() {
+
+        self.getPlace = function() {
+            myCategories =[];
+            self.myCategories(myCategories);
+             var keywords = self.keyword().trim();
+            // Searchbox will handle all keywords start with :
+            if (keywords.substring(0, 1) == ":") {
+                return;
+            }
+            var categories = keywords.split(" ");
+            self.getPlaces(categories);
+        };
+
+        self.getPlaces = function(categories) {
+            /*
             myCategories = [];
+            self.myCategories(myCategories);
             // get the keywords from the input-key
             var keywords = self.keyword().trim();
             // Searchbox will handle all keywords start with :
@@ -266,6 +290,7 @@ $(function() {
                 return;
             }
             var categories = keywords.split(" ");
+            */
             // map input keyword  to map place types
             categories.forEach(function(cat) {
                 if (cat.substring(0, 5) == "clini") cat = "hospital";
@@ -276,6 +301,7 @@ $(function() {
                 mapplacetype.forEach(function(type) {
                     myCategories.push(type);
                 });
+                self.myCategories(myCategories);
 
                 function getCat(maptype) {
                     return stringStartsWith(maptype, cat);
@@ -294,17 +320,15 @@ $(function() {
         };
 
         /* Init the self.myLocations() observable array
-        *  For each new location (only one for for the moment)
+        *  Add new location on top of the myLocations Array
         *  Used by the search box when keyword start with a semi colon :
         *
         */
         self.setnewLocation = function(location) {
-            myLocations.push(location);
-            self.initLocations(myLocations);
-            self.myLocations().forEach(function(location){
-                self.displayLocation(location)  ;
-            });
-
+            myLocations.unshift(location);
+            var loc = new Location(location);
+            self.myLocations.unshift(loc);
+            self.displayLocation(loc);
         };
 
 
@@ -360,9 +384,12 @@ $(function() {
           it show or hide the results  independently of the screen size
         **/
         self.toggleResults = function() {
+            /*
             if (self.showResults() == true) {
                 self.showResults(false);
             } else self.showResults(true);
+            */
+            self.showResults(!self.showResults());
         };
 
         /**
@@ -586,6 +613,7 @@ $(function() {
                 if (rawCategory.indexOf(val) != -1) return value;
             };
             myCategories = mapPlaceTypes.filter(Category);
+            self.myCategories(myCategories);
             self.myLocations().forEach(function(location) {
                 // nearby places search for the location and display the results
                 self.displayLocation(location);

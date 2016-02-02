@@ -158,7 +158,7 @@ gMaps.prototype.initAutocomplete = function() {
         if (places == 1) {
             var place = searchedPlaces[0]; // take the first result
             this.mapCenter = place.geometry.location;
-            myLocations = []; // reset the hard coded location array
+            // myLocations = []; // reset the hard coded location array
             // create a new location based on information returned by searchBox.getPlaces()
             var newLocation = {};
             newLocation.name = searchInput.value,
@@ -169,6 +169,7 @@ gMaps.prototype.initAutocomplete = function() {
                 };
             newLocation.selected = true;
             // set a new location and search places for nearby this location
+
             self.setnewLocation(newLocation);
         };
         searchInput.value = "";
@@ -306,7 +307,7 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
             var rev = reviewsTemplate.replace(/{{name}}/, place.name).replace(/{{formatted_address}}/, place.formatted_address).replace(/{{rating}}/, Map.getRating(place)).replace(/{{photos}}/, Map.getPhotoes(place));
             infoWindow.setContent(rev.replace(/{{website}}/g, website).replace(/{{phone}}/, Map.getPhone(place)));
             infoWindow.open(Map.map, marker);
-            $('.infoWindow').fadeIn(500);
+            $('.infoWindow').fadeIn(200);
 
             /*
                Open the photo-page  dom when photo link is clicked

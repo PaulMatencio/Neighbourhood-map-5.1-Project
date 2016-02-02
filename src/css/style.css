@@ -139,7 +139,7 @@ strong {
 #search-box {
   display: inline;
   width: 45%;
-  top:  2%;
+  top:  0%;
   left: 5%;
 }
 
@@ -459,13 +459,35 @@ img.street-view {
   font-weight: bold;
 }
 
-.show-location {
+.mycategories {
+  z-index: 106;
+  padding: 0;
+  margin: 0;
+  top: 15%;
+  left: 40%;
+  border-radius: 5px;
+
+}
+
+.select {
+  dispaly: block;
+}
+
+[group~=locations] {
   z-index: 105;
-  top: 2.3%;
-  left: 52%;
+  top: 0.2%;
   height: 30px;
   width: 30px;
   display: inline;
+  position: absolute;
+}
+
+.show-category {
+  left: 50%;
+}
+
+.show-location {
+  left: 59%;
 }
 
 #close-location {
@@ -479,13 +501,13 @@ img.street-view {
   -webkit-flex-direction: row;
   padding: 0;
   margin: 0;
-  top: 30%;
-  width: 30%;
-  max-width: 300px;
-  height: 35%;
+  top: 15%;
   left: 40%;
+  width: 30%;
+  max-width: 250px;
+  height: 230px;
   font-size: 14px;
-  z-index:105;
+  z-index:106;
 }
 
 #location-list {
@@ -541,15 +563,24 @@ img.street-view {
 /* Media query */
 @media screen and (min-width: 1170px) {
   .results {
-    width: 25%;
+    width: 22%;
     max-width: 350px;
   }
+
+  .show-category {
+    left: 50%;
+  }
+
+  .show-location {
+    left: 53%;
+  }
+
 }
 
-@media screen and (max-width: 969px) {
+@media screen and (min-width: 750px) and (max-width: 1169px) {
 
   .results {
-    width: 28%;
+    width: 23%;
     max-width: 350px;
     height: 65%;
   }
@@ -586,7 +617,7 @@ img.street-view {
 
   [group~=lists] {
     height: 92%;
-  };
+  }
 
   .infolist {
     font-size: 11px;
@@ -627,19 +658,36 @@ img.street-view {
   h3 {
     font-size: 1.1em;
   }
+
+  .show-category {
+    left: 50%;
+  }
+
+  .show-location {
+    left: 54%;
+  }
+
 }
 
-@media screen and (max-width: 750px) {
+@media screen and (max-width: 749px) {
 
    .results {
-    width: 30%;
+    width: 27%;
     max-width: 350px;
     height: 65%;
   }
 
-  #location{
+  #location {
     left:15%;
     width: 70%;
+  }
+
+  .show-category {
+    left: 50%;
+  }
+
+  .show-location {
+    left: 59%;
   }
 
   [group~=lists] {
@@ -650,5 +698,6 @@ img.street-view {
     font-size: 13px;
     height: 10%;
   }
+
 }
 

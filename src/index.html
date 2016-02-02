@@ -18,17 +18,24 @@
     <!--  search box -->
 
     <div id="search-box" group="controls">
-        <input id="search-input" type="text" class="form-control" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlaces" placeholder="Looking for places (separated by blank)  or :location ...">
+        <input id="search-input" type="text" class="form-control" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlace" placeholder="Looking for places (separated by blank)  or :location ...">
     </div>
 
-    <div class="show-location" group="controls" style="background-color:yellow;" >
+    <div class="show-location" group="locations" >
         <!--a data-bind="click: $root.toggleLocation"-->
-        <img id="close-location" style="background-color:yellow;" class="navButton" data-bind="click: $root.toggleLocation" src="images/location.png" alt="Location">
+        <img  style="background-color:#6890C1;"  data-bind="click: $root.toggleLocation" src="images/location.png" alt="Location">
+    </div>
 
-            <!--svg xmls="http://www/w3/org/2000/svg" viewbox="0 0 24 24">
-                <path d="M2 6h20v3H2zm0 5h20v3H2zm0 5h20v3H2z"></path>
-            </svg-->
-        <!--/a-->
+    <div class="show-category" group="locations" >
+        <!--a data-bind="click: $root.toggleCategory"-->
+        <img  style="background-color:#6890C1;" data-bind="click: $root.toggleCategory" src="images/places.png" alt="Category">
+    </div>
+
+    <div class="mycategories" group="controls" data-bind="visible:$root.showCategory">
+        <div class="select">
+        <h3 style="background-color:#6890C1;padding:5px;color:white">Choose categories</h3>
+        <select style="padding:5px;" data-bind="options: mapPlaceTypes, selectedOptions: myCategories" size="15" multiple="true"></select>
+        </div>
     </div>
 
     <!-- button to hide or show the search result list -->
@@ -308,7 +315,7 @@
             center: {lat: 48.852729, lng: 2.350564},
             zoomControl: true,
             zoom: 14,
-            minZoom: 5,
+            minZoom: 2,
             maxZoom: 20,
             disableDefaultUI: true,
             streetViewControl: true
