@@ -48,6 +48,7 @@ $(function() {
         self.showLocation = ko.observable(false);
         self.showCategory = ko.observable(false);
         self.showResults = ko.observable(true); // boolean to hide or show the places returned by google Map places API nearby search services
+        self.numberPlaces = ko.observable(0) ; // total number of nearby places
         self.placeReviews = ko.observableArray([]); // ko array for place review objects returned by google map places API getDetails() service
         self.placePhotos = ko.observableArray([]); //ko array for place photo urls returned by google map places API getDetails() service
         self.placeInFocus = ko.observable(); //place object container when opening photos and reviews via infowindows
@@ -75,7 +76,7 @@ $(function() {
             this.mapcenter = ko.observable(location.mapcenter);
             this.selected = ko.observable(location.selected);
             this.nearByPlaces = ko.observableArray([]); // ko array for object returned by google map places API nearby search service
-            this.savePlaces= [];
+            this.savePlaces = [];
             this.markers = []; // array of markers for nearby places of this location
             this.marker  = null ; // maker for this location
             this.self = self;
@@ -170,7 +171,11 @@ $(function() {
 
         /* show or hide the location view */
         self.toggleLocation = function() {
-            self.showLocation(!self.showLocation());
+            if (self.myLocations().length == 0) {
+                self.showLocation(false);
+            } else {
+                self.showLocation(!self.showLocation());
+            }
             self.showCategory(false);
         };
 
@@ -192,36 +197,50 @@ $(function() {
          * user can check /uncheck (check-box)  or click the check box label to select/unselect  a location
          *
          */
-        self.selectItem = function(item) {
+        self.selectLocation = function(location) {
 
             // toogle selected status
-            item.selected(!item.selected());
+            location.selected(!location.selected());
+
+            // localStorage.myLocations= ko.toJS(self.myLocations);
+
             /* hide the location list */
             self.showLocation(false);
             /* if unselect
             *  remove the markers from the map for this location
             *  if not set markers
             */
-            if (!item.selected()) {
-                item.savePlaces = item.nearByPlaces();
-                item.nearByPlaces([]);
-                item.marker.setMap(null);
-                item.createMarkers(item.nearByPlaces());
+            if (!location.selected()) {
+                location.savePlaces = location.nearByPlaces();
+                self.numberPlaces(self.numberPlaces() - location.nearByPlaces().length);
+                location.nearByPlaces([]);
+                if (location.marker) {
+                    location.marker.setMap(null);
+                }
+                 // center the map with  the first selected entry of the locations aray
+                self.setCenter();
+
             } else {
-                 item.nearByPlaces(item.savePlaces);
-                 item.marker.setMap(map);
-                 item.createMarkers(item.nearByPlaces());
-            }
-        }.bind(this);
+                 location.nearByPlaces(location.savePlaces);
+                 location.marker.setMap(map);
+                 // center the map with the selected location array
+                 location.setCenter();
+            };
+           location.createMarkers(location.nearByPlaces());
+        };
 
         /* computed observable to return the city name of a location */
         /* it is used to display the header of the list view  of the places */
+
         self.myCity = ko.computed(function() {
-            if (self.myLocations().length > 0) {
-                var city = self.myLocations()[0].city;
-                return self.myLocations()[0].city();
+            var locations = self.myLocations().filter( function(location) {
+                    return location.selected();
+            });
+            if (locations.length > 0) {
+              return locations[0].city();
             } else return "";
         });
+
 
         /*
          *   close wiki pages only when there are some
@@ -277,21 +296,11 @@ $(function() {
             }
             var categories = keywords.split(" ");
             self.getPlaces(categories);
+
         };
 
         self.getPlaces = function(categories) {
-            /*
-            myCategories = [];
-            self.myCategories(myCategories);
-            // get the keywords from the input-key
-            var keywords = self.keyword().trim();
-            // Searchbox will handle all keywords start with :
-            if (keywords.substring(0, 1) == ":") {
-                return;
-            }
-            var categories = keywords.split(" ");
-            */
-            // map input keyword  to map place types
+            // map some input keyword  to map Google place types
             categories.forEach(function(cat) {
                 if (cat.substring(0, 5) == "clini") cat = "hospital";
                 if (cat == "fitness") cat = "gym";
@@ -310,12 +319,14 @@ $(function() {
 
             // display near by places returned by the
             if (myCategories.length > 0) {
-                // self.nearByPlaces([]);
+
                 self.myLocations().forEach(function(location) {
-                    // for the display places
                     self.displayLocation(location);
                 });
-                myMaps.setCenter(self.myLocations()[0]);
+                // save the updated categories array in local storage
+                localStorage.myCategories = JSON.stringify(myCategories);
+                // center the map using the geolocalization of first entry of the locations array
+                self.setCenter();
             }
         };
 
@@ -324,13 +335,41 @@ $(function() {
         *  Used by the search box when keyword start with a semi colon :
         *
         */
-        self.setnewLocation = function(location) {
+        self.addLocation = function(location) {
             myLocations.unshift(location);
-            var loc = new Location(location);
-            self.myLocations.unshift(loc);
-            self.displayLocation(loc);
+            var loc = new Location(location); // instancie a new locazion
+            self.myLocations.unshift(loc); // add it to the top of the observable location array
+            loc.markLocation();  // mark the new location
+            self.displayLocation(loc); // display nearby places for the locaztion
+            localStorage.myLocations = JSON.stringify(myLocations);
         };
 
+        self.removeLocation = function(location) {
+            var name = location.name;
+            /* remove the location */
+            var locations = self.myLocations().filter( function(location) {
+                 return (location.name != name);
+            });
+            self.myLocations(locations);
+            // unselect the location
+            location.selected(true);
+            self.selectLocation(location); // unselect the location
+            // localStorage.myLocations = JSON.stringify(myLocations);
+        }
+
+
+
+        /* set the center of the map using the goelocalisation of first selected
+        * entry of the locationhs array
+        */
+        self.setCenter = function(){
+            var locations = self.myLocations().filter( function(location) {
+                    return location.selected();
+            });
+            if (locations.length > 0) {
+                    locations[0].setCenter();
+            }
+        };
 
         /* get the address of a place */
         self.getAddress = function(place) {
@@ -384,11 +423,7 @@ $(function() {
           it show or hide the results  independently of the screen size
         **/
         self.toggleResults = function() {
-            /*
-            if (self.showResults() == true) {
-                self.showResults(false);
-            } else self.showResults(true);
-            */
+
             self.showResults(!self.showResults());
         };
 
@@ -618,6 +653,7 @@ $(function() {
                 // nearby places search for the location and display the results
                 self.displayLocation(location);
             });
+            localStorage.myCategories = JSON.stringify(myCategories);
         };
 
         /**
@@ -626,14 +662,37 @@ $(function() {
          **/
         self.resetIcons = function() {
             myCategories = [];
-            //localStorage.myCategories = JSON.stringify(myCategories);
+            localStorage.myCategories = JSON.stringify(myCategories);
             self.myLocations().forEach(function(location) {
                 self.displayLocation(location);
             });
         };
         self.hideIcons = function() {
         }
+
+        /* internal computed observable that fires whenever anything changes in our locations */
+        ko.computed(function () {
+            // store a clean copy to local storage, which also creates a dependency on
+            // the observableArray and all observables in each item
+            //console.log("save",myLocations);
+            //localStorage.myLocations= JSON.stringify(myLocations);
+
+        }.bind(self)).extend({
+            rateLimit: { timeout: 500, method: 'notifyWhenChangesStop' }
+        }); // save at most every 2 seconds
+
     }; // end model
+
+    if (localStorage.myLocations) {
+        myLocations =  JSON.parse(localStorage.myLocations);
+        console.log(myLocations);
+    };
+
+    if (localStorage.myCategories) {
+        myCategories = JSON.parse(localStorage.myCategories);
+        console.log(myCategories);
+    };
+
 
     ko.applyBindings(new ViewModel());
 

@@ -65,11 +65,12 @@ gMaps.prototype.markLocation = function() {
 }
 
 // center the map around a location
-gMaps.prototype.setCenter = function(location) {
-    //var map = this.map;
-    map.setCenter(new google.maps.LatLng(location.mapcenter().lat, location.mapcenter().lng));
+gMaps.prototype.setCenter = function() {
+    console.log(this.name());
+    map.setCenter(new google.maps.LatLng(this.mapcenter().lat, this.mapcenter().lng));
     map.setZoom(13);
 };
+
 
 /**
  * The method  nearbySearch call google maps places API and search pagination request
@@ -79,7 +80,7 @@ gMaps.prototype.setCenter = function(location) {
 gMaps.prototype.nearbySearch = function() {
     var self = this.self;
     var service = new google.maps.places.PlacesService(this.map);
-    console.log("start nearby searchfor location:",this.name() );
+    //console.log("start nearby searchfor location:",this.name() );
     service.nearbySearch({
         location: this.mapcenter(),
         radius: radius,
@@ -109,11 +110,15 @@ gMaps.prototype.getResults = function(results, status, pagination) {
 
         map.fitBounds(bounds);
         this.nearByPlaces(nearByPlaces);
-        console.log("Results OK:", results.length," for location:",this.name(),"with categorie:",myCategories, "Nearby Places:",this.nearByPlaces());
+        //console.log("Results OK:", results.length," for location:",this.name(),"with categorie:",myCategories, "Nearby Places:",this.nearByPlaces());
         this.createMarkers(this.nearByPlaces());
-        console.log(this.nearByPlaces(),this.markers);
+        //console.log(this.nearByPlaces(),this.markers);
     };
-    this.setCenter(self.filteredLocations()[0])
+    /* set the location to the first  selected entry of the myLocations array
+     * instead of location.setCenter();
+    */
+    self.setCenter() ;
+    self.numberPlaces(self.numberPlaces()+ nearByPlaces.length);
 };
 
 /**
@@ -149,7 +154,6 @@ gMaps.prototype.initAutocomplete = function() {
         var searchedPlaces = [];
         // var map = this.map;
         var self = this.self;
-        console.log(self);
         if (searchInput.value.substring(0, 1) == ":") {
             searchInput.value = searchInput.value.slice(1);
             searchedPlaces = searchBox.getPlaces();
@@ -160,23 +164,25 @@ gMaps.prototype.initAutocomplete = function() {
             this.mapCenter = place.geometry.location;
             // myLocations = []; // reset the hard coded location array
             // create a new location based on information returned by searchBox.getPlaces()
-            var newLocation = {};
-            newLocation.name = searchInput.value,
-                newLocation.city = searchInput.value,
-                newLocation.mapcenter = {
-                    lat: place.geometry.location.lat(),
-                    lng: place.geometry.location.lng(),
-                };
-            newLocation.selected = true;
+            var location = {};
+            location.name = searchInput.value,
+            location.city = searchInput.value,
+            location.mapcenter = {
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng(),
+            };
+            location.selected = true;
             // set a new location and search places for nearby this location
 
-            self.setnewLocation(newLocation);
+            self.addLocation(location);
+
         };
         searchInput.value = "";
     };
 
     searchBox.addListener('places_changed', boxSearch.bind(this));
 };
+
 
 /* Remove markers for a location
     this.markers is an array of marker for "this location"
@@ -285,15 +291,15 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
     var self = this.self;
     var infoWindow = this.infoWindow;
     var $winWidth = $(window).width();
-
+    // hide the location and categories list no matter their state
+    self.showCategory(false);
+    self.showLocation(false);
     service.getDetails({
         placeId: place.place_id
     }, function(place, status) {
 
         if (status === google.maps.places.PlacesServiceStatus.OK) {
-
             var reviewsTemplate;
-            // console.log($winWidth);
             if ($winWidth < 800) {
                 self.showResults(false);
                 reviewsTemplate = $('script[data-template="review-short"]').html();

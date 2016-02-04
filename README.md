@@ -23,18 +23,19 @@ This is my  fifth project of the Udacity Front-end developer nanodegree. To comp
 The difference with the first version are
 
 * Google maps API is asynchronously loaded
-* 6 different hard coded locations
-* button to show/hide lthe list of locations
-* User can select/unselect location
-* Search box is only used by the application to find places nearby locations. It can be used to look for new locations via to Google Maps searchbox. To look for a new location, you must prefix your new location with a sim-colon :  ( as for instance :Newyork central park )
+* 6 different hard coded locations, You can select/unselect or add new location
+* button to show/hide lthe list of locations ( brown location icon)
+* button to display the list of google Maps categories ( red question mark icon)
+*
+* Search box is only used by the application to find places categories nearby locations.Nevertheless,  It can also be used to add  a new location via to Google Maps searchbox. To add  a new location, you must prefix your new location with a sim-colon :  ( as for instance :Newyork central park )
 * Use more  Knockout.js to manipulate DOM than the previous version
 
 
 ###Setting up Project:
 
-The Readable and commented HTML/CSS/JavaScript files are in the '<project folder>/src' folder. Gulp is used to minify html, javasript and css files , to cmpress images, and to deploy the resulting files into the <project folder>. Check ['src'](https://github.com/PaulMatencio/Neighbourhood-Maps-Project/tree/master/src) folder for commented readable codes.
+The Readable and commented HTML/CSS/JavaScript files are in the '<project folder>/src' folder. Gulp is used to minify html, javasript and css files , to cmpress images, and to deploy the resulting files into the <project folder>. Check ['src'](https://github.com/PaulMatencio/Neighbourhood-map-5.1-Project/tree/master/src) folder for commented readable codes.
 
-For the working page check this link: ( http://paulmatencio.github.io/Neighbourhood-Maps-Project )
+For the working page check this link: ( http://paulmatencio.github.io/Neighbourhood-map-5.1-Project )
 
 ###Project Overview:
 
@@ -44,44 +45,48 @@ Develop a single page application featuring a map of a neighborhood you would li
 
 * SEARCH BOX ( filter for google Maps categories or add a new Location)
 
-   Use the search box to find nearby places of locations ( cafe, restaurant, movie , atm , shopping). You can type multiple place types must be separated by blan. There are 6 hard coded locations of Paris. When you type places in the serach box, the application will look for nearby places around the current locations.
+   Use the search box to find nearby places ( cafe, restaurant, movie , atm , shopping) of locations. You can type multiple place types must be separated by blan. There are 6 hard coded locations of Paris. When you type categories in the serach box, the application will look for nearby places around all the current locations.
 
-  Looking for nearby places are handled by the application. However, the application will call Google Maps place services, therefore keyword must matched Google Maps place types. Some filter to map keyword to Google Place types are attempted. Further mapping must be done.
+  Looking for nearby places are handled by the application. However, the application will call Google maps nearby search services, therefore keyword must matched Google Maps place types. Some filter to map keyword to Google Place types are attempted. Further mapping must be done. You can also use the question mark at the end of the Search box to show the list of google applicable categories.
 
-  To change location, type :new-location as for instance :London picadelly square ot :Newyork central park. When a new location is entered, the appliaction use the Google Maps
+  To add a new  location, type :new-location as for instance :London picadelly square ot :Newyork central park. When a new location is entered, the appliaction use the Google maps searchBox services to search nearby places ( textsearch services could be used instead).
 
-  To use the default hard code locations, you must reload the application
+  Places returned by nearby places services or searchBox are used to display the Place list and to make google maps markers.
 
-  Places returned by nearby places services or search-box are used to display the Place list and to make google maps markers.
+* BUTTON ( background color yellow) to show/hide the list of locations.
 
-* BUTTON ( background color yellow) to show/hide the list of locations. By default, location list is hidden.
+ By default, the location list is hidden. To show the location list, click of this button.
 
 * LOCATION LIST ( Location filter)
 
   You can check/uncheck a location. To add a new location, use the SEARCH BOX.
-  Right now, the new location replace the existing list of locations.
-  in the final version, I will add the new location on top the current location
-  When user uncheck a location, markers (map) and places (list view) of that location will disapear . They will reappear when user check the location.
-  You can check or click on the label of the location to check/uncheck a location.
+  The new location will be  on top of the existing list of locations.
 
-* PLACEs LIST:
+  When user uncheck a location, markers (map) and places (list view) of that location will be hidden . When a location is checked, markers and places will be displayed.
 
-   On the right you can find the places corresponding to the markers. Clicking on one place will focus the map on the place and will open an infowindow. Every place contain its marker. Thsi should be fast.
+  You can check or click on the label of the location to check/uncheck a location. However with the current version, you must click on the label to fire hide/show markers and places of that location
+
+
+* PLACES LIST VIEW:
+
+   The place list viewis on the right, you can find the places corresponding to the markers. Clicking on one place will focus the map on the place and will open an info window. Every place contain a refence to its marker.
 
    When a info window is opened, the center of the map will slide, and depending on the size if the screen, the Places List can be hidden. The Places list can be shown as described below
 
-   You can use the hamburger button located at top-right of your application window to  hide or show the Places list at any time. It can be useful for devices with small screen.
+   You can use the hamburger button located at top-right of your application window to  hide or show the Places list when the screen is small. It can be useful for devices with small screen.
+
+   Places ( and markers) are moved whena location is unchecked.
 
 * HAMBURGER BUTTON:
 
-  This button is at the top-rigth of the Place list.
+  This button is at the top-rigth of the Place list. This button is hidden on large screen.
   You can use this button to hide or show the Placse list and the Button toolbar.
 
 * TOOLBAR ( filter place categories)
 
    This toolbar dynamically changes with the neighborhood. It will show the set of the markers returned be the near by search or searchbox. The number of icons is limited to 9, use the search-box to filter other google Maps categories
 
-   If you press one of the icon, it will re-request the search in the area with different category setting and save your categories both in memory and in your local storage. These filters will be reused when you move into a new location. When your re-load your application, these filters will be reused to filter the categories of your new location.
+   If you press one of the icon, it will re-request the search in the area with different category setting. These filters will be reused when you move into a new location. When your re-load your application, these filters will be reused to filter the categories of your new location.
 
    For example if you have a coffee icon it will return the 10-20 most popular coffee-shop of all your current locations.
 
@@ -96,17 +101,17 @@ Develop a single page application featuring a map of a neighborhood you would li
 
 * Photo viewer for dispaying photos for a place  [click on Photos link of the info window]
 
-* List  of the reviews for a place [click on Reviews link of the info window]
+* List of reviews for a place [click on Reviews link of the info window]
 
-  Nothing happen if there is no reviews
+  **Nothing happen** if there is no reviews
 
 * New york times headline  and latest news for a city and country ( based of the address of the place)  [Click on NYT articles of the info window]
 
-  Nothing happen if there is no articles
+  **Nothing happen** if there is no article
 
 * Wiki pedia [ click on W link of the info window]
 
-  Nothing happen if there is no wiki
+  **Nothing happen** if there is no wiki
 
 * Street views [ click on view icon of the info window]
 

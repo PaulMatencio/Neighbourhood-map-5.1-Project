@@ -28,7 +28,7 @@
 
     <div class="show-category" group="locations" >
         <!--a data-bind="click: $root.toggleCategory"-->
-        <img  style="background-color:#6890C1;" data-bind="click: $root.toggleCategory" src="images/places.png" alt="Category">
+        <img  style="background-color:#6890C1;" data-bind="click: $root.toggleCategory" src="images/question-1.png" alt="Category">
     </div>
 
     <div class="mycategories" group="controls" data-bind="visible:$root.showCategory">
@@ -48,14 +48,15 @@
     </div>
 
     <!-- location list-->
-    <div data-bind="visible: $root.showLocation">
+    <div data-bind="visible: $root.showLocation || Locations().length > 0">
         <div id="location" group="controls">
             <img id="close-location" class="navButton" data-bind="click: $root.hideLocation" src="images/stepbackward.png" alt="X">
             <ul id="location-list" group="controls" data-bind="foreach: $root.filteredLocations">
                 <span data-bind="with:$parent.displayLocation($data)"></span>
                 <li data-bind="css:{selected:selected}">
+                    <button class="destroy" data-bind="click: $root.removeLocation"></button>
                     <input class="toggle" data-bind="checked: $data.selected" type="checkbox">
-                    <label data-bind="text: $data.name, event: { click: $root.selectItem }"></label>
+                    <label data-bind="text: $data.name, event: { click: $root.selectLocation }"></label>
                 </li>
             </ul>
         </div>
@@ -71,7 +72,7 @@
     </div>
 
     <!-- place search result -->
-    <div class="results container-fluide" group="controls" data-bind="visible: $root.showResults">
+    <div class="results container-fluide" group="controls" data-bind="visible: $root.showResults && numberPlaces()>0">
         <div class="info row">
             <div class="col-md-2">
                 <img src="images/info.jpg" alt="info">
@@ -82,7 +83,8 @@
             </div>
         </div>
 
-        <ul class="infolist" data-bind="foreach: $root.myLocations">
+        <!--ul class="infolist" data-bind="foreach: $root.myLocations"-->
+         <ul class="infolist" data-bind="foreach: $root.filteredLocations">
             <span data-bind="foreach: $data.nearByPlaces">
                 <li data-bind="click: $root.clickMarker">
                     <!-- picture -->
@@ -184,7 +186,7 @@
 
 
     <!-- Tools bar -->
-    <div data-bind="visible: showResults">
+    <div data-bind="visible: showResults  && numberPlaces()>0">
         <div id="btn-toolbar" group="controls">
 
             <button type="core" class="btn" style="display: block" data-bind="click: $root.resetIcons">
