@@ -76,18 +76,18 @@ $(function() {
             this.mapcenter = ko.observable(location.mapcenter);
             this.selected = ko.observable(location.selected);
             this.nearByPlaces = ko.observableArray([]); // ko array for object returned by google map places API nearby search service
-            this.savePlaces = [];
+            this.savePlaces = []; 
             this.markers = []; // array of markers for nearby places of this location
             this.marker  = null ; // maker for this location
             this.self = self;
         };
 
-        /* initialize the self.myLocations based on the locations array
-         *  locations is the array of the hard codes location
-         *  mark the location on the map if it is selected
+        /* Initialize the self.myLocations observable array with the locations array (the hard coded locations)
+         * Mark each location on the map if it is selected
          */
         self.initLocations = function(locations) {
             self.myLocations([]);
+            self.numberPlaces(0);
             locations.forEach(function(location) {
                 var loc = new Location(location);
                 self.myLocations().push(loc);
@@ -144,10 +144,12 @@ $(function() {
          * function hide or show results list depending on the screen resizing ,
          */
         function showResults() {
-            var $winWidth = $(window).width();
+            var $winWidth = $(window).width();  
             if ($winWidth > 800) {
                 self.showResults(true);
             } else self.showResults(false);
+
+
         }
 
         /*
@@ -198,36 +200,34 @@ $(function() {
          *
          */
         self.selectLocation = function(location) {
-
-            // toogle selected status
+            /* toogle selected status */
             location.selected(!location.selected());
-
             // localStorage.myLocations= ko.toJS(self.myLocations);
 
             /* hide the location list */
             self.showLocation(false);
-            /* if unselect
-            *  remove the markers from the map for this location
-            *  if not set markers
+            /* 
+            *  if unselect remove the markers from the map for this location
+            *  decrement the totoal number of displayed pplace
+            *  the total number of places is incremented with the nearby search functions
             */
             if (!location.selected()) {
-                location.savePlaces = location.nearByPlaces();
-                console.log(self.numberPlaces(), location.nearByPlaces().length)
+                //location.savePlaces = location.nearByPlaces();
                 self.numberPlaces(self.numberPlaces() - location.nearByPlaces().length);
-                location.nearByPlaces([]);
+                location.nearByPlaces([]);// reset the nearby location places
+                // reset the marker
                 if (location.marker) {
                     location.marker.setMap(null);
                 }
-                 // center the map with  the first selected entry of the locations aray
+                 // re-center the map with  the first selected entry of the locations aray
                 self.setCenter();
-
-            } else {
-                 location.nearByPlaces(location.savePlaces);
-                 location.marker.setMap(map);
-                 // center the map with the selected location array
-                 location.setCenter();
             };
-           location.createMarkers(location.nearByPlaces());
+           // remove marker of the unselected location 
+           location.createMarkers(location.nearByPlaces()); 
+           if (self.numberPlaces() == 0) {
+                self.numberPlaces(0);
+                self.showResults(false);
+           }
         };
 
         /* computed observable to return the city name of a location */
@@ -320,7 +320,7 @@ $(function() {
 
             // display near by places returned by the
             if (myCategories.length > 0) {
-
+                self.numberPlaces(0);
                 self.myLocations().forEach(function(location) {
                     self.displayLocation(location);
                 });
@@ -341,8 +341,9 @@ $(function() {
             var loc = new Location(location); // instancie a new locazion
             self.myLocations.unshift(loc); // add it to the top of the observable location array
             loc.markLocation();  // mark the new location
-            self.displayLocation(loc); // display nearby places for the locaztion
-            localStorage.myLocations = JSON.stringify(myLocations);
+
+            self.displayLocation(loc); // display nearby places for the new location using the nearby services
+            localStorage.myLocations = JSON.stringify(myLocations); // save the myLocations array to local storage
         };
 
         self.removeLocation = function(location) {
@@ -635,7 +636,11 @@ $(function() {
 
         $(window).resize(function() {
             showResults();
-        })
+        });
+
+        $(document).ready(function(){
+            showResults();
+        });
 
         /**
           Based on which icon is pressed, map API nearby search is called with altered categories
@@ -651,6 +656,7 @@ $(function() {
             };
             myCategories = mapPlaceTypes.filter(Category);
             self.myCategories(myCategories);
+            self.numberPlaces(0); // reset the total number of places for these categories
             self.myLocations().forEach(function(location) {
                 // nearby places search for the location and display the results
                 self.displayLocation(location);
@@ -664,21 +670,20 @@ $(function() {
          **/
         self.resetIcons = function() {
             myCategories = [];
+            self.myCategories(myCategories);
+            self.numberPlaces(0); 
             localStorage.myCategories = JSON.stringify(myCategories);
             self.myLocations().forEach(function(location) {
                 self.displayLocation(location);
             });
         };
+
         self.hideIcons = function() {
         }
 
         /* internal computed observable that fires whenever anything changes in our locations */
         ko.computed(function () {
-            // store a clean copy to local storage, which also creates a dependency on
-            // the observableArray and all observables in each item
-            //console.log("save",myLocations);
-            //localStorage.myLocations= JSON.stringify(myLocations);
-
+          // TODO
         }.bind(self)).extend({
             rateLimit: { timeout: 500, method: 'notifyWhenChangesStop' }
         }); // save at most every 2 seconds

@@ -84,7 +84,7 @@ gMaps.prototype.nearbySearch = function() {
     service.nearbySearch({
         location: this.mapcenter(),
         radius: radius,
-        types: myCategories
+        types: self.myCategories()
     }, this.getResults.bind(this));
 };
 
@@ -98,9 +98,9 @@ gMaps.prototype.getResults = function(results, status, pagination) {
     function isPolitical(value) {
         return value == "political";
     }
-
-    if (status == google.maps.places.PlacesServiceStatus.OK) {
-        var nearByPlaces=[];
+    var nearByPlaces=[];
+    if (status == google.maps.places.PlacesServiceStatus.OK) {   
+        
         results.forEach(function(place) {
             if (place.types.filter(isPolitical).length == 0) {
                 nearByPlaces.push(place);
@@ -118,7 +118,8 @@ gMaps.prototype.getResults = function(results, status, pagination) {
      * instead of location.setCenter();
     */
     self.setCenter() ;
-    self.numberPlaces(self.numberPlaces()+ nearByPlaces.length);
+    self.numberPlaces(self.numberPlaces() + nearByPlaces.length);
+    console.log("results",self.numberPlaces());
 };
 
 /**
@@ -173,9 +174,7 @@ gMaps.prototype.initAutocomplete = function() {
             };
             location.selected = true;
             // set a new location and search places for nearby this location
-
             self.addLocation(location);
-
         };
         searchInput.value = "";
     };

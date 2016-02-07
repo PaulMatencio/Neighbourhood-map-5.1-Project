@@ -19,16 +19,18 @@
 
     <div id="search-box" group="controls">
         <input id="search-input" type="text" class="form-control" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlace" placeholder="Looking for places (separated by blank)  or :location ...">
+     
     </div>
-
-    <div class="show-location" group="locations" >
-        <!--a data-bind="click: $root.toggleLocation"-->
-        <img  style="background-color:#6890C1;"  data-bind="click: $root.toggleLocation" src="images/location.png" alt="Location">
-    </div>
-
-    <div class="show-category" group="locations" >
-        <!--a data-bind="click: $root.toggleCategory"-->
-        <img  style="background-color:#6890C1;" data-bind="click: $root.toggleCategory" src="images/question-1.png" alt="Category">
+    <div group="hz-buttons">
+        <button  type="core" data-bind="click: $root.toggleLocation">
+            <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+        </button>
+         <button type="core" data-bind="click: $root.toggleCategory">
+            <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
+        </button>
+        <button  type="core" data-bind="click: $root.resetIcons">
+             <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+        </button-->
     </div>
 
     <div class="mycategories" group="controls" data-bind="visible:$root.showCategory">
@@ -40,17 +42,20 @@
 
     <!-- button to hide or show the search result list -->
     <div class="hide-result" group="controls">
-        <a data-bind="click: $root.toggleResults">
+         <button type="core" data-bind="click: $root.toggleResults">
+            <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
+        </button>
+        <!--a data-bind="click: $root.toggleResults">
             <svg xmls="http://www/w3/org/2000/svg" viewbox="0 0 24 24">
                 <path d="M2 6h20v3H2zm0 5h20v3H2zm0 5h20v3H2z"></path>
             </svg>
-        </a>
+        </a-->
     </div>
 
     <!-- location list-->
     <div data-bind="visible: $root.showLocation || Locations().length > 0">
         <div id="location" group="controls">
-            <img id="close-location" class="navButton" data-bind="click: $root.hideLocation" src="images/stepbackward.png" alt="X">
+            <!--img id="close-location" class="navButton" data-bind="click: $root.hideLocation" src="images/stepbackward.png" alt="X"-->
             <ul id="location-list" group="controls" data-bind="foreach: $root.filteredLocations">
                 <span data-bind="with:$parent.displayLocation($data)"></span>
                 <li data-bind="css:{selected:selected}">
@@ -72,14 +77,13 @@
     </div>
 
     <!-- place search result -->
-    <div class="results container-fluide" group="controls" data-bind="visible: $root.showResults && numberPlaces()>0">
-        <div class="info row">
+    <div class="results container-fluide" group="controls" data-bind="visible: $root.showResults">
+        <div class="info-header row">
             <div class="col-md-2">
                 <img src="images/info.jpg" alt="info">
             </div>
             <div class="col-xs-12 col-md-10">
                 <h2 data-bind="text: $root.myCity"></h2>
-                <!--span data-bind="text:currentLocation"></span!-->
             </div>
         </div>
 
@@ -132,7 +136,11 @@
     <div data-bind="visible: placeReviews().length">
 
         <div id="review-page" class="viewport">
-            <img id="-revicloseew" data-bind="click: closeReview " class="navButton" group="closeButton" src="images/stepbackward.png" alt="X">
+
+            <!--img  data-bind="click: closeReview " class="navButton" group="closeButton" src="images/stepbackward.png" alt="X"-->
+            <button  type="core" data-bind="click:$root.closeReview" class="navButton" group="closeButton" style="display: block">
+                <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+            </button>
 
             <div group="review-lists">
 
@@ -170,8 +178,11 @@
 
     <!-- Photos display -->
 
-    <div id="photo-page" class="viewport" data-bind="visible: placePhotos().length">
-        <img id="close-photo" class="navButton" data-bind="click: closePhoto" group="closeButton" src="images/stepbackward.png" alt="X">
+    <div class="viewport" data-bind="visible: placePhotos().length">
+        <!--img id="close-photo" class="navButton" data-bind="click: closePhoto" group="closeButton" src="images/stepbackward.png" alt="X"-->
+        <button  type="core" data-bind="click:$root.closePhoto" class="navButton" group="closeButton" style="display: block">
+            <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+        </button>
         <div data-bind="with: currentPhoto">
             <img class="photo" data-bind="attr:{ src: getUrl({maxHeight: 800})}" alt="photo">
         </div>
@@ -180,23 +191,32 @@
             <span> / </span>
             <span data-bind="text: placePhotos().length"></span>
         </div>
-        <img data-bind="click: photoBackward" id="backward" class="navButton" src="images/stepbackward.png" alt="<">
-        <img data-bind="click: photoForward" id="forward" class="navButton" src="images/stepforward.png" alt=">">
+
+        <!--img data-bind="click: photoBackward" id="backward" class="navButton" src="images/stepbackward.png" alt="<">
+        <img data-bind="click: photoForward" id="forward" class="navButton" src="images/stepforward.png" alt=">"-->
+
+        <button  type="core" data-bind="click:$root.photoBackward" class="navButton" group="backward" style="display: block">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        </button>
+         <button  type="core" data-bind="click:$root.photoForward" class="navButton" group="forward" style="display: block">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        </button>
+
+
     </div>
 
 
     <!-- Tools bar -->
-    <div data-bind="visible: showResults  && numberPlaces()>0">
+    <div data-bind="visible: showResults">
         <div id="btn-toolbar" group="controls">
 
             <button type="core" class="btn" style="display: block" data-bind="click: $root.resetIcons">
                 <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
             </button>
 
-            <div id="filters" class="btn-group" data-bind="foreach: icons" role="group" aria-label="plane">
+            <div class="btn-group" data-bind="foreach: icons" role="group" aria-label="plane">
                 <!--placeholder for filter buttons-->
                 <button type="button" class="btn">
-                    <!--img class="btn-toolbar-img" data-bind="attr: {src: icon , alt: type}"-->
                     <img class="btn-toolbar-img" data-bind="click: $root.myIcons, attr: {src: icon}" alt="icon">
                 </button>
                 <br>
@@ -211,7 +231,13 @@
     <!-- New york times page -->
     <!--div data-bind="visible: nytarticles().length"-->
     <div id="nytimes-page" class="viewport" data-bind="visible: nytarticles().length">
-        <img id="close-nytimes" group="closeButton" class="navButton" src="images/stepbackward.png" alt="X" data-bind="click: closeNyt">
+
+        <!--img id="close-nytimes" group="closeButton" class="navButton" src="images/stepbackward.png" alt="X" data-bind="click: closeNyt"-->
+
+        <button  type="core" data-bind="click:$root.closeNyt" class="navButton" group="closeButton" style="display: block">
+                <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+        </button>
+
         <div class="Container" group="lists">
             <div class="review-title">
                 <span class="nytimes-header">New York Times Articles</span>
@@ -229,7 +255,10 @@
     <!-- Wikipedia page -->
 
     <div id="wiki-page" class="viewport" data-bind="visible: wikiarticles().length">
-        <img id="close-wiki" group="closeButton" class="navButton" src="images/stepbackward.png" alt="X" data-bind="click: closeWiki">
+        <!--img id="close-wiki" group="closeButton" class="navButton" src="images/stepbackward.png" alt="X" data-bind="click: closeWiki"-->
+        <button  type="core" data-bind="click:$root.closeWiki" class="navButton" group="closeButton" style="display: block">
+                <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+        </button>
         <div class="Container" group="lists">
             <div class="review-title">
                 <span class="wiki-header">Wikipedia Articles</span>
@@ -246,7 +275,11 @@
 
     <div data-bind="visible: showView">
         <div id="street-page" class="viewport">
-            <img id="close-street" group="closeButton" class="navButton" src="images/stepbackward.png" alt="X" data-bind="click: closeView">
+            <!--img id="close-street" group="closeButton" class="navButton" src="images/stepbackward.png" alt="X" data-bind="click: closeView"-->
+            <button  type="core" data-bind="click:$root.closeView" class="navButton" group="closeButton" style="display: block">
+                <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+            </button>
+
             <div id="streeview">
                 <img class="street-view" data-bind="attr:{src: streetView, alt: noimage}">
             </div>
