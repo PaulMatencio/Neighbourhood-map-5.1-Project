@@ -212,6 +212,7 @@ $(function() {
             */
             if (!location.selected()) {
                 location.savePlaces = location.nearByPlaces();
+                console.log(self.numberPlaces(), location.nearByPlaces().length)
                 self.numberPlaces(self.numberPlaces() - location.nearByPlaces().length);
                 location.nearByPlaces([]);
                 if (location.marker) {
@@ -346,15 +347,16 @@ $(function() {
 
         self.removeLocation = function(location) {
             var name = location.name;
+            if (location.selected()) {
+                // unselect the location
+                self.selectLocation(location) ;
+            }
             /* remove the location */
             var locations = self.myLocations().filter( function(location) {
                  return (location.name != name);
             });
             self.myLocations(locations);
             // unselect the location
-            location.selected(true);
-            self.selectLocation(location); // unselect the location
-            // localStorage.myLocations = JSON.stringify(myLocations);
         }
 
 
