@@ -41,7 +41,7 @@ gMaps.prototype.searchResults = function(results, status) {
 };
 
 /* create a marker for a location */
-gMaps.prototype.createLocMarker= function(place) {
+gMaps.prototype.createLocMarker = function(place) {
     var name = place.formatted_address;
     var bounds = window.mapBounds; // current boundaries of the map window
     var marker = new google.maps.Marker({
@@ -79,7 +79,6 @@ gMaps.prototype.setCenter = function() {
  */
 gMaps.prototype.nearbySearch = function() {
     var self = this.self;
-    console.log("nearby search",self.myCategories());
     var service = new google.maps.places.PlacesService(this.map);
     service.nearbySearch({
         location: this.mapcenter(),
@@ -95,29 +94,28 @@ gMaps.prototype.getResults = function(results, status, pagination) {
 
     var bounds = new google.maps.LatLngBounds();
     var self = this.self;
+
     function isPolitical(value) {
         return value == "political";
     }
-    var nearByPlaces=[];
+    var nearByPlaces = [];
+    // process  places returned the nearby search services
     if (status == google.maps.places.PlacesServiceStatus.OK) {
-
         results.forEach(function(place) {
             if (place.types.filter(isPolitical).length == 0) {
                 nearByPlaces.push(place);
                 bounds.extend(place.geometry.location);
             }
         });
-
         map.fitBounds(bounds);
         this.nearByPlaces(nearByPlaces);
-        console.log("Results OK:", results.length," for location:",this.name(),"with categorie:",myCategories, "Nearby Places:",this.nearByPlaces());
         this.createMarkers(this.nearByPlaces());
-        console.log(this.nearByPlaces(),this.markers);
     };
+
     /* set the location to the first  selected entry of the myLocations array
      * instead of location.setCenter();
-    */
-    self.setCenter() ;
+     */
+    self.setCenter();
     self.numberPlaces(self.numberPlaces() + nearByPlaces.length);
     // console.log("results",self.numberPlaces());
 };
@@ -167,11 +165,11 @@ gMaps.prototype.initAutocomplete = function() {
             // create a new location based on information returned by searchBox.getPlaces()
             var location = {};
             location.name = searchInput.value,
-            location.city = searchInput.value,
-            location.mapcenter = {
-                lat: place.geometry.location.lat(),
-                lng: place.geometry.location.lng(),
-            };
+                location.city = searchInput.value,
+                location.mapcenter = {
+                    lat: place.geometry.location.lat(),
+                    lng: place.geometry.location.lng(),
+                };
             location.selected = true;
             // set a new location and search places for nearby this location
             self.addLocation(location);
@@ -456,8 +454,34 @@ gMaps.prototype.getOpenings = function(place) {
     return opening;
 };
 
-/*   Model */
+/* custom Alert boxes */
+/* must be written in pure Javascript to handle jQuery, Knockout.js and maps loading problems */
 
+function CustomAlert() {
+
+    // render method 
+    this.render = function(dialog) {
+        var winW = window.innerWidth;
+        var winH = window.innerHeight;
+        var overlay = document.getElementById('alertoverlay');
+        var alert = document.getElementById('alertbox');
+        overlay.style.display = "block";
+        overlay.style.height = winH + "px";
+
+        alert.style.display = "block";
+        document.getElementById('alertboxhead').innerHTML = "Error message, please aknowledge";
+        document.getElementById('alertboxbody').innerHTML = dialog;
+        document.getElementById('alertboxfoot').innerHTML = '<button onclick="Alert.ok()">OK</button>';
+    }
+
+    // ok method 
+    this.ok = function() {
+        document.getElementById('alertbox').style.display = "none";
+        document.getElementById('alertoverlay').style.display = "none";
+    }
+}
+
+var Alert = new CustomAlert();
 /*
    https://developers.google.com/places/supported_types
    List of supported values for the types property in the Google Places API
@@ -585,10 +609,18 @@ var mapPlaceTypes = [
     }],
 
     mapCenter = {},
-    winWidth = $(window).width(),
     myCategories = [],
     radius = 2000,
     today = new Date();
+
+var winWidth;
+try {
+    winWidth = $(window).width();
+} catch (e) {
+    var msg = "Failed to load jQuery, Check your network and retry";
+    console.log(msg);
+    Alert.render(msg);
+}
 
 var Lindex = 0;
 var myLocations = [{
@@ -642,4 +674,3 @@ function inherit(subClass, superClass) {
     subClass.prototype = Object.create(superClass.prototype); // delegate to prototype
     subClass.prototype.Constructor = subClass; // update constructor on prototype
 }
-

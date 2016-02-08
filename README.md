@@ -24,11 +24,13 @@ The difference with the first version are
 
 * Google maps API is asynchronously loaded
 * 6 different hard coded locations, You can select/unselect or add new location
-* button to show/hide lthe list of locations ( brown location icon)
-* button to display the list of google Maps categories ( red question mark icon)
-*
-* Search box is only used by the application to find places categories nearby locations.Nevertheless,  It can also be used to add  a new location via to Google Maps searchbox. To add  a new location, you must prefix your new location with a sim-colon :  ( as for instance :Newyork central park )
-* Use more  Knockout.js to manipulate DOM than the previous version
+* button to show/hide the list of locations that user can select/unselect or remove
+* button to display the list of categories that user can select/unselect filter 
+* list of locations ( hidden by default)
+* list of place types (hidden by default)
+* In addition to look for places categories nearby locations, the search box can be used to add a new location via to Google Maps searchbox. 
+* To add  a new location, you must prefix your desired location with a double colon :  ( as for instance :NewYork central park or a full address)
+
 
 
 ###Setting up Project:
@@ -49,16 +51,20 @@ Develop a single page application featuring a map of a neighborhood you would li
 
   Looking for nearby places are handled by the application. However, the application will call Google maps nearby search services, therefore keyword must matched Google Maps place types. Some filter to map keyword to Google Place types are attempted. Further mapping must be done. You can also use the question mark at the end of the Search box to show the list of google applicable categories.
 
-  To add a new  location, type :new-location as for instance :London picadelly square ot :Newyork central park. When a new location is entered, the appliaction use the Google maps searchBox services to search nearby places ( textsearch services could be used instead).
+  To add a new  location, type :new-location as for instance :London picadelly square or :Newyork central park or any full address. 
+  When a new location is entered, the application will use the Google maps searchBox services to look ONLY for coordinates ( textsearch services could be used instead), it will not use the nearby places returned by Google Search box. The coordinated returmed by search-box are used to mark the location and by the nearby search services to look for nearby places. 
 
-  Places returned by nearby places services or searchBox are used to display the Place list and to make google maps markers.
+  Places returned by nearby places services  are used to display the Place list and to make google maps markers.
 
 * BUTTONS
 
   There are 3 buttons after the SEARCH BOX
+
   The first one is to display the list of Locations.
-  The second one is to display the list of list of categories ( place types) that can be used to look for places ( search box).
-  The third one is to refresh the list of categories ( place types)
+
+  The second one can be used to filter multiple categories ( place types)
+
+  The third one is to refresh the list of categories ( place types). 
 
 
 * LOCATION LIST ( Location filter)
@@ -66,12 +72,10 @@ Develop a single page application featuring a map of a neighborhood you would li
   There are 5 hard coded locations, 4 are selected by default.
 
   To select/unselect a location you must click on the label of that location. Checing/unchecking is not enough.
-  To add a new location, use the SEARCH BOX ( type in the new location . The new location will be placed on top of the existing list of locations.
-  To delete a new location, click on the remove button on the right of the location label. This button is shown when user
+  To add a new location, use the SEARCH BOX ( type in the new location prefixed by a double colon :. The new location will be placed on top of the existing list of locations.
+  To delete a new location, click on the remove button on the right of the location label. This button is shown when user pass the mouse over the label.
 
   When user unselect a location, all markers (map) and places (list view) of that location will be hidden. When a location is selected, markers and places will be displayed again.
-
-
 
 
 * PLACES LIST VIEW:

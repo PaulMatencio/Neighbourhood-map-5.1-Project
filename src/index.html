@@ -3,7 +3,6 @@
 
 <head>
     <meta charset="UTF-8">
-    <!--meta name="viewport" content="initial-scale=1.0, user-scalable=no"-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Front-end developer Project 5">
     <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -15,11 +14,10 @@
 <body>
     <!--div tag that holds the google map-->
     <div id="map-canvas"></div>
-    <!--  search box -->
 
+    <!--  search box -->
     <div id="search-box" group="controls">
         <input id="search-input" type="text" class="form-control" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlace" placeholder="Looking for places (separated by blank)  or :location ...">
-
     </div>
     <div group="hz-buttons">
         <button type="core" data-bind="click: $root.toggleLocation">
@@ -35,8 +33,11 @@
 
     <div class="mycategories" group="controls" data-bind="visible:$root.showCategory">
         <div class="select">
-        <h3 style="background-color:#6890C1;padding:5px;color:white">Choose categories</h3>
-        <select style="padding:5px;" data-bind="options: mapPlaceTypes, selectedOptions: myCategories" size="15" multiple="true"></select>
+            <h3 style="background-color:#6890C1;padding:5px;color:white">Choose multiple categories</h3>
+            <!--button type="core" data-bind="click: $root.getCategories">
+                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+            </button-->
+            <select style="padding:15px;" data-bind="options: mapPlaceTypes, selectedOptions: myCategories" size="15" multiple="true"></select>
         </div>
     </div>
 
@@ -45,17 +46,11 @@
          <button type="core" data-bind="click: $root.toggleResults">
             <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
         </button>
-        <!--a data-bind="click: $root.toggleResults">
-            <svg xmls="http://www/w3/org/2000/svg" viewbox="0 0 24 24">
-                <path d="M2 6h20v3H2zm0 5h20v3H2zm0 5h20v3H2z"></path>
-            </svg>
-        </a-->
     </div>
 
     <!-- location list-->
     <div data-bind="visible: $root.showLocation || Locations().length > 0">
         <div id="location" group="controls">
-            <!--img id="close-location" class="navButton" data-bind="click: $root.hideLocation" src="images/stepbackward.png" alt="X"-->
             <ul id="location-list" group="controls" data-bind="foreach: $root.filteredLocations">
                 <span data-bind="with:$parent.displayLocation($data)"></span>
                 <li data-bind="css:{selected:selected}">
@@ -105,39 +100,36 @@
                     <div class="col-sm-12 col-md-8">
                         <h3 class="longtext" data-bind="text: $data.name"></h3>
                         <p class="place-category"><span data-bind="text: $root.formattedType($data)"></span></p>
-            <p>
-                <div data-bind="if: $data.rating">
-                    <div>
-                        <span class="rating-number" data-bind="text: $data.rating"></span>
-                        <div style="display: inline;" data-bind="foreach: $root.rateStar($data.rating)">
-                            <img class="rate-star" data-bind="attr:{src: star}" alt="*">
-                        </div>
+                        <p>
+                            <div data-bind="if: $data.rating">
+                                <div>
+                                    <span class="rating-number" data-bind="text: $data.rating"></span>
+                                    <div style="display: inline;" data-bind="foreach: $root.rateStar($data.rating)">
+                                        <img class="rate-star" data-bind="attr:{src: star}" alt="*">
+                                    </div>
+                                </div>
+                            </div>
+                            <span data-bind="ifnot: $data.rating">
+                                em>no rating available.</em>
+                            </span>
+                        </p>
+                         <p class="place-address"><span data-bind="text: $root.getAddress($data)"></span></p>
                     </div>
-                </div>
-                <span data-bind="ifnot: $data.rating">
-                    <em>no rating available.</em>
-                  </span>
-            </p>
-            <p class="place-address"><span data-bind="text: $root.getAddress($data)"></span></p>
-    </div>
-    <!-- end of place inforantion -->
-    </li>
-    </span>
-    </ul>
-    <div class="logo">
-        <span>powered by </span>
-        <img src="images/googlelogo.jpg" alt="Google" />
-    </div>
+                     <!-- end of place inforantion -->
+                </li>
+            </span>
+        </ul>
+        <div class="logo">
+            <span>powered by </span>
+            <img src="images/googlelogo.jpg" alt="Google" />
+        </div>
     </div>
 
     <!-- end of place search result -->
 
     <!--Review page -->
     <div data-bind="visible: placeReviews().length">
-
         <div id="review-page" class="viewport">
-
-            <!--img  data-bind="click: closeReview " class="navButton" group="closeButton" src="images/stepbackward.png" alt="X"-->
             <button type="core" data-bind="click:$root.closeReview" class="navButton" group="closeButton" style="display: block">
                 <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
             </button>
@@ -176,7 +168,6 @@
 
     <!-- Photos display -->
     <div class="viewport" data-bind="visible: placePhotos().length">
-        <!--img id="close-photo" class="navButton" data-bind="click: closePhoto" group="closeButton" src="images/stepbackward.png" alt="X"-->
         <button type="core" data-bind="click:$root.closePhoto" class="navButton" group="closeButton" style="display: block">
             <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
         </button>
@@ -263,6 +254,16 @@
             <div id="streeview">
                 <img class="street-view" data-bind="attr:{src: streetView, alt: noimage}">
             </div>
+        </div>
+    </div>
+
+    <!-- custom alert box -->
+    <div id="alertoverlay"></div>
+    <div id="alertbox">
+        <div>
+            <div id="alertboxhead"></div>
+            <div id="alertboxbody"></div>
+            <div id="alertboxfoot"></div>
         </div>
     </div>
 

@@ -35,7 +35,6 @@ gulp.task('mini-inline', function() {
     .pipe(gulp.dest(''))
 });
 
-
 // JavaScript  minifier
 gulp.task('mini-js', function() {
   gulp.src('src/js/*.js')

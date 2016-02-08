@@ -44,23 +44,23 @@ $(function() {
 
         self.showLocation = ko.observable(false);
         self.showCategory = ko.observable(false);
-        self.showResults = ko.observable(true);     // boolean to hide or show the places returned by google Map places API nearby search services
-        self.numberPlaces = ko.observable(0) ;      // total number of nearby places
+        self.showResults = ko.observable(true); // boolean to hide or show the places returned by google Map places API nearby search services
+        self.numberPlaces = ko.observable(0); // total number of nearby places
         self.placeReviews = ko.observableArray([]); // ko array for place review objects returned by google map places API getDetails() service
         self.placePhotos = ko.observableArray([]); //ko array for place photo urls returned by google map places API getDetails() service
-        self.placeInFocus = ko.observable();       //place object container when opening photos and reviews via infowindows
+        self.placeInFocus = ko.observable(); //place object container when opening photos and reviews via infowindows
         self.nytarticles = ko.observableArray([]); //ko array for place new york times artcicle (search API)
-        self.nytInFocus = ko.observable();         //
+        self.nytInFocus = ko.observable(); //
         self.wikiarticles = ko.observableArray([]); //ko array for place wikipedia  artcicle  ( opensearch API)
         self.wikiInFocus = ko.observable();
-        self.streetView = ko.observable();        // photo returned by streetview APU
-        self.noimage = ko.observable();           // used for the attribute alt= of <img> to handle street view errors.
+        self.streetView = ko.observable(); // photo returned by streetview APU
+        self.noimage = ko.observable(); // used for the attribute alt= of <img> to handle street view errors.
         self.showView = ko.observable(false); // control the street view page
         self.currentPhoto = ko.observable(); // current photo holder
         self.currentIndex = ko.observable(0); // cirrent photo index holder
         self.keyword = ko.observable();
-        self.mapPlaceTypes= ko.observableArray(mapPlaceTypes);
-        self.myCategories= ko.observableArray(myCategories) ;
+        self.mapPlaceTypes = ko.observableArray(mapPlaceTypes);
+        self.myCategories = ko.observableArray(myCategories);
 
         /*
          *  Location is a subclass of the gMaps class
@@ -75,7 +75,7 @@ $(function() {
             this.nearByPlaces = ko.observableArray([]); // ko array for object returned by google map places API nearby search service
             this.savePlaces = [];
             this.markers = []; // array of markers for nearby places of this location
-            this.marker  = null ; // maker for this location
+            this.marker = null; // maker for this location
             this.self = self;
         };
 
@@ -89,7 +89,7 @@ $(function() {
                 var loc = new Location(location);
                 self.myLocations().push(loc);
                 loc.markLocation();
-                if (!loc.selected()){
+                if (!loc.selected()) {
                     loc.marker.setMap(null);
                 }
             });
@@ -102,12 +102,18 @@ $(function() {
          * Complete the map initialization
          * initAutocomplete
          */
-        var myMaps = new gMaps();
-        var infoWindow = myMaps.infoWindow;
-        var marker_animation = myMaps.marker_animation;
-        myMaps.initAutocomplete();
-        myMaps.self = self;
-
+        var myMaps, marker_animation, infoWindow;
+        try { 
+            myMaps = new gMaps();
+            infoWindow = myMaps.infoWindow;
+            marker_animation = myMaps.marker_animation;
+            myMaps.initAutocomplete();
+            myMaps.self = self;
+        }
+        catch (e) {
+            alert.render("failed to load Google maps, check your network")
+        }
+        
         /* define third parties  servies url */
         var nyturl = "http://api.nytimes.com/svc/search/v2/articlesearch.json?",
             streetViewApiKey = "AIzaSyAUYlUoaLYjM8hidnMVQ05zXiEXJ87dFiY",
@@ -178,17 +184,17 @@ $(function() {
             self.showCategory(false);
         };
 
-         /* show or hide the catgories selection lists*/
+        /* show or hide the catgories selection lists*/
         self.toggleCategory = function() {
-             self.showCategory(!self.showCategory());
-             self.showLocation(false);
+            self.showCategory(!self.showCategory());
+            self.showLocation(false);
         };
         /*
             Return all the locations which are selected
             during the initLocations function
         */
         self.filteredLocations = ko.computed(function() {
-                    return self.myLocations();
+            return self.myLocations();
         }, myMaps);
 
 
@@ -203,42 +209,42 @@ $(function() {
             /* hide the location list */
             self.showLocation(false);
             /*
-            *  if unselect,
-            *   Remove the markers from the map for this location,
-            *   Decrement the totoal number of displayed pplace
-            *  the total number of places is incremented with the nearby search functions
-            */
+             *  if unselect,
+             *   Remove the markers from the map for this location,
+             *   Decrement the totoal number of displayed pplace
+             *  the total number of places is incremented with the nearby search functions
+             */
             if (!location.selected()) {
                 self.numberPlaces(self.numberPlaces() - location.nearByPlaces().length);
-                location.nearByPlaces([]);// reset the nearby location places
+                location.nearByPlaces([]); // reset the nearby location places
                 // prepare to remove the markers
                 if (location.marker) {
                     location.marker.setMap(null);
                 }
-                 // re-center the map with  the first selected entry of the locations aray
+                // re-center the map with  the first selected entry of the locations aray
                 self.setCenter();
             } else {
-                 location.markLocation();   // add a marker for that location
+                location.markLocation(); // add a marker for that location
             }
-           // remove or add markers
-           location.createMarkers(location.nearByPlaces());
-           if (self.numberPlaces() == 0) {
+            // remove or add markers
+            location.createMarkers(location.nearByPlaces());
+            if (self.numberPlaces() == 0) {
                 self.numberPlaces(0);
                 self.showResults(false);
-           }
-           //save the modified myLocations array
-           /* ko.toJS has a security problem. below is a work around */
+            }
+            //save the modified myLocations array
+            /* ko.toJS has a security problem. below is a work around */
         };
 
         /* computed observable to return the city name of a location */
         /* it is used to display the header of the list view  of the places */
 
         self.myCity = ko.computed(function() {
-            var locations = self.myLocations().filter( function(location) {
-                    return location.selected();
+            var locations = self.myLocations().filter(function(location) {
+                return location.selected();
             });
             if (locations.length > 0) {
-              return locations[0].city();
+                return locations[0].city();
             } else return "";
         });
 
@@ -270,8 +276,8 @@ $(function() {
          *  close the photo viewer
          */
         self.closePhoto = function() {
-                self.placePhotos([]);
-                self.currentIndex(0);
+            self.placePhotos([]);
+            self.currentIndex(0);
         };
 
         // return the current photo index
@@ -294,9 +300,11 @@ $(function() {
             if (keywords.substring(0, 1) == ":") {
                 return;
             }
-            myCategories =[];
+            myCategories = [];
             var categories = keywords.split(" ");
             self.getPlaces(categories);
+            self.showLocation(false);
+            self.showCategory(false);
 
         };
 
@@ -326,55 +334,69 @@ $(function() {
 
         };
 
+        self.getCategories = function() {
+            console.log(self.myCategories());
+        }
+
         /* Init the self.myLocations() observable array
-        *  Add new location on top of the myLocations Array
-        *  Used by the search box when keyword start with a semi colon :
-        *
-        */
+         *  Add new location on top of the myLocations Array
+         *  Used by the search box when keyword start with a semi colon :
+         *
+         */
         self.addLocation = function(location) {
             myLocations.unshift(location);
             var loc = new Location(location); // instancie a new location
-            self.myLocations.unshift(loc);    // add it to the top of the observable location array and THAT's IT
-            loc.markLocation();               // mark the new location
+            self.myLocations.unshift(loc); // add it to the top of the observable location array and THAT's IT
+            loc.markLocation(); // mark the new location
             localStorage.myLocations = JSON.stringify(myLocations); // save the myLocations array to local storage
         };
 
-        self.removeLocation = function(location) {
-            var name = location.name;
-            // unselect the location if it is selected
-            if (location.selected()) {
-                self.selectLocation(location) ;
-            }
-            /* remove the location of the locations observable array and That'sit */
-            /*  GET a security issue with
-            *       ko.toJS(self.myLocations()
-            *    Below is a work around to Jsonify the mylocations array
-            */
-            self.myLocations(self.myLocations().filter( function(location,idx) {
-                myLocations[idx].remove = true;
-                if (location.name != name) {
-                    myLocations[idx].remove = false;
-                    return location;
-                }
-            }));
+        /*
+            Unselect the location first (if it is selected)
+            Try using Ko.toJS to convert self.myLocations() to myLocations array and save it
+            if fail then use a work around ( which is much less efficient)
 
-            // save the new locations array on the local storage
-            console.log("remove", myLocations);
-            myLocations =  myLocations.filter(function(location) {
-                if (location.remove == false) return location;
-            });
-            localStorage.myLocations = JSON.stringify(myLocations);
-        }
-
-        /* set the center of the map using the goelocalisation of first selected
-        * entry of the locationhs array
         */
-        self.setCenter = function(){
-            var locations = self.myLocations().filter( function(location) {
-                    return location.selected();
+        self.removeLocation = function(location) {
+                var name = location.name;
+                // unselect the location if it is selected
+                if (location.selected()) {
+                    self.selectLocation(location);
+                }
+                /* remove the location of the locations observable array and That'sit */
+                /*  GET a security issue with
+                 *       ko.toJS(self.myLocations()
+                 *    Below is a work around to Jsonify the mylocations array
+                 */
+
+                try {
+                    localStorage.myLocations = ko.toJS(self.myLocations());
+                } catch (e) {
+                    console.log(e);
+                    self.myLocations(self.myLocations().filter(function(location, idx) {
+                        myLocations[idx].remove = true;
+                        if (location.name != name) {
+                            myLocations[idx].remove = false;
+                            return location;
+                        }
+                    }));
+
+                    // save the new locations array on the local storage
+                    myLocations = myLocations.filter(function(location) {
+                        if (location.remove == false) return location;
+                    });
+                    localStorage.myLocations = JSON.stringify(myLocations);
+                };
+            }
+            /* set the center of the map using the goelocalisation of first selected
+             * entry of the locationhs array
+             */
+        self.setCenter = function() {
+            var locations = self.myLocations().filter(function(location) {
+                return location.selected();
             });
             if (locations.length > 0) {
-                    locations[0].setCenter();
+                locations[0].setCenter();
             }
         };
 
@@ -430,7 +452,7 @@ $(function() {
           it show or hide the results  independently of the screen size
         **/
         self.toggleResults = function() {
-            if (self.numberPlaces() > 0 ) {
+            if (self.numberPlaces() > 0) {
                 self.showResults(!self.showResults());
             }
         };
@@ -622,8 +644,6 @@ $(function() {
             }.bind(self)); /* "self" is passed to the function as "this" */
         };
 
-
-
         /*
            Display the view of the street based on the formatted address of the place
            if street view fail, text Sorry .... will replaced the alt= attribute of the <img> element
@@ -643,7 +663,7 @@ $(function() {
             showResults();
         });
 
-        $(document).ready(function(){
+        $(document).ready(function() {
             showResults();
         });
 
@@ -655,22 +675,17 @@ $(function() {
         self.myIcons = function(image) {
             marker_animation = google.maps.Animation.DROP;
             var rawCategory = image.icon.split("/").slice(-1)[0].split("-").slice(0, 1)[0];
+
             function Category(value) {
                 var val = value.split('_')[0];
                 if (rawCategory.indexOf(val) != -1) return value;
             };
             myCategories = mapPlaceTypes.filter(Category);
-            console.log("myicons", myCategories);
             self.myCategories(myCategories);
             self.numberPlaces(0); // reset the total number of places for these categories
+            self.showLocation(false);
+            self.showCategory(false);
             localStorage.myCategories = JSON.stringify(myCategories);
-
-            /*
-            self.myLocations().forEach(function(location) {
-                self.displayLocation(location);
-            });
-            */
-
         };
 
         /**
@@ -694,10 +709,13 @@ $(function() {
         }
 
         /* internal computed observable that fires whenever anything changes in our locations */
-        ko.computed(function () {
-          // To do
+        ko.computed(function() {
+            // To do
         }.bind(self)).extend({
-            rateLimit: { timeout: 500, method: 'notifyWhenChangesStop' }
+            rateLimit: {
+                timeout: 500,
+                method: 'notifyWhenChangesStop'
+            }
         }); // save at most every 2 seconds
 
         ko.onError = function(error) {
@@ -706,22 +724,26 @@ $(function() {
 
     }; // end model
 
+    /* load categories and locations from local storage if they have been saved */
+
     if (localStorage.myLocations) {
-        myLocations =  JSON.parse(localStorage.myLocations);
-        console.log(myLocations);
+        myLocations = JSON.parse(localStorage.myLocations);
     };
 
     if (localStorage.myCategories) {
         myCategories = JSON.parse(localStorage.myCategories);
-        console.log(myCategories);
     };
 
-
-    ko.applyBindings(new ViewModel());
-
+    /* Start the view model */
+    try {
+        ko.applyBindings(new ViewModel());
+    } catch (e) {
+        Alert.render("Error loading Knockout.js, check your network and retry");
+    }
 
     /**
      * Handle .btn-toolbar click events.
+     * Will be replaced by self.hideIcons
      */
     $('#hide').click(function() {
 
