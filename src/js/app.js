@@ -10,21 +10,18 @@ $(function() {
             return {
                 init: function(element, valueAccessor, allBindingsAccessor, data, bindingContext) {
                     var wrappedHandler, newValueAccessor;
-
                     // wrap the handler with a check for the enter key
                     wrappedHandler = function(data, event) {
                         if (event.keyCode === keyCode) {
                             valueAccessor().call(this, data, event);
                         }
                     };
-
                     // create a valueAccessor with the options that we would want to pass to the event binding
                     newValueAccessor = function() {
                         return {
                             keyup: wrappedHandler
                         };
                     };
-
                     // call the real event binding's init function
                     ko.bindingHandlers.event.init(element, newValueAccessor, allBindingsAccessor, data, bindingContext);
                 }
@@ -47,17 +44,17 @@ $(function() {
 
         self.showLocation = ko.observable(false);
         self.showCategory = ko.observable(false);
-        self.showResults = ko.observable(true); // boolean to hide or show the places returned by google Map places API nearby search services
-        self.numberPlaces = ko.observable(0) ; // total number of nearby places
+        self.showResults = ko.observable(true);     // boolean to hide or show the places returned by google Map places API nearby search services
+        self.numberPlaces = ko.observable(0) ;      // total number of nearby places
         self.placeReviews = ko.observableArray([]); // ko array for place review objects returned by google map places API getDetails() service
         self.placePhotos = ko.observableArray([]); //ko array for place photo urls returned by google map places API getDetails() service
-        self.placeInFocus = ko.observable(); //place object container when opening photos and reviews via infowindows
+        self.placeInFocus = ko.observable();       //place object container when opening photos and reviews via infowindows
         self.nytarticles = ko.observableArray([]); //ko array for place new york times artcicle (search API)
-        self.nytInFocus = ko.observable(); //
+        self.nytInFocus = ko.observable();         //
         self.wikiarticles = ko.observableArray([]); //ko array for place wikipedia  artcicle  ( opensearch API)
         self.wikiInFocus = ko.observable();
-        self.streetView = ko.observable(); // photo returned by streetview APU
-        self.noimage = ko.observable(); // used for the attribute alt= of <img> to handle street view errors.
+        self.streetView = ko.observable();        // photo returned by streetview APU
+        self.noimage = ko.observable();           // used for the attribute alt= of <img> to handle street view errors.
         self.showView = ko.observable(false); // control the street view page
         self.currentPhoto = ko.observable(); // current photo holder
         self.currentIndex = ko.observable(0); // cirrent photo index holder
@@ -76,7 +73,7 @@ $(function() {
             this.mapcenter = ko.observable(location.mapcenter);
             this.selected = ko.observable(location.selected);
             this.nearByPlaces = ko.observableArray([]); // ko array for object returned by google map places API nearby search service
-            this.savePlaces = []; 
+            this.savePlaces = [];
             this.markers = []; // array of markers for nearby places of this location
             this.marker  = null ; // maker for this location
             this.self = self;
@@ -144,7 +141,7 @@ $(function() {
          * function hide or show results list depending on the screen resizing ,
          */
         function showResults() {
-            var $winWidth = $(window).width();  
+            var $winWidth = $(window).width();
             if ($winWidth > 800) {
                 self.showResults(true);
             } else self.showResults(false);
@@ -202,32 +199,35 @@ $(function() {
         self.selectLocation = function(location) {
             /* toogle selected status */
             location.selected(!location.selected());
-            // localStorage.myLocations= ko.toJS(self.myLocations);
 
             /* hide the location list */
             self.showLocation(false);
-            /* 
-            *  if unselect remove the markers from the map for this location
-            *  decrement the totoal number of displayed pplace
+            /*
+            *  if unselect,
+            *   Remove the markers from the map for this location,
+            *   Decrement the totoal number of displayed pplace
             *  the total number of places is incremented with the nearby search functions
             */
             if (!location.selected()) {
-                //location.savePlaces = location.nearByPlaces();
                 self.numberPlaces(self.numberPlaces() - location.nearByPlaces().length);
                 location.nearByPlaces([]);// reset the nearby location places
-                // reset the marker
+                // prepare to remove the markers
                 if (location.marker) {
                     location.marker.setMap(null);
                 }
                  // re-center the map with  the first selected entry of the locations aray
                 self.setCenter();
-            };
-           // remove marker of the unselected location 
-           location.createMarkers(location.nearByPlaces()); 
+            } else {
+                 location.markLocation();   // add a marker for that location
+            }
+           // remove or add markers
+           location.createMarkers(location.nearByPlaces());
            if (self.numberPlaces() == 0) {
                 self.numberPlaces(0);
                 self.showResults(false);
            }
+           //save the modified myLocations array
+           /* ko.toJS has a security problem. below is a work around */
         };
 
         /* computed observable to return the city name of a location */
@@ -288,13 +288,13 @@ $(function() {
         */
 
         self.getPlace = function() {
-            myCategories =[];
-            self.myCategories(myCategories);
-             var keywords = self.keyword().trim();
-            // Searchbox will handle all keywords start with :
+            /* reset the categories */
+            var keywords = self.keyword().trim();
+            // The Search box will handle all keywords start with :
             if (keywords.substring(0, 1) == ":") {
                 return;
             }
+            myCategories =[];
             var categories = keywords.split(" ");
             self.getPlaces(categories);
 
@@ -308,6 +308,7 @@ $(function() {
                 if (cat.substring(0, 3) == "eat") cat = "food";
                 if (cat.substring(0, 5) == "metro") cat = "subway";
                 mapplacetype = mapPlaceTypes.filter(getCat);
+
                 mapplacetype.forEach(function(type) {
                     myCategories.push(type);
                 });
@@ -317,18 +318,12 @@ $(function() {
                     return stringStartsWith(maptype, cat);
                 };
             });
+            self.numberPlaces(0);
+            // save the updated categories array in local storage
+            localStorage.myCategories = JSON.stringify(myCategories);
+            // center the map using the geolocalization of first entry of the locations array
+            self.setCenter();
 
-            // display near by places returned by the
-            if (myCategories.length > 0) {
-                self.numberPlaces(0);
-                self.myLocations().forEach(function(location) {
-                    self.displayLocation(location);
-                });
-                // save the updated categories array in local storage
-                localStorage.myCategories = JSON.stringify(myCategories);
-                // center the map using the geolocalization of first entry of the locations array
-                self.setCenter();
-            }
         };
 
         /* Init the self.myLocations() observable array
@@ -338,29 +333,38 @@ $(function() {
         */
         self.addLocation = function(location) {
             myLocations.unshift(location);
-            var loc = new Location(location); // instancie a new locazion
-            self.myLocations.unshift(loc); // add it to the top of the observable location array
-            loc.markLocation();  // mark the new location
-
-            self.displayLocation(loc); // display nearby places for the new location using the nearby services
+            var loc = new Location(location); // instancie a new location
+            self.myLocations.unshift(loc);    // add it to the top of the observable location array and THAT's IT
+            loc.markLocation();               // mark the new location
             localStorage.myLocations = JSON.stringify(myLocations); // save the myLocations array to local storage
         };
 
         self.removeLocation = function(location) {
             var name = location.name;
+            // unselect the location if it is selected
             if (location.selected()) {
-                // unselect the location
                 self.selectLocation(location) ;
             }
-            /* remove the location */
-            var locations = self.myLocations().filter( function(location) {
-                 return (location.name != name);
+            /* remove the location of the locations observable array and That'sit */
+            /*  GET a security issue with
+            *       ko.toJS(self.myLocations()
+            *    Below is a work around to Jsonify the mylocations array
+            */
+            self.myLocations(self.myLocations().filter( function(location,idx) {
+                myLocations[idx].remove = true;
+                if (location.name != name) {
+                    myLocations[idx].remove = false;
+                    return location;
+                }
+            }));
+
+            // save the new locations array on the local storage
+            console.log("remove", myLocations);
+            myLocations =  myLocations.filter(function(location) {
+                if (location.remove == false) return location;
             });
-            self.myLocations(locations);
-            // unselect the location
+            localStorage.myLocations = JSON.stringify(myLocations);
         }
-
-
 
         /* set the center of the map using the goelocalisation of first selected
         * entry of the locationhs array
@@ -426,8 +430,9 @@ $(function() {
           it show or hide the results  independently of the screen size
         **/
         self.toggleResults = function() {
-
-            self.showResults(!self.showResults());
+            if (self.numberPlaces() > 0 ) {
+                self.showResults(!self.showResults());
+            }
         };
 
         /**
@@ -655,13 +660,17 @@ $(function() {
                 if (rawCategory.indexOf(val) != -1) return value;
             };
             myCategories = mapPlaceTypes.filter(Category);
+            console.log("myicons", myCategories);
             self.myCategories(myCategories);
             self.numberPlaces(0); // reset the total number of places for these categories
+            localStorage.myCategories = JSON.stringify(myCategories);
+
+            /*
             self.myLocations().forEach(function(location) {
-                // nearby places search for the location and display the results
                 self.displayLocation(location);
             });
-            localStorage.myCategories = JSON.stringify(myCategories);
+            */
+
         };
 
         /**
@@ -671,22 +680,29 @@ $(function() {
         self.resetIcons = function() {
             myCategories = [];
             self.myCategories(myCategories);
-            self.numberPlaces(0); 
+            self.numberPlaces(0);
             localStorage.myCategories = JSON.stringify(myCategories);
+            /*
             self.myLocations().forEach(function(location) {
                 self.displayLocation(location);
             });
+            */
         };
 
         self.hideIcons = function() {
+            // To do
         }
 
         /* internal computed observable that fires whenever anything changes in our locations */
         ko.computed(function () {
-          // TODO
+          // To do
         }.bind(self)).extend({
             rateLimit: { timeout: 500, method: 'notifyWhenChangesStop' }
         }); // save at most every 2 seconds
+
+        ko.onError = function(error) {
+            console.log(error);
+        }
 
     }; // end model
 

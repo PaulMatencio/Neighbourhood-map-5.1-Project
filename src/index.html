@@ -19,18 +19,18 @@
 
     <div id="search-box" group="controls">
         <input id="search-input" type="text" class="form-control" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlace" placeholder="Looking for places (separated by blank)  or :location ...">
-     
+
     </div>
     <div group="hz-buttons">
-        <button  type="core" data-bind="click: $root.toggleLocation">
+        <button type="core" data-bind="click: $root.toggleLocation">
             <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
         </button>
-         <button type="core" data-bind="click: $root.toggleCategory">
+        <button type="core" data-bind="click: $root.toggleCategory">
             <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
         </button>
-        <button  type="core" data-bind="click: $root.resetIcons">
+        <button type="core" data-bind="click: $root.resetIcons">
              <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-        </button-->
+        </button>
     </div>
 
     <div class="mycategories" group="controls" data-bind="visible:$root.showCategory">
@@ -88,7 +88,7 @@
         </div>
 
         <!--ul class="infolist" data-bind="foreach: $root.myLocations"-->
-         <ul class="infolist" data-bind="foreach: $root.filteredLocations">
+        <ul class="infolist" data-bind="foreach: $root.filteredLocations">
             <span data-bind="foreach: $data.nearByPlaces">
                 <li data-bind="click: $root.clickMarker">
                     <!-- picture -->
@@ -138,12 +138,11 @@
         <div id="review-page" class="viewport">
 
             <!--img  data-bind="click: closeReview " class="navButton" group="closeButton" src="images/stepbackward.png" alt="X"-->
-            <button  type="core" data-bind="click:$root.closeReview" class="navButton" group="closeButton" style="display: block">
+            <button type="core" data-bind="click:$root.closeReview" class="navButton" group="closeButton" style="display: block">
                 <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
             </button>
 
             <div group="review-lists">
-
                 <div class="review-title" data-bind="with: placeInFocus">
                     <div class="longtext">
                         <span class="p2" data-bind="text: $data.name"></span>
@@ -156,7 +155,6 @@
                     </div>
                     <div class="greytext" data-bind="text: $data.formatted_address"> </div>
                 </div>
-
                 <ul class="list-review" data-bind="foreach: placeReviews">
                     <li>
                         <div>
@@ -177,10 +175,9 @@
     <!--end review page -->
 
     <!-- Photos display -->
-
     <div class="viewport" data-bind="visible: placePhotos().length">
         <!--img id="close-photo" class="navButton" data-bind="click: closePhoto" group="closeButton" src="images/stepbackward.png" alt="X"-->
-        <button  type="core" data-bind="click:$root.closePhoto" class="navButton" group="closeButton" style="display: block">
+        <button type="core" data-bind="click:$root.closePhoto" class="navButton" group="closeButton" style="display: block">
             <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
         </button>
         <div data-bind="with: currentPhoto">
@@ -191,29 +188,20 @@
             <span> / </span>
             <span data-bind="text: placePhotos().length"></span>
         </div>
-
-        <!--img data-bind="click: photoBackward" id="backward" class="navButton" src="images/stepbackward.png" alt="<">
-        <img data-bind="click: photoForward" id="forward" class="navButton" src="images/stepforward.png" alt=">"-->
-
-        <button  type="core" data-bind="click:$root.photoBackward" class="navButton" group="backward" style="display: block">
+        <button type="core" data-bind="click:$root.photoBackward" class="navButton" group="backward" style="display: block">
             <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
         </button>
-         <button  type="core" data-bind="click:$root.photoForward" class="navButton" group="forward" style="display: block">
+        <button type="core" data-bind="click:$root.photoForward" class="navButton" group="forward" style="display: block">
             <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
         </button>
-
-
     </div>
-
 
     <!-- Tools bar -->
     <div data-bind="visible: showResults">
         <div id="btn-toolbar" group="controls">
-
             <button type="core" class="btn" style="display: block" data-bind="click: $root.resetIcons">
                 <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
             </button>
-
             <div class="btn-group" data-bind="foreach: icons" role="group" aria-label="plane">
                 <!--placeholder for filter buttons-->
                 <button type="button" class="btn">
@@ -221,7 +209,6 @@
                 </button>
                 <br>
             </div>
-
             <button id="hide" type="core" class="btn" style="display: block">
                 <span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span>
             </button>
@@ -229,12 +216,8 @@
     </div>
 
     <!-- New york times page -->
-    <!--div data-bind="visible: nytarticles().length"-->
     <div id="nytimes-page" class="viewport" data-bind="visible: nytarticles().length">
-
-        <!--img id="close-nytimes" group="closeButton" class="navButton" src="images/stepbackward.png" alt="X" data-bind="click: closeNyt"-->
-
-        <button  type="core" data-bind="click:$root.closeNyt" class="navButton" group="closeButton" style="display: block">
+        <button type="core" data-bind="click:$root.closeNyt" class="navButton" group="closeButton" style="display: block">
                 <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
         </button>
 
@@ -253,10 +236,8 @@
     <!--/div-->
 
     <!-- Wikipedia page -->
-
     <div id="wiki-page" class="viewport" data-bind="visible: wikiarticles().length">
-        <!--img id="close-wiki" group="closeButton" class="navButton" src="images/stepbackward.png" alt="X" data-bind="click: closeWiki"-->
-        <button  type="core" data-bind="click:$root.closeWiki" class="navButton" group="closeButton" style="display: block">
+        <button type="core" data-bind="click:$root.closeWiki" class="navButton" group="closeButton" style="display: block">
                 <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
         </button>
         <div class="Container" group="lists">
@@ -272,11 +253,10 @@
         </div>
     </div>
 
-
+    <!-- street view page -->
     <div data-bind="visible: showView">
         <div id="street-page" class="viewport">
-            <!--img id="close-street" group="closeButton" class="navButton" src="images/stepbackward.png" alt="X" data-bind="click: closeView"-->
-            <button  type="core" data-bind="click:$root.closeView" class="navButton" group="closeButton" style="display: block">
+            <button type="core" data-bind="click:$root.closeView" class="navButton" group="closeButton" style="display: block">
                 <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
             </button>
 
@@ -285,6 +265,7 @@
             </div>
         </div>
     </div>
+
     <!-- template scripts  for reviews page-->
     <script type="text/template" data-template="reviews">
         <div id="infoWindow" class="infoWindow">

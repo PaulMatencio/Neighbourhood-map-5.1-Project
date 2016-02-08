@@ -66,7 +66,7 @@ gMaps.prototype.markLocation = function() {
 
 // center the map around a location
 gMaps.prototype.setCenter = function() {
-    console.log(this.name());
+    // console.log(this.name());
     map.setCenter(new google.maps.LatLng(this.mapcenter().lat, this.mapcenter().lng));
     map.setZoom(13);
 };
@@ -79,8 +79,8 @@ gMaps.prototype.setCenter = function() {
  */
 gMaps.prototype.nearbySearch = function() {
     var self = this.self;
+    console.log("nearby search",self.myCategories());
     var service = new google.maps.places.PlacesService(this.map);
-    //console.log("start nearby searchfor location:",this.name() );
     service.nearbySearch({
         location: this.mapcenter(),
         radius: radius,
@@ -99,8 +99,8 @@ gMaps.prototype.getResults = function(results, status, pagination) {
         return value == "political";
     }
     var nearByPlaces=[];
-    if (status == google.maps.places.PlacesServiceStatus.OK) {   
-        
+    if (status == google.maps.places.PlacesServiceStatus.OK) {
+
         results.forEach(function(place) {
             if (place.types.filter(isPolitical).length == 0) {
                 nearByPlaces.push(place);
@@ -110,16 +110,16 @@ gMaps.prototype.getResults = function(results, status, pagination) {
 
         map.fitBounds(bounds);
         this.nearByPlaces(nearByPlaces);
-        //console.log("Results OK:", results.length," for location:",this.name(),"with categorie:",myCategories, "Nearby Places:",this.nearByPlaces());
+        console.log("Results OK:", results.length," for location:",this.name(),"with categorie:",myCategories, "Nearby Places:",this.nearByPlaces());
         this.createMarkers(this.nearByPlaces());
-        //console.log(this.nearByPlaces(),this.markers);
+        console.log(this.nearByPlaces(),this.markers);
     };
     /* set the location to the first  selected entry of the myLocations array
      * instead of location.setCenter();
     */
     self.setCenter() ;
     self.numberPlaces(self.numberPlaces() + nearByPlaces.length);
-    console.log("results",self.numberPlaces());
+    // console.log("results",self.numberPlaces());
 };
 
 /**

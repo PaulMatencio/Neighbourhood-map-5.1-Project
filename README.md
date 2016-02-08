@@ -45,7 +45,7 @@ Develop a single page application featuring a map of a neighborhood you would li
 
 * SEARCH BOX ( filter for google Maps categories or add a new Location)
 
-   Use the search box to find nearby places ( cafe, restaurant, movie , atm , shopping) of locations. You can type multiple place types must be separated by blan. There are 6 hard coded locations of Paris. When you type categories in the serach box, the application will look for nearby places around all the current locations.
+  Use the search box to find nearby places ( cafe, restaurant, movie , atm , shopping) of locations. You can type multiple place types must be separated by blan. There are 6 hard coded locations of Paris. When you type categories in the serach box, the application will look for nearby places around all the current locations.
 
   Looking for nearby places are handled by the application. However, the application will call Google maps nearby search services, therefore keyword must matched Google Maps place types. Some filter to map keyword to Google Place types are attempted. Further mapping must be done. You can also use the question mark at the end of the Search box to show the list of google applicable categories.
 
@@ -53,18 +53,25 @@ Develop a single page application featuring a map of a neighborhood you would li
 
   Places returned by nearby places services or searchBox are used to display the Place list and to make google maps markers.
 
-* BUTTON ( background color yellow) to show/hide the list of locations.
+* BUTTONS
 
- By default, the location list is hidden. To show the location list, click of this button.
+  There are 3 buttons after the SEARCH BOX
+  The first one is to display the list of Locations.
+  The second one is to display the list of list of categories ( place types) that can be used to look for places ( search box).
+  The third one is to refresh the list of categories ( place types)
+
 
 * LOCATION LIST ( Location filter)
 
-  You can check/uncheck a location. To add a new location, use the SEARCH BOX.
-  The new location will be  on top of the existing list of locations.
+  There are 5 hard coded locations, 4 are selected by default.
 
-  When user uncheck a location, markers (map) and places (list view) of that location will be hidden . When a location is checked, markers and places will be displayed.
+  To select/unselect a location you must click on the label of that location. Checing/unchecking is not enough.
+  To add a new location, use the SEARCH BOX ( type in the new location . The new location will be placed on top of the existing list of locations.
+  To delete a new location, click on the remove button on the right of the location label. This button is shown when user
 
-  You can check or click on the label of the location to check/uncheck a location. However with the current version, you must click on the label to fire hide/show markers and places of that location
+  When user unselect a location, all markers (map) and places (list view) of that location will be hidden. When a location is selected, markers and places will be displayed again.
+
+
 
 
 * PLACES LIST VIEW:
@@ -75,12 +82,14 @@ Develop a single page application featuring a map of a neighborhood you would li
 
    You can use the hamburger button located at top-right of your application window to  hide or show the Places list when the screen is small. It can be useful for devices with small screen.
 
-   Places ( and markers) are moved whena location is unchecked.
+   Places ( and markers) are moved whena location is unchecked. When all locations are unchecked or deleted, the list of places ( and the tool bars) will be hidden.
 
 * HAMBURGER BUTTON:
 
   This button is at the top-rigth of the Place list. This button is hidden on large screen.
-  You can use this button to hide or show the Placse list and the Button toolbar.
+
+  You can use this button to hide or show the Placse list and the Button toolbar if the number of places are > 0
+  Clicking on this button while the list of places is empty has no effect.
 
 * TOOLBAR ( filter place categories)
 

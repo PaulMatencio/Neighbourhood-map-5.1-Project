@@ -61,7 +61,6 @@ p {
 p a {
   text-decoration: none;
   color: #616161;
-  /* padding: 1.5em; */
 }
 
 p a:hover {
@@ -76,6 +75,15 @@ strong {
 [group~=controls] {
   position: absolute;
   background-color: white;
+}
+
+[group~=hz-buttons] {
+  z-index: 105;
+  top: 0;
+  margin: 0;
+  display: inline;
+  position: absolute;
+  left: 50%;
 }
 
 [group~=review-lists] {
@@ -98,22 +106,12 @@ strong {
   font-size: 18px;
 }
 
-[type~=core] {
-  background-color: #4b86b4;
-  color: white;
-  height: 30px;
-  width: 30px;
-  margin: 0;
-  padding: 0;
-  border: none;
-}
-
 [group~=photos] {
-    position: absolute;
-    max-width: 60%;
-    max-height: 80%;
-    top:50%;
-    left: 50%;
+  position: absolute;
+  max-width: 60%;
+  max-height: 80%;
+  top: 50%;
+  left: 50%;
 }
 
 [group~=closeButton] {
@@ -126,33 +124,6 @@ strong {
   height: 40px;
 }
 
-#search-box input:focus {
-  background-color: white;
-}
-
-#hide-list {
-  z-index: 105;
-  right: 1vw;
-  top : 1vw;
-  margin: 0;
-}
-
-#map-canvas {
-  height: 100%;
-}
-
-#search-box {
-  display: inline;
-  width: 45%;
-  top:  0%;
-  left: 5%;
-}
-
-.backward {
-  left: 15%;
-  top: 50%;
-}
-
 [group~=backward] {
   position: absolute;
   z-index: 110;
@@ -163,11 +134,6 @@ strong {
   height: 40px;
 }
 
-.forward {
-  right: 15%;
-  top: 50%;
-}
-
 [group~=forward] {
   position: absolute;
   z-index: 110;
@@ -176,6 +142,38 @@ strong {
   right: 15%;
   width: 40px;
   height: 40px;
+}
+
+[type~=core] {
+  background-color: #4b86b4;
+  color: white;
+  height: 30px;
+  width: 30px;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+#search-box input:focus {
+  background-color: white;
+}
+
+#hide-list {
+  z-index: 105;
+  right: 1vw;
+  top: 1vw;
+  margin: 0;
+}
+
+#map-canvas {
+  height: 100%;
+}
+
+#search-box {
+  display: inline;
+  width: 45%;
+  top: 0%;
+  left: 5%;
 }
 
 #photoCounter {
@@ -201,9 +199,9 @@ strong {
 }
 
 .p2 {
-    font-size: 20px;
-    padding:  10px;
-    font-weight: bold;
+  font-size: 20px;
+  padding: 10px;
+  font-weight: bold;
 }
 
 .review-title {
@@ -248,15 +246,15 @@ strong {
 }
 
 .viewport {
- width: 100%;
- height: 100%;
- position: absolute;
- z-index: 110;
- top: 0;
- background: -moz-linear-gradient(left,  rgba(216,224,222,0.6) 10%, rgba(189,203,200,0.65) 14%, rgba(174,191,188,0.70) 22%, rgba(153,175,171,0.75) 33%, rgba(142,166,162,0.8) 50%, rgba(130,157,152,0.85) 67%, rgba(78,92,90,0.89) 82%, rgba(14,14,14,1) 100%);
- background: -webkit-linear-gradient(left,  rgba(216,224,222,0.6) 10%,rgba(189,203,200,0.65) 14%,rgba(174,191,188,0.70) 22%,rgba(153,175,171,0.75) 33%,rgba(142,166,162,0.8) 50%,rgba(130,157,152,0.85) 67%,rgba(78,92,90,0.89) 82%,rgba(14,14,14,1) 100%);
- background: linear-gradient(to right,  rgba(216,224,222,0.6) 10%,rgba(189,203,200,0.65) 14%,rgba(174,191,188,0.70) 22%,rgba(153,175,171,0.75) 33%,rgba(142,166,162,0.8) 50%,rgba(130,157,152,0.85) 67%,rgba(78,92,90,0.89) 82%,rgba(14,14,14,1) 100%);
- /* filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7ad8e0de', endColorstr='#0e0e0e',GradientType=1 ); */
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 110;
+  top: 0;
+  background: -moz-linear-gradient(left,  rgba(216,224,222,0.6) 10%, rgba(189,203,200,0.65) 14%, rgba(174,191,188,0.70) 22%, rgba(153,175,171,0.75) 33%, rgba(142,166,162,0.8) 50%, rgba(130,157,152,0.85) 67%, rgba(78,92,90,0.89) 82%, rgba(14,14,14,1) 100%);
+  background: -webkit-linear-gradient(left,  rgba(216,224,222,0.6) 10%,rgba(189,203,200,0.65) 14%,rgba(174,191,188,0.70) 22%,rgba(153,175,171,0.75) 33%,rgba(142,166,162,0.8) 50%,rgba(130,157,152,0.85) 67%,rgba(78,92,90,0.89) 82%,rgba(14,14,14,1) 100%);
+  background: linear-gradient(to right,  rgba(216,224,222,0.6) 10%,rgba(189,203,200,0.65) 14%,rgba(174,191,188,0.70) 22%,rgba(153,175,171,0.75) 33%,rgba(142,166,162,0.8) 50%,rgba(130,157,152,0.85) 67%,rgba(78,92,90,0.89) 82%,rgba(14,14,14,1) 100%);
+ /* filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7ad8e0de', endColorstr='#0e0e0e',GradientType=1 ); */;
 }
 
 .btn-toolbar-img {
@@ -282,21 +280,18 @@ strong {
   max-height: 72%;
   margin: 5px 0 5px 0;
   padding: 2px;
-
 }
 
 .list-review {
   font-size: 14px;
   overflow-x: hidden;
   overflow-y: scroll;
-  /* max-height: 72%; */
   margin: 5px 0 5px 0;
   padding: 2px;
 }
 
 .infolist::-webkit-scrollbar,
-.list-review::-webkit-scrollbar,
-  {
+.list-review::-webkit-scrollbar, {
   width: 12px;
   overflow: visible;
   margin: 10px;
@@ -304,14 +299,13 @@ strong {
 }
 
 .infolist::-webkit-scrollbar-thumb,
-.list-review::-webkit-scrollbar-thumb
- {
+.list-review::-webkit-scrollbar-thumb {
   background-color: #4b86b4;
   height: 30px;
   box-shadow: inset 1px 1px 0 rgba(0,0,0,.2),inset 0 -1px 0 rgba(0,0,0,.1);
 }
 
-.infolist li  {
+.infolist li {
   padding: 0px 2px 3px 2px;
   padding-bottom: 3px;
   margin-bottom: 4px;
@@ -324,11 +318,11 @@ strong {
   padding-bottom: 3px;
   margin-bottom: 6px;
   color: #989696;
-  background-color: #fffae3;;
+  background-color: #fffae3;
   cursor: pointer;
 }
 
-.infolist li:hover, .list-review li:hover{
+.infolist li:hover, .list-review li:hover {
   background-color: #d1e1ec;
 }
 
@@ -336,7 +330,7 @@ strong {
   background-color: #b3cde0;
 }
 
-.info-header{
+.info-header {
   font-size: 16px;
 }
 
@@ -351,7 +345,7 @@ strong {
 }
 
 .col-md-4 {
-  padding-right: 5px ;
+  padding-right: 5px;
   height: inherit;
 }
 
@@ -363,7 +357,7 @@ img.photo {
   left: 20%;
   display: block;
   margin-left: auto;
-  margin-right: auto
+  margin-right: auto;
 }
 
 img.street-view {
@@ -374,7 +368,7 @@ img.street-view {
   left: 10%;
   display: block;
   margin-left: auto;
-  margin-right: auto
+  margin-right: auto;
 }
 
 .navButton {
@@ -394,11 +388,11 @@ img.street-view {
 }
 
 .btn-toolbar-img {
-    width: 17px;
+  width: 17px;
 }
 
 .btn {
-    padding: 4px;
+  padding: 4px;
 }
 
 .rate-star {
@@ -430,14 +424,13 @@ img.street-view {
 }
 
 .row {
-  /* height: 10vh; */
   margin-top: 3px;
 }
 
 .list-review {
   width: 95%;
-  height: 70% ;
-  margin: 0 2.5% 0 2.5% ;
+  height: 70%;
+  margin: 0 2.5% 0 2.5%;
 }
 
 .list-photo {
@@ -457,7 +450,7 @@ img.street-view {
   width: 280px;
 }
 
-.opening, .rating{
+.opening, .rating {
   color: #4a7ea7;
   white-space: normal;
 }
@@ -474,20 +467,10 @@ img.street-view {
   top: 15%;
   left: 40%;
   border-radius: 5px;
-
 }
 
 .select {
   dispaly: block;
-}
-
-[group~=hz-buttons] {
-  z-index: 105;
-  top: 0;
-  margin: 0;
-  display: inline;
-  position: absolute;
-  left: 50%;
 }
 
 #close-location {
@@ -507,7 +490,7 @@ img.street-view {
   max-width: 250px;
   height: 230px;
   font-size: 14px;
-  z-index:106;
+  z-index: 106;
 }
 
 #location-list {
@@ -524,7 +507,8 @@ img.street-view {
 }
 
 #location-list li label {
-  color: #d9d9d9;
+  /* color: #d9d9d9; */
+  color: #a9a9a9;
   white-space: pre-line;
   word-break: break-all;
   padding: 0 0 0 10px;
@@ -533,8 +517,7 @@ img.street-view {
   transition: color 0.4s;
 }
 
-#location-list li.selected label{
-  /* color: #d9d9d9; */
+#location-list li.selected label {
   color: gray;
 }
 
@@ -590,14 +573,12 @@ img.street-view {
   display: block;
 }
 
-
-
 /* Media query */
 @media screen and (min-width: 1170px) {
   .results {
     width: 22%;
     max-width: 350px;
-  }
+  };
 }
 
 @media screen and (min-width: 750px) and (max-width: 1169px) {
@@ -618,7 +599,7 @@ img.street-view {
   }
 
   #photoCounter {
-   bottom: 2%;
+    bottom: 2%;
     font-size: 18px;
   }
 
@@ -626,7 +607,7 @@ img.street-view {
     display: none;
   }
 
-   #btn-toolbar {
+  #btn-toolbar {
     bottom: 7%;
   }
 
@@ -638,7 +619,7 @@ img.street-view {
     padding: 5px;
   }
 
-  [group~=lists] {
+  [ group~=lists] {
     height: 92%;
   }
 
@@ -647,11 +628,11 @@ img.street-view {
   }
 
   .nytimes-header,.wiki-header {
-      font-size: 14px;
+    font-size: 14px;
   }
 
   .article {
-    font-size : 14px;
+    font-size: 14px;
   }
 
   .btn-toolbar-button {
@@ -680,7 +661,7 @@ img.street-view {
 
   h3 {
     font-size: 1.1em;
-  }
+  };
 }
 
 @media screen and (max-width: 749px) {
@@ -695,24 +676,23 @@ img.street-view {
     height: 65%;
   }
 
-  [type~=core] {
-  background-color: #4b86b4;
-  color: white;
-  height: 26px;
-  width: 26px;
-}
-
+  [ type~=core] {
+    background-color: #4b86b4;
+    color: white;
+    height: 26px;
+    width: 26px;
+  }
 
   #location {
-    left:15%;
+    left: 15%;
     width: 70%;
   }
 
-  .info-header{
-  font-size: 14px;
+  .info-header {
+    font-size: 14px;
   }
 
-  [group~=lists] {
+  [ group~=lists] {
     font-size: 16px;
   }
 
@@ -724,8 +704,5 @@ img.street-view {
   button {
     width: 26px;
     height: 26px;
-  }
-
-
+  };
 }
-
