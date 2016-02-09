@@ -103,7 +103,7 @@ $(function() {
          * initAutocomplete
          */
         var myMaps, marker_animation, infoWindow;
-        try { 
+        try {
             myMaps = new gMaps();
             infoWindow = myMaps.infoWindow;
             marker_animation = myMaps.marker_animation;
@@ -113,7 +113,7 @@ $(function() {
         catch (e) {
             alert.render("failed to load Google maps, check your network")
         }
-        
+
         /* define third parties  servies url */
         var nyturl = "http://api.nytimes.com/svc/search/v2/articlesearch.json?",
             streetViewApiKey = "AIzaSyAUYlUoaLYjM8hidnMVQ05zXiEXJ87dFiY",
@@ -662,10 +662,11 @@ $(function() {
         $(window).resize(function() {
             showResults();
         });
-
+        /*
         $(document).ready(function() {
             showResults();
         });
+        */
 
         /**
           Based on which icon is pressed, map API nearby search is called with altered categories
@@ -706,20 +707,6 @@ $(function() {
 
         self.hideIcons = function() {
             // To do
-        }
-
-        /* internal computed observable that fires whenever anything changes in our locations */
-        ko.computed(function() {
-            // To do
-        }.bind(self)).extend({
-            rateLimit: {
-                timeout: 500,
-                method: 'notifyWhenChangesStop'
-            }
-        }); // save at most every 2 seconds
-
-        ko.onError = function(error) {
-            console.log(error);
         }
 
     }; // end model

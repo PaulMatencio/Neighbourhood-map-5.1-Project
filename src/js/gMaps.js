@@ -207,7 +207,7 @@ gMaps.prototype.removeMarkers = function() {
  */
 
 gMaps.prototype.createMarkers = function(places) {
-    var iconSize = Math.sqrt($(window).width()) + 20;
+    var iconSize = Math.sqrt($(window).width()) + 30;
 
     // Clear out the old markers for this location
     this.removeMarkers();
@@ -459,7 +459,7 @@ gMaps.prototype.getOpenings = function(place) {
 
 function CustomAlert() {
 
-    // render method 
+    // render method
     this.render = function(dialog) {
         var winW = window.innerWidth;
         var winH = window.innerHeight;
@@ -474,7 +474,7 @@ function CustomAlert() {
         document.getElementById('alertboxfoot').innerHTML = '<button onclick="Alert.ok()">OK</button>';
     }
 
-    // ok method 
+    // ok method
     this.ok = function() {
         document.getElementById('alertbox').style.display = "none";
         document.getElementById('alertoverlay').style.display = "none";
@@ -647,7 +647,7 @@ var myLocations = [{
         lat: 48.819067,
         lng: 2.360230
     },
-    selected: true
+    selected: false
 }, {
     name: "Place de la Nation",
     city: "Paris France",
@@ -655,7 +655,7 @@ var myLocations = [{
         lat: 48.847895,
         lng: 2.395984
     },
-    selected: true
+    selected: false
 }, {
     name: "Porte de la Chapelle",
     city: "Paris France",
@@ -663,7 +663,7 @@ var myLocations = [{
         lat: 48.896748,
         lng: 2.363993
     },
-    selected: true
+    selected: false
 }]
 
 /*
