@@ -89,7 +89,8 @@ strong {
 [group~=review-lists] {
   position: absolute;
   background-color: #fffae3;
-  top: 5%;
+  top: 40px;
+  padding: 10px;
   max-width: 80%;
   height: 90%;
   left: 10%;
@@ -98,12 +99,12 @@ strong {
 [group~=lists] {
   position: absolute;
   background-color: #fffae3;
-  padding: 10px;
-  top: 5%;
+  padding: 10px 20px 0px 20px;
+  top: 40px;
   max-width: 60%;
   height: 90%;
   left: 10%;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 [group~=photos] {
@@ -118,7 +119,7 @@ strong {
   position: absolute;
   z-index: 110;
   cursor: pointer;
-  top: 30px;
+  top: 50px;
   left: 20px;
   width: 40px;
   height: 40px;
@@ -652,10 +653,6 @@ img.street-view {
     padding: 5px;
   }
 
-  [ group~=lists] {
-    height: 92%;
-  }
-
   .infolist {
     font-size: 11px;
   }
@@ -726,7 +723,7 @@ img.street-view {
   }
 
   [ group~=lists] {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .review-title {

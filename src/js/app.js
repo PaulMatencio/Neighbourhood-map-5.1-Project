@@ -665,6 +665,7 @@ $(function() {
          
         $(document).ready(function() {
             $('#marker').toggle();
+            $('#options').toggle();
         });
          
 

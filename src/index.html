@@ -34,6 +34,21 @@
         </button>
     </div>
 
+<div id="options" style="display: none;">
+    <!-- location list-->
+    <div data-bind="visible: $root.showLocation || Locations().length > 0">
+        <div id="location" group="controls">
+            <ul id="location-list" group="controls" data-bind="foreach: $root.filteredLocations">
+                <span data-bind="with:$parent.displayLocation($data)"></span>
+                <li data-bind="css:{selected:selected}">
+                    <button class="destroy" data-bind="click: $root.removeLocation"></button>
+                    <input class="toggle" data-bind="checked: $data.selected" type="checkbox">
+                    <label data-bind="text: $data.name, event: { click: $root.selectLocation }"></label>
+                </li>
+            </ul>
+        </div>
+    </div>
+
     <div class="mycategories" group="controls" data-bind="visible:$root.showCategory">
         <div class="select">
             <h3 style="background-color:#6890C1;padding:5px;color:white">Choose multiple categories</h3>
@@ -52,20 +67,8 @@
         </button>
     </div>
 
-    <!-- location list-->
-    <div data-bind="visible: $root.showLocation || Locations().length > 0">
-        <div id="location" group="controls">
-            <ul id="location-list" group="controls" data-bind="foreach: $root.filteredLocations">
-                <span data-bind="with:$parent.displayLocation($data)"></span>
-                <li data-bind="css:{selected:selected}">
-                    <button class="destroy" data-bind="click: $root.removeLocation"></button>
-                    <input class="toggle" data-bind="checked: $data.selected" type="checkbox">
-                    <label data-bind="text: $data.name, event: { click: $root.selectLocation }"></label>
-                </li>
-            </ul>
-        </div>
-    </div>
-
+  
+</div>
     <!-- button to hide or show the search result list -->
     <!--div class="hide-result" group="controls">
         <a data-bind="click: $root.toggleResults">
@@ -151,7 +154,9 @@
     <!-- end of place search result -->
 
     <!--Review page -->
-<div id="marker" style="display: none;">
+
+<div id="marker" style="display: none;">    
+    
     <div data-bind="visible: placeReviews().length">
         <div id="review-page" class="viewport">
             <button type="core" data-bind="click:$root.closeReview" class="navButton" group="closeButton" style="display: block">
@@ -191,7 +196,7 @@
     <!--end review page -->
 
     <!-- Photos display -->
-    <div class="viewport" data-bind="visible: placePhotos().length">
+    <div id="photos-page" class="viewport" data-bind="visible: placePhotos().length">
         <button type="core" data-bind="click:$root.closePhoto" class="navButton" group="closeButton" style="display: block">
             <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
         </button>
