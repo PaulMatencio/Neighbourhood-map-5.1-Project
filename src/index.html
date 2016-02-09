@@ -63,13 +63,13 @@
     </div>
 
     <!-- button to hide or show the search result list -->
-    <div class="hide-result" group="controls">
+    <!--div class="hide-result" group="controls">
         <a data-bind="click: $root.toggleResults">
             <svg xmls="http://www/w3/org/2000/svg" viewbox="0 0 24 24">
                 <path d="M2 6h20v3H2zm0 5h20v3H2zm0 5h20v3H2z"></path>
             </svg>
         </a>
-    </div>
+    </div-->
 
     <!-- place search result -->
     <div class="results container-fluide" group="controls" data-bind="visible: $root.showResults">
@@ -376,9 +376,9 @@
       })(document);
     </script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" async></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js" async></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places&callback=initMap" async></script>
-    <script type="text/javascript" src="js/gMaps.js"></script>
+    <script type="text/javascript" src="js/gMaps.js" async></script>
   </body>
 </html>
