@@ -662,11 +662,11 @@ $(function() {
         $(window).resize(function() {
             showResults();
         });
-        /*
+         
         $(document).ready(function() {
-            showResults();
+            $('#marker').toggle();
         });
-        */
+         
 
         /**
           Based on which icon is pressed, map API nearby search is called with altered categories
@@ -731,7 +731,8 @@ $(function() {
     /**
      * Handle .btn-toolbar click events.
      * Will be replaced by self.hideIcons
-     */
+    */ 
+    /*
     $('#hide').click(function() {
 
         var glyph = '',
@@ -748,5 +749,19 @@ $(function() {
 
         $(this).children('span').attr('class', glyph);
     });
+    */
+    
+     $('#hide').click(function() {
 
+        var $span = $(this).children('span');
+        var $direction = $span.text();
+        if ($direction == "⊳⊳") { 
+            $direction = "⊲⊲" ;
+        } else  $direction = "⊳⊳";
+        console.log($direction);
+        $span.text($direction);
+        $(this).siblings('div').animate({
+            width: "toggle"
+        }, 500);
+      });
 });

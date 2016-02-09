@@ -207,7 +207,7 @@ gMaps.prototype.removeMarkers = function() {
  */
 
 gMaps.prototype.createMarkers = function(places) {
-    var iconSize = Math.sqrt($(window).width()) + 30;
+    var iconSize = Math.sqrt($(window).width()) + 24;
 
     // Clear out the old markers for this location
     this.removeMarkers();
@@ -240,7 +240,7 @@ gMaps.prototype.createMarkers = function(places) {
 
         if (width < 800) {
             offsetX = -30;
-            offsetY = -1 * (height / 2 + 50);
+            offsetY = -1 * (height / 2 + 40); /* +50 */
         }
 
         /* define the click function for the marker*/

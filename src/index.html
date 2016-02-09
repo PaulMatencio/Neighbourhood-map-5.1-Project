@@ -20,14 +20,17 @@
         <input id="search-input" type="text" class="form-control" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlace" placeholder="Looking for places (separated by blank)  or :location ...">
     </div>
     <div group="hz-buttons">
-        <button type="core" data-bind="click: $root.toggleLocation">
-            <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+        <button type="core" data-bind="click: $root.toggleLocation" class="hz-button">
+            <!--span class="glyphicon glyphicon-list" aria-hidden="true"></span-->
+            <span> ☰</span>
         </button>
-        <button type="core" data-bind="click: $root.toggleCategory">
-            <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
+        <button type="core" data-bind="click: $root.toggleCategory" class="hz-button">
+            <!--span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span-->
+            <span> ☷ </span>
         </button>
-        <button type="core" data-bind="click: $root.resetIcons">
-             <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+        <button type="core" data-bind="click: $root.resetIcons" class="hz-button">
+             <!--span class="glyphicon glyphicon-refresh" aria-hidden="true"></span-->
+             <span> ⚡⚡</span>
         </button>
     </div>
 
@@ -44,7 +47,8 @@
     <!-- button to hide or show the search result list -->
     <div class="hide-result" group="controls">
          <button type="core" data-bind="click: $root.toggleResults">
-            <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
+            <!--span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span-->
+            <span> ☷ </span>
         </button>
     </div>
 
@@ -124,10 +128,30 @@
             <img src="images/googlelogo.jpg" alt="Google" />
         </div>
     </div>
-
+    <!-- Tools bar -->
+    <div data-bind="visible: showResults">
+        <div id="btn-toolbar" group="controls">
+            <button type="core" class="btn" style="display: block" data-bind="click: $root.resetIcons">
+                <!--span class="glyphicon glyphicon-refresh" aria-hidden="true"></span-->
+                <span> ⚡⚡ </span>
+            </button>
+            <div class="btn-group" data-bind="foreach: icons" role="group" aria-label="plane">
+                <!--placeholder for filter buttons-->
+                <button type="button" class="btn">
+                    <img class="btn-toolbar-img" data-bind="click: $root.myIcons, attr: {src: icon}" alt="icon">
+                </button>
+                <br>
+            </div>
+            <button id="hide" type="core" class="btn" style="display: block">
+                <!--span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span-->
+                <span>⊲⊲</span>
+            </button>
+        </div>
+    </div>
     <!-- end of place search result -->
 
     <!--Review page -->
+<div id="marker" style="display: none;">
     <div data-bind="visible: placeReviews().length">
         <div id="review-page" class="viewport">
             <button type="core" data-bind="click:$root.closeReview" class="navButton" group="closeButton" style="display: block">
@@ -187,24 +211,7 @@
         </button>
     </div>
 
-    <!-- Tools bar -->
-    <div data-bind="visible: showResults">
-        <div id="btn-toolbar" group="controls">
-            <button type="core" class="btn" style="display: block" data-bind="click: $root.resetIcons">
-                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-            </button>
-            <div class="btn-group" data-bind="foreach: icons" role="group" aria-label="plane">
-                <!--placeholder for filter buttons-->
-                <button type="button" class="btn">
-                    <img class="btn-toolbar-img" data-bind="click: $root.myIcons, attr: {src: icon}" alt="icon">
-                </button>
-                <br>
-            </div>
-            <button id="hide" type="core" class="btn" style="display: block">
-                <span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span>
-            </button>
-        </div>
-    </div>
+    
 
     <!-- New york times page -->
     <div id="nytimes-page" class="viewport" data-bind="visible: nytarticles().length">
@@ -256,7 +263,7 @@
             </div>
         </div>
     </div>
-
+</div>
     <!-- custom alert box -->
     <div id="alertoverlay"></div>
     <div id="alertbox">
@@ -345,7 +352,6 @@
             }, {
             "featureType": "landscape.natural"
             }];
-
         function initMap() {
             map = new google.maps.Map(document.querySelector('#map-canvas'), mapOptions);
             var styledMap = new google.maps.StyledMapType(mapStyle, {
@@ -355,7 +361,6 @@
             map.setMapTypeId('map_style');
             // append the app.js script  when the MAPS API is loaded
             (function(d) {
-
                 var wf = d.createElement('script'),
                        s = d.scripts[d.scripts.length-1];
                 wf.src = 'js/app.js';
@@ -381,4 +386,5 @@
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places&callback=initMap" async></script>
     <script type="text/javascript" src="js/gMaps.js" async></script>
   </body>
+
 </html>
