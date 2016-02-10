@@ -4,6 +4,7 @@ var gulp = require('gulp'),
     imagemin = require('gulp-imagemin'),
     plumber = require('gulp-plumber'),
     minifyinline = require('gulp-minify-inline'),
+    critical = require('critical'),
     minifyhtml = require('gulp-minify-html');
 
 // HTML minifier
@@ -104,4 +105,4 @@ gulp.task('watch', function() {
   gulp.watch('src/images/*', ['optimize-image']);
 });
 
-gulp.task('default', ['mini-html', 'mini-js','mini-css', 'compress-image','watch']);
+gulp.task('default', ['mini-html', 'mini-js','mini-css', 'compress-image','critical','watch']);
