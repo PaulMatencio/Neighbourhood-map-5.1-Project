@@ -25,10 +25,10 @@ The difference with the first version are
 * Google maps API is asynchronously loaded
 * 6 different hard coded locations, You can select/unselect or add new location
 * button to show/hide the list of locations that user can select/unselect or remove
-* button to display the list of categories that user can select/unselect filter 
+* button to display the list of categories that user can select/unselect filter
 * list of locations ( hidden by default)
 * list of place types (hidden by default)
-* In addition to look for places categories nearby locations, the search box can be used to add a new location via to Google Maps searchbox. 
+* In addition to look for places categories nearby locations, the search box can be used to add a new location via to Google Maps searchbox.
 * To add  a new location, you must prefix your desired location with a double colon :  ( as for instance :NewYork central park or a full address)
 
 
@@ -51,28 +51,28 @@ Develop a single page application featuring a map of a neighborhood you would li
 
   Looking for nearby places are handled by the application. However, the application will call Google maps nearby search services, therefore keyword must matched Google Maps place types. Some filter to map keyword to Google Place types are attempted. Further mapping must be done. You can also use the question mark at the end of the Search box to show the list of google applicable categories.
 
-  To add a new  location, type :new-location as for instance :London picadelly square or :Newyork central park or any full address. 
-  When a new location is entered, the application will use the Google maps searchBox services to look ONLY for coordinates ( textsearch services could be used instead), it will not use the nearby places returned by Google Search box. The coordinated returmed by search-box are used to mark the location and by the nearby search services to look for nearby places. 
+  To add a new  location, type :new-location as for instance :London picadelly square or :Newyork central park or any full address.
+  When a new location is entered, the application will use the Google maps searchBox services to look ONLY for coordinates ( textsearch services could be used instead), it will not use the nearby places returned by Google Search box. The coordinated returmed by search-box are used to mark the location and by the nearby search services to look for nearby places.
 
   Places returned by nearby places services  are used to display the Place list and to make google maps markers.
 
-* BUTTONS
+* BUTTONS (for controlling locations and place types)
 
   There are 3 buttons after the SEARCH BOX
 
-  The first one is to display the list of Locations.
+  The first button is to display the list of Locations, and to select, unselect or remove a Location. Adding a location is done with the Search-Box. The updated list of locations is saved on Local storage when a location is removed. Select or unselect operations are not saved to local storage for the moment. When the ko.toJS() issues is solved, it will be implemented
 
-  The second one can be used to filter multiple categories ( place types)
+  The second button can be used to select/unselect multiple categories ( place types). Every time, place types are updated (select or inselect), a new nearby search is performed for every selected location.
 
-  The third one is to refresh the list of categories ( place types). 
+  The third one is to refresh the list of categories ( place types). This button has be removed. User can use the refresh button on top of the tool bar. The refresh button will reset the place types ( empty the selected place types array)
 
 
 * LOCATION LIST ( Location filter)
 
-  There are 5 hard coded locations, 4 are selected by default.
+  There are 5 hard coded locations in Paris, only 1 is selected by default. User can select them one by one afterwards using the search box. Moreover user can add/remove new locations using the Search Box as mentioned above.
 
-  To select/unselect a location you must click on the label of that location. Checing/unchecking is not enough.
-  To add a new location, use the SEARCH BOX ( type in the new location prefixed by a double colon :. The new location will be placed on top of the existing list of locations.
+  To select/unselect a location you must ** click on the label of that location. Checking/unchecking is not enough. **
+  To add a new location, use the SEARCH BOX ( type in the new location prefixed by a double colon :. ** The new location will be placed on top of the existing list of locations. **
   To delete a new location, click on the remove button on the right of the location label. This button is shown when user pass the mouse over the label.
 
   When user unselect a location, all markers (map) and places (list view) of that location will be hidden. When a location is selected, markers and places will be displayed again.
@@ -80,7 +80,7 @@ Develop a single page application featuring a map of a neighborhood you would li
 
 * PLACES LIST VIEW:
 
-   The place list viewis on the right, you can find the places corresponding to the markers. Clicking on one place will focus the map on the place and will open an info window. Every place contain a refence to its marker.
+   The place list view is on the right, you can find the places corresponding to the markers. Clicking on one place will focus the map on the place and will open an info window. Every place contain a refence to its marker.
 
    When a info window is opened, the center of the map will slide, and depending on the size if the screen, the Places List can be hidden. The Places list can be shown as described below
 
@@ -92,8 +92,8 @@ Develop a single page application featuring a map of a neighborhood you would li
 
   This button is at the top-rigth of the Place list. This button is hidden on large screen.
 
-  You can use this button to hide or show the Placse list and the Button toolbar if the number of places are > 0
-  Clicking on this button while the list of places is empty has no effect.
+  You can use this button to hide or show the Placse list and the Button toolbar if the number of places are > 0. Clicking on this button while the list of places is empty has no effect.
+
 
 * TOOLBAR ( filter place categories)
 
@@ -105,33 +105,38 @@ Develop a single page application featuring a map of a neighborhood you would li
 
    If you move into a new location, the application will use these categories to filter the nearbysearch.
 
-   Important: You can reset the search with the refresh button. This will clear the category filters ( both memory and local storage copies) and return the 10-20 most popular places in the area. Ĝoogle Maps may
+   Important: You can reset the search with the refresh button. This will clear the category filters ( both memory and local storage copies) and return the 10-20 most popular places in the area without specific categories.
 
 
 * INFO WINDOW:
 
    You can find useful information here like the name of the place, address, opening hours, newyork times headline/link(if existing), wikipedia link for the city, newyork times articles and street views
 
-* Photo viewer for dispaying photos for a place  [click on Photos link of the info window]
+* PHOTO VIEWER for dispaying photos for a place  [click on Photos link of the info window]
 
-* List of reviews for a place [click on Reviews link of the info window]
+* REVIEWS LIST for a place [click on Reviews link of the info window]
 
   **Nothing happen** if there is no reviews
 
-* New york times headline  and latest news for a city and country ( based of the address of the place)  [Click on NYT articles of the info window]
+* NEW YORK times headline  and latest news for a city and country ( based of the address of the place)  [Click on NYT articles of the info window]
 
   **Nothing happen** if there is no article
 
-* Wiki pedia [ click on W link of the info window]
+* WIKIPEDIA [ click on W link of the info window]
 
   **Nothing happen** if there is no wiki
 
-* Street views [ click on view icon of the info window]
+* STREET VIEW [ click on view icon of the info window]
 
 
 * LOCAL STORAGE
 
-  To reset your local storage, go to the console of your browser and type localStorage.clear() . This will clear the localStorage.mapCenter and localStorage.myCategories leaved by this application
+  Added and removed locations are saved in Local storage.
+  Selected place types are saved in Local storage.
+
+  ** I have a problem with ko.toJS to save observable array, therefore ko observable array are converted into javascript array and saved **
+
+  To reset your local storage, go to the console of your browser and type localStorage.clear() . This will clear the localStorage.myLocations and localStorage.myCategories arrays.
 
 * RESPONSIVE APPLICATION
 
@@ -142,6 +147,7 @@ Develop a single page application featuring a map of a neighborhood you would li
   The infowiew of a marker provides less information about a place.
   The listview and tool bars are hidden when user click on a marker. Use the hambuger menu on the top right corner to display them back.
 
+*  Google Maps is asynchronously loaded and the script app.js is appened ât the end of the document script's array with the defer option by the initMap() function. However, for any reason, knockout.js may not be loaded when app.js will start, an alert box will be displayed if this happen.
 
 ###Resources and tools that are used
 
@@ -156,7 +162,7 @@ Develop a single page application featuring a map of a neighborhood you would li
 * [Convert command] (http://www.imagemagick.org/script/convert.php)
 
 ###I was Inspired by
-*The toolbar of the Project 5 below and the todo-ko that I have modified below.
+*The toolbar is isnspired by the Project 5 below and the location lists is inspired by todo-ko that I have modified below.
 
 * [Project5] (http://devrob.github.io/Udacity-WebDev-project5)
 * [todo-ko] (https://github.com/PaulMatencio/todomvc-ko)
@@ -170,6 +176,7 @@ Develop a single page application featuring a map of a neighborhood you would li
     * [minify inline javascript] (https://www.npmjs.com/package/gulp-minify-inline)
     * [minify CSS with gulp-minify-css](https://www.npmjs.com/package/gulp-minify-css)
     * [minify HTML with gulp-minify-html](https://www.npmjs.com/package/gulp-minify-html)
+    * [citical inline CSS] (https://www.npmjs.com/package/critical)
 
 * pixlr to manipulate images
 

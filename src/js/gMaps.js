@@ -139,8 +139,8 @@ gMaps.prototype.initAutocomplete = function() {
 
     /*
      * Search for new place is handled by the modelview getPlaces function
-     * However, if the searck keyword startwith ":", the modelview getPlaces function just exit, the boxsearch is used to
-     * for a new location
+     * However, if the searck keyword startwith ":", the modelview getPlaces function just do nothing and the boxsearch is used to
+     * for searching a new location ( using searchBox)
      *
      * boysearch: only search for a new location is valid, as for instance
      *
@@ -160,6 +160,10 @@ gMaps.prototype.initAutocomplete = function() {
         var places = searchedPlaces.length;
         if (places == 1) {
             var place = searchedPlaces[0]; // take the first result
+            if (!place.geometry) {
+                Alert.render("SearchBox's returned place contains no geometry");
+                return;
+            }
             this.mapCenter = place.geometry.location;
             // myLocations = []; // reset the hard coded location array
             // create a new location based on information returned by searchBox.getPlaces()
@@ -207,8 +211,8 @@ gMaps.prototype.removeMarkers = function() {
  */
 
 gMaps.prototype.createMarkers = function(places) {
-    var iconSize = Math.sqrt($(window).width()) + 24;
-
+    // var iconSize = Math.sqrt($(window).width()) + 24;
+    var iconSize = Math.sqrt(window.innerWidth) + 24;
     // Clear out the old markers for this location
     this.removeMarkers();
     this.markers = [];
@@ -287,7 +291,8 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
     var Map = this;
     var self = this.self;
     var infoWindow = this.infoWindow;
-    var $winWidth = $(window).width();
+    //var $winWidth = $(window).width();
+    var winWidth = innerWidth;
     // hide the location and categories list no matter their state
     self.showCategory(false);
     self.showLocation(false);
@@ -297,11 +302,13 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
 
         if (status === google.maps.places.PlacesServiceStatus.OK) {
             var reviewsTemplate;
-            if ($winWidth < 800) {
+            if (winWidth < 800) {
                 self.showResults(false);
-                reviewsTemplate = $('script[data-template="review-short"]').html();
+                // reviewsTemplate = $('script[data-template="review-short"]').html();
+                reviewsTemplate = document.getElementById('review-short').innerHTML ;
             } else {
-                reviewsTemplate = $('script[data-template="reviews"]').html();
+                // reviewsTemplate = $('script[data-template="reviews"]').html();
+                reviewsTemplate = document.getElementById('review-long').innerHTML ;
                 reviewsTemplate = reviewsTemplate.replace(/{{opening}}/, Map.getOpenings(place));
             }
 
@@ -310,28 +317,27 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
             var rev = reviewsTemplate.replace(/{{name}}/, place.name).replace(/{{formatted_address}}/, place.formatted_address).replace(/{{rating}}/, Map.getRating(place)).replace(/{{photos}}/, Map.getPhotoes(place));
             infoWindow.setContent(rev.replace(/{{website}}/g, website).replace(/{{phone}}/, Map.getPhone(place)));
             infoWindow.open(Map.map, marker);
-            $('.infoWindow').fadeIn(200);
+            // $('.infoWindow').fadeIn(200);
 
             /*
                Open the photo-page  dom when photo link is clicked
             */
             if (place.photos) {
                 var numberPhotos = place.photos.length;
-
-                $('#photos').click(function() {
+                var photolink = document.getElementById('photos');
+                photolink.addEventListener("click", function(){
                     self.placePhotos(place.photos);
                     self.currentIndex(0);
                     self.currentPhoto(self.placePhotos()[0]);
                 });
-
             };
 
             /*
                Open the reviews page when reviews is clicked
             */
-            var $reviews = $('#reviews');
-            if ($reviews) {
-                $reviews.click(function() {
+            var reviews =  document.getElementById('reviews');
+            if (reviews) {
+                reviews.addEventListener("click",function() {
                     self.placeInFocus(place);
                     place.reviews.forEach(function(review) {
                         if (review.text !== "") {
@@ -344,9 +350,9 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
             /*
               Open the nyt article when the nyt link is clicked
             */
-            var $nytlink = $('#nytLink');
-            if ($nytlink) {
-                $nytlink.click(function() {
+            var nytlink =  document.getElementById('nytLink');
+            if (nytlink) {
+                nytlink.addEventListener("click",function() {
                     self.getNytArticle(place);
                 });
             }; /* end nyt */
@@ -355,10 +361,10 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
             /*
               Open the wikit article when the nyt link is clicked
             */
-            var $wikilink = $('#wikiLink');
-            if ($wikilink) {
-                $wikilink.click(function() {
-                    self.openSearchWikipedia(place);
+            var wikilink =  document.getElementById('wikiLink');
+            if (wikilink) {
+                wikilink.addEventListener("click",function() {
+                self.openSearchWikipedia(place);
                 });
             };
 
@@ -366,9 +372,9 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
               Open the street view page when it is clicked
             */
 
-            var $streetLink = $('#streetLink');
-            if ($streetLink) {
-                $streetLink.click(function() {
+            var streetLink = document.getElementById('streetLink');
+            if (streetLink) {
+                streetLink.addEventListener("click",function() {
                     self.getStreetView(place);
                 });
             };
@@ -482,6 +488,7 @@ function CustomAlert() {
 }
 
 var Alert = new CustomAlert();
+
 /*
    https://developers.google.com/places/supported_types
    List of supported values for the types property in the Google Places API
@@ -613,7 +620,8 @@ var mapPlaceTypes = [
     radius = 2000,
     today = new Date();
 
-var winWidth;
+var winWidth =  window.innerWidth;
+/*
 try {
     winWidth = $(window).width();
 } catch (e) {
@@ -621,7 +629,7 @@ try {
     console.log(msg);
     Alert.render(msg);
 }
-
+*/
 var Lindex = 0;
 var myLocations = [{
 

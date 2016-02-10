@@ -1,3 +1,4 @@
+try {
 $(function() {
 
     function ViewModel() {
@@ -205,7 +206,6 @@ $(function() {
         self.selectLocation = function(location) {
             /* toogle selected status */
             location.selected(!location.selected());
-
             /* hide the location list */
             self.showLocation(false);
             /*
@@ -232,8 +232,6 @@ $(function() {
                 self.numberPlaces(0);
                 self.showResults(false);
             }
-            //save the modified myLocations array
-            /* ko.toJS has a security problem. below is a work around */
         };
 
         /* computed observable to return the city name of a location */
@@ -247,7 +245,6 @@ $(function() {
                 return locations[0].city();
             } else return "";
         });
-
 
         /*
          *   close wiki pages only when there are some
@@ -363,12 +360,27 @@ $(function() {
                 if (location.selected()) {
                     self.selectLocation(location);
                 }
-                /* remove the location of the locations observable array and That'sit */
-                /*  GET a security issue with
+                /* remove the location of the locations observable array and that's it */
+                /*  I get a security or timeout issue with
                  *       ko.toJS(self.myLocations()
-                 *    Below is a work around to Jsonify the mylocations array
+                 *    Below is a work around to Jsonify the mylocations array ( not really efficient but it works)
                  */
 
+                self.myLocations(self.myLocations().filter(function(location, idx) {
+                    myLocations[idx].remove = true;
+                    if (location.name != name) {
+                        myLocations[idx].remove = false;
+                            return location;
+                        }
+                    }));
+
+                // save the new locations array on the local storage
+                myLocations = myLocations.filter(function(location) {
+                        if (location.remove == false) return location;
+                });
+                localStorage.myLocations = JSON.stringify(myLocations);
+
+                /*
                 try {
                     localStorage.myLocations = ko.toJS(self.myLocations());
                 } catch (e) {
@@ -387,7 +399,8 @@ $(function() {
                     });
                     localStorage.myLocations = JSON.stringify(myLocations);
                 };
-            }
+                */
+        }
             /* set the center of the map using the goelocalisation of first selected
              * entry of the locationhs array
              */
@@ -662,12 +675,6 @@ $(function() {
         $(window).resize(function() {
             showResults();
         });
-         
-        $(document).ready(function() {
-            $('#marker').toggle();
-            $('#options').toggle();
-        });
-         
 
         /**
           Based on which icon is pressed, map API nearby search is called with altered categories
@@ -722,48 +729,38 @@ $(function() {
         myCategories = JSON.parse(localStorage.myCategories);
     };
 
-    /* Start the view model */
+    $(document).ready(function() {
+        $('#marker').toggle();
+        $('#options').toggle();
+        ko.applyBindings(new ViewModel());
+    });
+
+    /* Start the view model
     try {
         ko.applyBindings(new ViewModel());
     } catch (e) {
         Alert.render("Error loading Knockout.js, check your network and retry");
     }
-     
+    */
 
     /**
      * Handle .btn-toolbar click events.
      * Will be replaced by self.hideIcons
-    */ 
-    /*
-    $('#hide').click(function() {
-
-        var glyph = '',
-            $currentGlyph = $(this).children('span').attr('class');
-        if ($currentGlyph.slice(29) === 'left') {
-            glyph = $currentGlyph.replace('left', 'right');
-        } else {
-            glyph = $currentGlyph.replace('right', 'left');
-        }
-
-        $(this).siblings('div').animate({
-            width: "toggle"
-        }, 500);
-
-        $(this).children('span').attr('class', glyph);
-    });
     */
-    
-     $('#hide').click(function() {
+
+    $('#hide').click(function() {
 
         var $span = $(this).children('span');
         var $direction = $span.text();
-        if ($direction == "⊳⊳") { 
+        if ($direction == "⊳⊳") {
             $direction = "⊲⊲" ;
         } else  $direction = "⊳⊳";
-        console.log($direction);
         $span.text($direction);
         $(this).siblings('div').animate({
             width: "toggle"
         }, 500);
       });
-});
+});}
+catch(e) {
+    Alert.render("Fail to load jQuery, please retry");
+};

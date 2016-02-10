@@ -7,9 +7,6 @@
     <meta name="description" content="Front-end developer Project 5">
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css" media="screen" title="no title">
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js" async></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" async></script>
     <meta name="author" content="Paul Matencio">
     <title>Project 5 Neighborhood-Map</title>
 </head>
@@ -20,7 +17,7 @@
 
     <!--  search box -->
     <div id="search-box" group="controls">
-        <input id="search-input" type="text"  data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlace" placeholder="Looking for places (separated by blank)  or :location ...">
+        <input id="search-input" type="text" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlace" placeholder="Looking for places (separated by blank)  or :location ...">
     </div>
     <div group="hz-buttons">
         <button type="core" data-bind="click: $root.toggleLocation" class="hz-button">
@@ -34,37 +31,37 @@
         </button-->
     </div>
 
-<div id="options" style="display: none;">
-    <!-- location list-->
-    <div data-bind="visible: $root.showLocation || Locations().length > 0">
-        <div id="location" group="controls">
-            <ul id="location-list" group="controls" data-bind="foreach: $root.filteredLocations">
-                <span data-bind="with:$parent.displayLocation($data)"></span>
-                <li data-bind="css:{selected:selected}">
-                    <button class="destroy" data-bind="click: $root.removeLocation"></button>
-                    <input class="toggle" data-bind="checked: $data.selected" type="checkbox">
-                    <label data-bind="text: $data.name, event: { click: $root.selectLocation }"></label>
-                </li>
-            </ul>
+    <div id="options" style="display: none;">
+        <!-- location list-->
+        <div data-bind="visible: $root.showLocation || Locations().length > 0">
+            <div id="location" group="controls">
+                <ul id="location-list" group="controls" data-bind="foreach: $root.filteredLocations">
+                    <span data-bind="with:$parent.displayLocation($data)"></span>
+                    <li data-bind="css:{selected:selected}">
+                        <button class="destroy" data-bind="click: $root.removeLocation"></button>
+                        <input class="toggle" data-bind="checked: $data.selected" type="checkbox">
+                        <label data-bind="text: $data.name, event: { click: $root.selectLocation }"></label>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
 
-    <div class="mycategories" group="controls" data-bind="visible:$root.showCategory">
-        <div class="select">
-            <h3 style="background-color:#6890C1;padding:5px;color:white">Choose multiple categories</h3>
-            <select style="padding:15px;" data-bind="options: mapPlaceTypes, selectedOptions: myCategories" size="15" multiple="true"></select>
+        <div class="mycategories" group="controls" data-bind="visible:$root.showCategory">
+            <div class="select">
+                <h3 style="background-color:#6890C1;padding:5px;color:white">Choose multiple categories</h3>
+                <select style="padding:15px;" data-bind="options: mapPlaceTypes, selectedOptions: myCategories" size="15" multiple="true"></select>
+            </div>
         </div>
+
+        <!-- button to hide or show the search result list -->
+        <div class="hide-result" group="controls">
+            <button type="core" data-bind="click: $root.toggleResults">
+                <span> ☷ </span>
+            </button>
+        </div>
+
+
     </div>
-
-    <!-- button to hide or show the search result list -->
-    <div class="hide-result" group="controls">
-         <button type="core" data-bind="click: $root.toggleResults">
-            <span> ☷ </span>
-        </button>
-    </div>
-
-
-</div>
     <!-- button to hide or show the search result list -->
     <!--div class="hide-result" group="controls">
         <a data-bind="click: $root.toggleResults">
@@ -105,20 +102,20 @@
                         <p class="place-category"><span data-bind="text: $root.formattedType($data)"></span></p>
                         <p>
                             <div data-bind="if: $data.rating">
-                                <div>
-                                    <span class="rating-number" data-bind="text: $data.rating"></span>
-                                    <div style="display: inline;" data-bind="foreach: $root.rateStar($data.rating)">
-                                        <img class="rate-star" data-bind="attr:{src: star}" alt="*">
-                                    </div>
+                            <div>
+                                <span class="rating-number" data-bind="text: $data.rating"></span>
+                                <div style="display: inline;" data-bind="foreach: $root.rateStar($data.rating)">
+                                    <img class="rate-star" data-bind="attr:{src: star}" alt="*">
                                 </div>
                             </div>
+                            </div>
                             <span data-bind="ifnot: $data.rating">
-                                em>no rating available.</em>
+                                <em>no rating available.</em>
                             </span>
                         </p>
-                         <p class="place-address"><span data-bind="text: $root.getAddress($data)"></span></p>
+                        <p class="place-address"><span data-bind="text: $root.getAddress($data)"></span></p>
                     </div>
-                     <!-- end of place inforantion -->
+                <!-- end of place inforantion -->
                 </li>
             </span>
         </ul>
@@ -151,120 +148,120 @@
 
     <!--Review page -->
 
-<div id="marker" style="display: none;">
+    <div id="marker" style="display: none;">
 
-    <div data-bind="visible: placeReviews().length">
-        <div id="review-page" class="viewport">
-            <button type="core" data-bind="click:$root.closeReview" class="navButton" group="closeButton" style="display: block">
-                <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
-            </button>
+        <div data-bind="visible: placeReviews().length">
+            <div id="review-page" class="viewport">
+                <button type="core" data-bind="click:$root.closeReview" class="navButton" group="closeButton" style="display: block">
+                    <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+                </button>
 
-            <div group="review-lists">
-                <div class="review-title" data-bind="with: placeInFocus">
-                    <div class="longtext">
-                        <span class="p2" data-bind="text: $data.name"></span>
-                    </div>
-                    <div style="float: left;">
-                        <span class="rating-number" style="font-size: 16px;" data-bind="text: $data.rating"></span>
-                        <div style="display: inline;" data-bind="foreach: $parent.rateStar($data.rating)">
-                            <img style="height: 16px;" class="rate-star" data-bind="attr:{src: star}" alt="*">
+                <div group="review-lists">
+                    <div class="review-title" data-bind="with: placeInFocus">
+                        <div class="longtext">
+                            <span class="p2" data-bind="text: $data.name"></span>
                         </div>
-                    </div>
-                    <div class="greytext" data-bind="text: $data.formatted_address"> </div>
-                </div>
-                <ul class="list-review" data-bind="foreach: placeReviews">
-                    <li>
-                        <div>
-                            <strong data-bind="text: $data.author_name"></strong>
-                            <span class="rating-number" data-bind="text: $data.rating"></span>
+                        <div style="float: left;">
+                            <span class="rating-number" style="font-size: 16px;" data-bind="text: $data.rating"></span>
                             <div style="display: inline;" data-bind="foreach: $parent.rateStar($data.rating)">
-                                <img class="rate-star" data-bind="attr:{src: star}" alt="*">
+                                <img style="height: 16px;" class="rate-star" data-bind="attr:{src: star}" alt="*">
                             </div>
                         </div>
-                        <div data-bind="text: $data.text"></div>
-                    </li>
-                </ul>
-            </div>
-            <!-- container -->
-        </div>
-        <!-- viewport -->
-    </div>
-    <!--end review page -->
-
-    <!-- Photos display -->
-    <div id="photos-page" class="viewport" data-bind="visible: placePhotos().length">
-        <button type="core" data-bind="click:$root.closePhoto" class="navButton" group="closeButton" style="display: block">
-            <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
-        </button>
-        <div data-bind="with: currentPhoto">
-            <img class="photo" data-bind="attr:{ src: getUrl({maxHeight: 800})}" alt="photo">
-        </div>
-        <div id="photoCounter">
-            <span data-bind="text: photoIndex"></span>
-            <span> / </span>
-            <span data-bind="text: placePhotos().length"></span>
-        </div>
-        <button type="core" data-bind="click:$root.photoBackward" class="navButton" group="backward" style="display: block">
-            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-        </button>
-        <button type="core" data-bind="click:$root.photoForward" class="navButton" group="forward" style="display: block">
-            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-        </button>
-    </div>
-
-
-
-    <!-- New york times page -->
-    <div id="nytimes-page" class="viewport" data-bind="visible: nytarticles().length">
-        <button type="core" data-bind="click:$root.closeNyt" class="navButton" group="closeButton" style="display: block">
-                <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
-        </button>
-
-        <div class="Container" group="lists">
-            <div class="review-title">
-                <span class="nytimes-header">New York Times Articles</span>
-                <span class="nytimes-header" data-bind="text:nytInFocus"></span>
-            </div>
-            <div class="mylist" data-bind="foreach: nytarticles">
-                <div>
-                    <span class="review list-group-item" data-bind="html:$data"></span>
+                        <div class="greytext" data-bind="text: $data.formatted_address"> </div>
+                    </div>
+                    <ul class="list-review" data-bind="foreach: placeReviews">
+                        <li>
+                            <div>
+                                <strong data-bind="text: $data.author_name"></strong>
+                                <span class="rating-number" data-bind="text: $data.rating"></span>
+                                <div style="display: inline;" data-bind="foreach: $parent.rateStar($data.rating)">
+                                    <img class="rate-star" data-bind="attr:{src: star}" alt="*">
+                                </div>
+                            </div>
+                            <div data-bind="text: $data.text"></div>
+                        </li>
+                    </ul>
                 </div>
+                <!-- container -->
             </div>
+            <!-- viewport -->
         </div>
-    </div>
-    <!--/div-->
+        <!--end review page -->
 
-    <!-- Wikipedia page -->
-    <div id="wiki-page" class="viewport" data-bind="visible: wikiarticles().length">
-        <button type="core" data-bind="click:$root.closeWiki" class="navButton" group="closeButton" style="display: block">
+        <!-- Photos display -->
+        <div id="photos-page" class="viewport" data-bind="visible: placePhotos().length">
+            <button type="core" data-bind="click:$root.closePhoto" class="navButton" group="closeButton" style="display: block">
                 <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
-        </button>
-        <div class="Container" group="lists">
-            <div class="review-title">
-                <span class="wiki-header">Wikipedia Articles</span>
-                <span class="wiki-header" data-bind="text:wikiInFocus"></span>
+            </button>
+            <div data-bind="with: currentPhoto">
+                <img class="photo" data-bind="attr:{ src: getUrl({maxHeight: 800})}" alt="photo">
             </div>
-            <div class="mylist" data-bind="foreach: wikiarticles">
-                <div>
-                    <span class="review list-group-item" data-bind="html:$data"></span>
-                </div>
+            <div id="photoCounter">
+                <span data-bind="text: photoIndex"></span>
+                <span> / </span>
+                <span data-bind="text: placePhotos().length"></span>
             </div>
+            <button type="core" data-bind="click:$root.photoBackward" class="navButton" group="backward" style="display: block">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            </button>
+            <button type="core" data-bind="click:$root.photoForward" class="navButton" group="forward" style="display: block">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            </button>
         </div>
-    </div>
 
-    <!-- street view page -->
-    <div data-bind="visible: showView">
-        <div id="street-page" class="viewport">
-            <button type="core" data-bind="click:$root.closeView" class="navButton" group="closeButton" style="display: block">
+
+
+        <!-- New york times page -->
+        <div id="nytimes-page" class="viewport" data-bind="visible: nytarticles().length">
+            <button type="core" data-bind="click:$root.closeNyt" class="navButton" group="closeButton" style="display: block">
                 <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
             </button>
 
-            <div id="streeview">
-                <img class="street-view" data-bind="attr:{src: streetView, alt: noimage}">
+            <div class="Container" group="lists">
+                <div class="review-title">
+                    <span class="nytimes-header">New York Times Articles</span>
+                    <span class="nytimes-header" data-bind="text:nytInFocus"></span>
+                </div>
+                <div class="mylist" data-bind="foreach: nytarticles">
+                    <div>
+                        <span class="review list-group-item" data-bind="html:$data"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/div-->
+
+        <!-- Wikipedia page -->
+        <div id="wiki-page" class="viewport" data-bind="visible: wikiarticles().length">
+            <button type="core" data-bind="click:$root.closeWiki" class="navButton" group="closeButton" style="display: block">
+                <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+            </button>
+            <div class="Container" group="lists">
+                <div class="review-title">
+                    <span class="wiki-header">Wikipedia Articles</span>
+                    <span class="wiki-header" data-bind="text:wikiInFocus"></span>
+                </div>
+                <div class="mylist" data-bind="foreach: wikiarticles">
+                    <div>
+                        <span class="review list-group-item" data-bind="html:$data"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- street view page -->
+        <div data-bind="visible: showView">
+            <div id="street-page" class="viewport">
+                <button type="core" data-bind="click:$root.closeView" class="navButton" group="closeButton" style="display: block">
+                    <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+                </button>
+
+                <div id="streeview">
+                    <img class="street-view" data-bind="attr:{src: streetView, alt: noimage}">
+                </div>
             </div>
         </div>
     </div>
-</div>
     <!-- custom alert box -->
     <div id="alertoverlay"></div>
     <div id="alertbox">
@@ -276,18 +273,23 @@
     </div>
 
     <!-- template scripts  for reviews page-->
-    <script type="text/template" data-template="reviews">
+    <script id="review-long" type="text/template" data-template="review-long">
         <div id="infoWindow" class="infoWindow">
             <p class="longtext">
-                <h3>{{name}}</h3></p>
+                <h3>{{name}}</h3>
+            </p>
             <hr>
-            <p class="longtext"><span>{{formatted_address}} </span></p>
-            <p><span class="opening">{{opening}}</span></p>
-            <div id="wiki" style="white-space: normal;"><span></span></div>
+            <p class="longtext"><span>{{formatted_address}} </span>
+            </p>
+            <p><span class="opening">{{opening}}</span>
+            </p>
+            <div id="wiki" style="white-space: normal;"><span></span>
+            </div>
             <hr>{{rating}} {{photos}}
         </div>
         </p>
-        <p><span>{{phone}} </span></p>
+        <p><span>{{phone}} </span>
+        </p>
         <p>
             <div class="longtext"><a class="longtext" href="{{website}}" target="_blank">{{website}}<a></div></p>
         <hr style="background: #ffbccd;">
@@ -296,17 +298,21 @@
                 <img style="width: 20px;" src="images/streetview.png"><a href="#" id="streetLink" style="display: inline;">View</a>
             </div>
     </script>
-    <script type="text/template" data-template="review-short">
+    <script  id="review-short" type="text/template" data-template="review-short">
         <div id="infoWindow" class="infoWindow">
             <p class="longtext">
-                <h3>{{name}}</h3></p>
+                <h3>{{name}}</h3>
+            </p>
             <hr>
-            <p class="longtext"><span>{{formatted_address}} </span></p>
-            <div id="wiki" style="white-space: normal;"><span></span></div>
+            <p class="longtext"><span>{{formatted_address}} </span>
+            </p>
+            <div id="wiki" style="white-space: normal;"><span></span>
+            </div>
             <hr>{{rating}} {{photos}}
         </div>
         </p>
-        <p><span>{{phone}} </span></p>
+        <p><span>{{phone}} </span>
+        </p>
         <p>
             <div class="longtext"><a class="longtext" href="{{website}}" target="_blank">{{website}}<a></div></p>
         <hr style="background: #ffbccd;">
@@ -315,13 +321,25 @@
     </script>
     <!-- template for newyork times page -->
     <script type="text/template" data-template="nytimes">
-        <p class="article"><a href="{{articleUrl}}" target="_blank">{{headline}}</a></p>
+        <p class="article"><a href="{{articleUrl}}" target="_blank">{{headline}}</a>
+        </p>
     </script>
     <script type="text/template" data-template="wiki">
         <p class="article"><a href="{{articleUrl}}" target="_blank">{{wikiarticle}}</p>
     </script>
     <!-- load scripts -->
-    <script>
+    <!--script>
+        (function () {
+            var script = document.createElement(s);
+            script.type = 'text/javascript';
+            script.async = true;
+            script.src = 'jquery.js';
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(script, s);
+        })();
+    </script-->
+
+    <script type="text/javascript">
         // callback function when google Maps API is loaded
         var map,
         mapOptions = {
@@ -365,12 +383,13 @@
                 var script = d.createElement('script');
                 var s = d.scripts[d.scripts.length-1];
                 script.src = 'js/app.js';
-                script.setAttribute('defer',"");
+                script.defer = true;
+                // script.setAttribute('defer',"");
                 s.parentNode.insertBefore(script, s.nextSibling);
             })(document);
         }
     </script>
-    <script>
+    <script type="text/javascript">
       WebFontConfig = {
         google: {
         families: ['Roboto:100,300']
@@ -382,8 +401,11 @@
        s.parentNode.insertBefore(wf, s);
       })(document);
     </script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&callback=initMap" async></script>
-    <script type="text/javascript" src="js/gMaps.js" async></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js" async></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" async></script>
+    <script type="text/javascript" src="js/gMaps.js"></script>
   </body>
 
 </html>
