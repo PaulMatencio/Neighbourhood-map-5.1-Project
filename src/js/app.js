@@ -728,6 +728,7 @@ $(function() {
     } catch (e) {
         Alert.render("Error loading Knockout.js, check your network and retry");
     }
+     
 
     /**
      * Handle .btn-toolbar click events.

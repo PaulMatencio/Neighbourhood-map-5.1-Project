@@ -5,8 +5,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Front-end developer Project 5">
+    <style>
+        [group~=hz-buttons] {
+            z-index: 105;
+            top: 0;
+            margin: 0px 5px 0px 5px;
+            display: inline;
+            position: absolute;
+            left: 50%;
+        }
+        [group~=controls] {
+            position: absolute;
+            background-color: white;
+        }
+        .hz-button:hover {
+            opacity: 0.8;
+        }
+    </style>
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css" media="screen" title="no title">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js" async></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" async></script>
     <meta name="author" content="Paul Matencio">
     <title>Project 5 Neighborhood-Map</title>
 </head>
@@ -17,7 +37,7 @@
 
     <!--  search box -->
     <div id="search-box" group="controls">
-        <input id="search-input" type="text" class="form-control" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlace" placeholder="Looking for places (separated by blank)  or :location ...">
+        <input id="search-input" type="text"  data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlace" placeholder="Looking for places (separated by blank)  or :location ...">
     </div>
     <div group="hz-buttons">
         <button type="core" data-bind="click: $root.toggleLocation" class="hz-button">
@@ -156,7 +176,7 @@
     <!--Review page -->
 
 <div id="marker" style="display: none;">    
-    
+
     <div data-bind="visible: placeReviews().length">
         <div id="review-page" class="viewport">
             <button type="core" data-bind="click:$root.closeReview" class="navButton" group="closeButton" style="display: block">
@@ -366,10 +386,11 @@
             map.setMapTypeId('map_style');
             // append the app.js script  when the MAPS API is loaded
             (function(d) {
-                var wf = d.createElement('script'),
-                       s = d.scripts[d.scripts.length-1];
-                wf.src = 'js/app.js';
-                s.parentNode.insertBefore(wf, s.nextSibling);
+                var script = d.createElement('script');
+                var s = d.scripts[d.scripts.length-1];
+                script.src = 'js/app.js';
+                script.setAttribute('defer',"");
+                s.parentNode.insertBefore(script, s.nextSibling);
             })(document);
         }
     </script>
@@ -385,10 +406,7 @@
        s.parentNode.insertBefore(wf, s);
       })(document);
     </script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" async></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js" async></script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places&callback=initMap" async></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&callback=initMap" async></script>
     <script type="text/javascript" src="js/gMaps.js" async></script>
   </body>
 

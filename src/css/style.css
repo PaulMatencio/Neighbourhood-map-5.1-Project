@@ -71,20 +71,21 @@ p a:hover {
 strong {
   color: #787676;
 }
-
+/*
 [group~=controls] {
   position: absolute;
   background-color: white;
 }
-
+ 
 [group~=hz-buttons] {
-  z-index: 111;
+  z-index: 105;
   top: 0;
-  margin: 0;
+  margin: 0px 5px 0px 5px;
   display: inline;
   position: absolute;
   left: 50%;
 }
+*/
 
 [group~=review-lists] {
   position: absolute;
@@ -175,7 +176,7 @@ strong {
   width: 45%;
   top: 0%;
   left: 5%;
-  z-index: 111;
+  z-index: 105;
 }
 
 #photoCounter {
@@ -386,7 +387,7 @@ img.street-view {
   opacity: 0.8;
 }
 
-.navButton:active,.hz-button:active {
+.navButton:active {
   opacity: 0.3;
 }
 
