@@ -752,9 +752,9 @@ $(function() {
 
         var $span = $(this).children('span');
         var $direction = $span.text();
-        if ($direction == "⊳⊳") {
-            $direction = "⊲⊲" ;
-        } else  $direction = "⊳⊳";
+        if ($direction == "⊳") {
+            $direction = "⊲" ;
+        } else  $direction = "⊳";
         $span.text($direction);
         $(this).siblings('div').animate({
             width: "toggle"
