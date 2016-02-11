@@ -1,4 +1,4 @@
-try {
+
 $(function() {
 
     function ViewModel() {
@@ -580,7 +580,8 @@ $(function() {
             //var query = location.locality;
             var filter = location.country;
             var articles = [];
-            var nytTemplate = $('script[data-template="nytimes"]').html();
+            // var nytTemplate = $('script[data-template="nytimes"]').html();
+            var nytTemplate = document.getElementById('nytimes-temp').innerHTML ;
             self.nytInFocus("about " + filter + " " + query);
             var wikiRequestTimeout = setTimeout(function() {
                 articles.push("<p>failed to query New York times resources</p>");
@@ -629,7 +630,8 @@ $(function() {
             };
             var url = wikiOpenSearchURL.replace("%data%", query);
             var wikiarticle = 'http://fr.wikipedia.org/wiki/';
-            var wikiTemplate = $('script[data-template="wiki"]').html();
+            // var wikiTemplate = $('script[data-template="wiki"]').html();
+            var wikiTemplate = document.getElementById('wiki-temp').innerHTML ;
             self.wikiInFocus("about " + query);
             var wikiRequestTimeout = setTimeout(function() {
                 articles.push("<p>failed to query wiki resources</p>");
@@ -760,7 +762,4 @@ $(function() {
             width: "toggle"
         }, 500);
       });
-});}
-catch(e) {
-    Alert.render("Fail to load jQuery, please retry");
-};
+});
