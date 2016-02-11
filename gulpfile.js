@@ -105,4 +105,4 @@ gulp.task('watch', function() {
   gulp.watch('src/images/*', ['optimize-image']);
 });
 
-gulp.task('default', ['mini-html', 'mini-js','mini-css', 'compress-image','critical','watch']);
+gulp.task('default', ['mini-html', 'mini-js','mini-css', 'compress-image','critical','mini-critical-html','watch']);

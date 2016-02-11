@@ -344,7 +344,6 @@ gMaps.prototype.initAutocomplete = function() {
         var self = this.self;
         var input = searchInput.value.split(" ");
         if (input.length ==  1) return;
-
         var searchedPlaces = searchBox.getPlaces();
         var places = searchedPlaces.length;
         if (places == 1) {
@@ -1028,27 +1027,30 @@ function ViewModel() {
     self.addLocation = function(location) {
         myLocations.unshift(location);
         var loc = new Location(location); // instancie a new location
-        self.myLocations.unshift(loc); // add it to the top of the observable location array and THAT's IT
+        self.myLocations.unshift(loc);    // add it to the top of the observable location array and THAT's IT
         loc.markLocation(); // mark the new location
         localStorage.myLocations = JSON.stringify(myLocations); // save the myLocations array to local storage
     };
 
     /*
         Unselect the location first (if it is selected)
+        Remove the location (filter)
         Try using Ko.toJS to convert self.myLocations() to myLocations array and save it
         if fail then use a work around ( which is much less efficient)
     */
     self.removeLocation = function(location) {
             var name = location.name;
-            // unselect the location if it is selected
+            // unselect the location if it is selected which will decrease the number of current places
             if (location.selected()) {
                 self.selectLocation(location);
             }
+
             /* remove the location of the locations observable array and that's it */
+
             /*  I get a security or timeout issue with
              *       ko.toJS(self.myLocations()
              *    Below is a work around to Jsonify the mylocations array ( not really efficient but it works)
-             */
+            */
 
             self.myLocations(self.myLocations().filter(function(location, idx) {
                 myLocations[idx].remove = true;
@@ -1057,7 +1059,7 @@ function ViewModel() {
                     return location;
                 }
             }));
-
+            if (self.myLocations().length == 0) self.showLocation(false);
             // save the new locations array on the local storage
             myLocations = myLocations.filter(function(location) {
                 if (location.remove == false) return location;
