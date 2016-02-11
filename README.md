@@ -8,14 +8,14 @@ This is my  fifth project of the Udacity Front-end developer nanodegree. To comp
 * HTML 5 (Element Errors due to KO)
 * CSS 3 (validated)
 * CSS Media query
+* Bootstrap CSS
 * knockout.js
 * Google Maps API ( async)
 * AJAX
 * Newyork times API
 * Wikipedia API ( )
 * Street view API
-* jQuery
-* Bootstrap
+* jQuery ( for third party services)
 * Local Storage
 * Gulp
 
@@ -23,11 +23,13 @@ This is my  fifth project of the Udacity Front-end developer nanodegree. To comp
 The difference with the first version are
 
 * Google maps API is asynchronously loaded
-* 6 different hard coded locations, You can select/unselect or add new location
-* button to show/hide the list of locations that user can select/unselect or remove
-* button to display the list of categories that user can select/unselect filter
-* list of locations ( hidden by default)
-* list of place types (hidden by default)
+* Knockoout.js is asynchronously loaded
+* jQuery is asynchronously loaded
+* There 5 different hard coded locations but only one is originally selected. You can select/unselect a location or add any new location to the list via the searchbox
+* button to show/hide the list of locations
+* button to display the list of categories that user can use to select category palces. Multiple options is permitted
+* a list of locations ( hidden by default)
+* a list of place types (hidden by default)
 * In addition to look for places categories nearby locations, the search box can be used to add a new location via to Google Maps searchbox.
 * To add  a new location, you must prefix your desired location with a double colon :  ( as for instance :NewYork central park or a full address)
 
@@ -43,16 +45,23 @@ For the working page check this link: ( http://paulmatencio.github.io/Neighbourh
 
 Develop a single page application featuring a map of a neighborhood you would like to visit. Add additional functionality to this map including highlighted locations, third-party data about those locations and various ways to browse the content.
 
+#### Asynchonous
+
+Google Maps, knockout.js and jQuery are loaded asynchnously
+For Google maps, a callback function is executed when the API is loaded
+For jQuery and Knockout.js, the application will wait 5ms and retry 20 times until they are loaded
+The application can opearte without jQuery ( third parties services will not be available)
+
 ###How to use the app
 
-* SEARCH BOX ( filter for google Maps categories or add a new Location)
+* SEARCH BOX ( used to filter  google Maps categories or add a new Location to the locations list)
 
-  Use the search box to find nearby places ( cafe, restaurant, movie , atm , shopping) of locations. You can type multiple place types must be separated by blan. There are 6 hard coded locations of Paris. When you type categories in the serach box, the application will look for nearby places around all the current locations.
+  Use the search box to find nearby places ( cafe, restaurant, movie , atm , shopping) of the locations which are selected. You can type multiple place types, they must be separated by blank space. There are 5 hard coded locations in Paris. When you type any categories in the Search box, the application will look for nearby places for  all the selected locations. The more locations are selected, the longer it will take. On mobile with low network bandwidth it is recommend to select one location at a time
 
-  Looking for nearby places are handled by the application. However, the application will call Google maps nearby search services, therefore keyword must matched Google Maps place types. Some filter to map keyword to Google Place types are attempted. Further mapping must be done. You can also use the question mark at the end of the Search box to show the list of google applicable categories.
+  The application will call Google maps nearby search services, therefore typed in keyword must matched Google Maps place types. Some filter to map keyword to Google Place types are attempted. Further mapping must be done. You can also use the second button ( for category places) on the right ofthe Search box to select multiple all the  google applicable categories ( See categories list)
 
   To add a new  location, type :new-location as for instance :London picadelly square or :Newyork central park or any full address.
-  When a new location is entered, the application will use the Google maps searchBox services to look ONLY for coordinates ( textsearch services could be used instead), it will not use the nearby places returned by Google Search box. The coordinated returmed by search-box are used to mark the location and by the nearby search services to look for nearby places.
+  When a new location is entered, the application will use the Google maps searchBox services to look ONLY for coordinates ( textsearch services could be used instead), it will not use the nearby places returned by Google Search box. The coordinated returmed by search-box are used to mark the location, then the nearby search services is used to look for nearby places of the new location
 
   Places returned by nearby places services  are used to display the Place list and to make google maps markers.
 
@@ -60,16 +69,16 @@ Develop a single page application featuring a map of a neighborhood you would li
 
   There are 3 buttons after the SEARCH BOX
 
-  The first button is to display the list of Locations, and to select, unselect or remove a Location. Adding a location is done with the Search-Box. The updated list of locations is saved on Local storage when a location is removed. Select or unselect operations are not saved to local storage for the moment. When the ko.toJS() issues is solved, it will be implemented
+  The first button ( 3 barres ) is to display the list of Locations, and to select, unselect or remove a Location. Adding a location is done with the Search-Box. The updated list of locations is saved on Local storage when a location is removed. Select or unselect operations are not saved to local storage for the moment. When the ko.toJS() issues is solved, it will be implemented
 
-  The second button can be used to select/unselect multiple categories ( place types). Every time, place types are updated (select or inselect), a new nearby search is performed for every selected location.
+  The second button (plus sign) can be used to select/unselect multiple categories ( place types). Every time, place types are updated (select or inselect), a new nearby search is performed for every selected location.
 
-  The third one is to refresh the list of categories ( place types). This button has be removed. User can use the refresh button on top of the tool bar. The refresh button will reset the place types ( empty the selected place types array)
+  The third one is to refresh the list of categories ( place types). ** This button has be removed **. User can use the refresh button on top of the tool bar (on left of the application window) . The refresh button will reset the place types ( empty all previously selected place types)
 
 
 * LOCATION LIST ( Location filter)
 
-  There are 5 hard coded locations in Paris, only 1 is selected by default. User can select them one by one afterwards using the search box. Moreover user can add/remove new locations using the Search Box as mentioned above.
+  There are 5 hard coded locations in Paris, only 1 is selected by default. User can select them one by one afterwards using the search box. Moreover, as stated above, user can add/remove new locations using the Search Box as mentioned above.
 
   To select/unselect a location you must ** click on the label of that location. Checking/unchecking is not enough. **
   To add a new location, use the SEARCH BOX ( type in the new location prefixed by a double colon :. ** The new location will be placed on top of the existing list of locations. **
@@ -77,10 +86,13 @@ Develop a single page application featuring a map of a neighborhood you would li
 
   When user unselect a location, all markers (map) and places (list view) of that location will be hidden. When a location is selected, markers and places will be displayed again.
 
+* CATEGORIES LIST ( categories filter)
+
+  Using this list ( The google maps places types), a user select/unselect multiple place types ( same as the search box). However when a category ( type) is selected, immediately the application will look the nearby places for this type for the currenz selected locations.
 
 * PLACES LIST VIEW:
 
-   The place list view is on the right, you can find the places corresponding to the markers. Clicking on one place will focus the map on the place and will open an info window. Every place contain a refence to its marker.
+   The place list view is on the right of the application window, you can find the places corresponding to the markers. Clicking on one place will focus the map on the place and will open an info window. Every place contain a refence to its marker.
 
    When a info window is opened, the center of the map will slide, and depending on the size if the screen, the Places List can be hidden. The Places list can be shown as described below
 

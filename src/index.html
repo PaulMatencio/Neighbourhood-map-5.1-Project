@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="css/style.css" media="screen" title="no title">
     <meta name="author" content="Paul Matencio">
     <title>Project 5 Neighborhood-Map</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js" async></script>
 </head>
 
 <body>
@@ -25,7 +26,7 @@
             <span style="font-size: 24px;"> ☰</span>
         </button>
         <button type="core" data-bind="click: $root.toggleCategory" class="hz-button">
-            <span style="font-size: 24px;"> ☷ </span>
+            <span style="font-size: 24px;"> ⊕ </span>
         </button>
         <!--button type="core" data-bind="click: $root.resetIcons" class="hz-button">
              <span> ⚡⚡</span>
@@ -60,14 +61,6 @@
         </div>
 
     </div>
-    <!-- button to hide or show the search result list -->
-    <!--div class="hide-result" group="controls">
-        <a data-bind="click: $root.toggleResults">
-            <svg xmls="http://www/w3/org/2000/svg" viewbox="0 0 24 24">
-                <path d="M2 6h20v3H2zm0 5h20v3H2zm0 5h20v3H2z"></path>
-            </svg>
-        </a>
-    </div-->
 
     <!-- place search result -->
     <div class="results container-fluide" group="controls" data-bind="visible: $root.showResults">
@@ -125,7 +118,7 @@
     <!-- Tools bar -->
     <div data-bind="visible: showResults">
         <div id="btn-toolbar" group="controls">
-            <button type="core" class="btn" style="display: block" data-bind="click: $root.resetIcons"> 
+            <button type="core" class="btn" style="display: block" data-bind="click: $root.resetIcons">
                 <span style="font-size: 24px;"> ↺ </span>
             </button>
             <div class="btn-group" data-bind="foreach: icons" role="group" aria-label="plane">
@@ -217,7 +210,6 @@
                 </div>
                 <div class="mylist" data-bind="foreach: nytarticles">
                     <div>
-                        <!--span class="review list-group-item" data-bind="html:$data"></span-->
                         <span class="article" style="padding:10px;" data-bind="html:$data"></span-->
                     </div>
                 </div>
@@ -265,72 +257,58 @@
         </div>
     </div>
 
-    <!-- template scripts  for reviews page-->
+    <!-- html templates for infowindow -->
     <script id="review-long" type="text/template" data-template="review-long">
         <div id="infoWindow" class="infoWindow">
-            <p class="longtext">
-                <h3>{{name}}</h3>
-            </p>
+            <p class="longtext"><h3>{{name}}</h3></p>
             <hr>
-            <p class="longtext"><span>{{formatted_address}} </span>
-            </p>
-            <p><span class="opening">{{opening}}</span>
-            </p>
-            <div id="wiki" style="white-space: normal;"><span></span>
-            </div>
+            <p class="longtext"><span>{{formatted_address}} </span></p>
+            <p><span class="opening">{{opening}}</span></p>
+            <div id="wiki" style="white-space: normal;"><span></span></div>
             <hr>{{rating}} {{photos}}
+            <p><span>{{phone}} </span></p>
+            <p><div class="longtext"><a class="longtext" href="{{website}}" target="_blank">{{website}}<a></div></p>
+            <hr style="background: #ffbccd;">
+            <img style="width: 20px;" src= "images/NYT-logo.png"><a href="#" id="nytLink" style="display: inline;"> NYT articles</a>
+            <span style="font-size :20px; color:black; font-weight: bold;">&#87;</span>
+            <a href="#" id="wikiLink" style="display: inline;"> Wikipedia articles</a>
+            <img style="width: 20px;" src="images/streetview.png"><a href="#" id="streetLink" style="display: inline;">View</a>
         </div>
-        </p>
-        <p><span>{{phone}} </span>
-        </p>
-        <p>
-            <div class="longtext"><a class="longtext" href="{{website}}" target="_blank">{{website}}<a></div></p>
-        <hr style="background: #ffbccd;">
-        <img style="width: 20px;" src= "images/NYT-logo.png"><a href="#" id="nytLink" style="display: inline;"> NYT articles</a>
-                <span style="font-size :20px; color:black; font-weight: bold;">&#87;</span><a href="#" id="wikiLink" style="display: inline;"> Wikipedia articles</a>
-                <img style="width: 20px;" src="images/streetview.png"><a href="#" id="streetLink" style="display: inline;">View</a>
-            </div>
     </script>
     <script  id="review-short" type="text/template" data-template="review-short">
         <div id="infoWindow" class="infoWindow">
-            <p class="longtext">
-                <h3>{{name}}</h3>
-            </p>
+            <p class="longtext"> <h3>{{name}}</h3></p>
             <hr>
-            <p class="longtext"><span>{{formatted_address}} </span>
-            </p>
-            <div id="wiki" style="white-space: normal;"><span></span>
-            </div>
+            <p class="longtext"><span>{{formatted_address}} </span></p>
+            <div id="wiki" style="white-space: normal;"><span></span></div>
             <hr>{{rating}} {{photos}}
+            <p><span>{{phone}} </span></p>
+            <p><div class="longtext"><a class="longtext" href="{{website}}" target="_blank">{{website}}<a></div></p>
+            <hr style="background: #ffbccd;">
+            <span style="font-size :20px; color:black; font-weight: bold;">&#87;</span>
+            <a href="#" id="wikiLink" style="display: inline;"> Wikipedia articles</a>
         </div>
-        </p>
-        <p><span>{{phone}} </span>
-        </p>
-        <p>
-            <div class="longtext"><a class="longtext" href="{{website}}" target="_blank">{{website}}<a></div></p>
-        <hr style="background: #ffbccd;">
-        <span style="font-size :20px; color:black; font-weight: bold;">&#87;</span><a href="#" id="wikiLink" style="display: inline;"> Wikipedia articles</a>
-            </div>
     </script>
+
     <!-- template for newyork times page -->
     <script id="nytimes-temp" type="text/template" data-template="nytimes">
-        <p class="article"><a href="{{articleUrl}}" target="_blank">{{headline}}</a>
-        </p>
+        <p class="article"><a href="{{articleUrl}}" target="_blank">{{headline}}</a></p>
     </script>
     <script id="wiki-temp" type="text/template" data-template="wiki">
         <p class="article"><a href="{{articleUrl}}" target="_blank">{{wikiarticle}}</p>
     </script>
+
     <!-- load scripts -->
-    <!--script>
-        (function () {
-            var script = document.createElement(s);
+    <script>
+        (function (d) {
+            var script = d.createElement('script');
             script.type = 'text/javascript';
             script.async = true;
-            script.src = 'jquery.js';
-            var s = document.getElementsByTagName("script")[0];
+            script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js';
+            var s = d.scripts[0] ;
             s.parentNode.insertBefore(script, s);
-        })();
-    </script-->
+        })(document);
+    </script>
 
     <script type="text/javascript">
         // callback function when google Maps API is loaded
@@ -394,11 +372,11 @@
        s.parentNode.insertBefore(wf, s);
       })(document);
     </script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!--script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script-->
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&callback=initMap" async></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js" async></script>
+    <!--script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js" async></script-->
     <!--script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" async></script-->
-    <script type="text/javascript" src="js/gMaps.js"></script>
+    <script type="text/javascript" src="js/gMaps.js" async></script>
   </body>
 
 </html>
