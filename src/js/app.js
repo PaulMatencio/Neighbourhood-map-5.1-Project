@@ -734,7 +734,7 @@ function ViewModel() {
     self.myLocations = ko.observableArray([]); // ko array for hard coded locations
     self.showLocation = ko.observable(false);
     self.showCategory = ko.observable(false);
-    self.showResults = ko.observable(true); // boolean to hide or show the places returned by google Map places API nearby search services
+    self.showResults = ko.observable(false); // boolean to hide or show the places returned by google Map places API nearby search services
     self.numberPlaces = ko.observable(0); // total number of nearby places
     self.placeReviews = ko.observableArray([]); // ko array for place review objects returned by google map places API getDetails() service
     self.placePhotos = ko.observableArray([]); //ko array for place photo urls returned by google map places API getDetails() service
