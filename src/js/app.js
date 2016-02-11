@@ -1,10 +1,172 @@
-/* */
+/*
+   https://developers.google.com/places/supported_types
+   List of supported values for the types property in the Google Places API
+*/
+var mapPlaceTypes = [
+        "accounting",
+        "airport",
+        "amusement_park",
+        "aquarium",
+        "art_gallery",
+        "atm",
+        "bakery",
+        "bank",
+        "bar",
+        "beauty_salon",
+        "bicycle_store",
+        "book_store",
+        "bowling_alley",
+        "bus_station",
+        "cafe",
+        "campground",
+        "car_dealer",
+        "car_rental",
+        "car_repair",
+        "car_wash",
+        "casino",
+        "cemetery",
+        "church",
+        "city_hall",
+        "clothing_store",
+        "convenience_store",
+        "courthouse",
+        "dentist",
+        "department_store",
+        "doctor",
+        "electrician",
+        "electronics_store",
+        "embassy",
+        "establishment",
+        "finance",
+        "fire_station",
+        "florist",
+        "food",
+        "funeral_home",
+        "furniture_store",
+        "gas_station",
+        "general_contractor",
+        "grocery_or_supermarket",
+        "gym",
+        "hair_care",
+        "hardware_store",
+        "health",
+        "hindu_temple",
+        "home_goods_store",
+        "hospital",
+        "insurance_agency",
+        "jewelry_store",
+        "laundry",
+        "lawyer",
+        "library",
+        "liquor_store",
+        "local_government_office",
+        "locksmith",
+        "lodging",
+        "meal_delivery",
+        "meal_takeaway",
+        "mosque",
+        "movie_rental",
+        "movie_theater",
+        "moving_company",
+        "museum",
+        "night_club",
+        "painter",
+        "park",
+        "parking",
+        "pet_store",
+        "pharmacy",
+        "physiotherapist",
+        "place_of_worship",
+        "plumber",
+        "police",
+        "post_office",
+        "real_estate_agency",
+        "restaurant",
+        "roofing_contractor",
+        "rv_park",
+        "school",
+        "shoe_store",
+        "shopping_mall",
+        "spa",
+        "stadium",
+        "storage",
+        "store",
+        "subway_station",
+        "synagogue",
+        "taxi_stand",
+        "train_station",
+        "travel_agency",
+        "university",
+        "veterinary_care",
+        "zoo"
+    ],
+    /*
+       https://developers.google.com/maps/documentation/javascript/styling#styling_the_default_map
+    */
+    mapCenter = {},
+    myCategories = [],
+    radius = 2000;
+
+/* default locations array which is used for the first time
+* they  will be updated and saved in local storage
+* sub sequence use of the applications, the locastorage copy will be used.
+* to reuse this copy, you should clear the localstorage copy
+* localstorage.myLocations.clear()
+*/
+var myLocations = [{
+
+    name: "Notre Dame de Paris",
+    city: "Paris France",
+    mapcenter: {
+        lat: 48.852729,
+        lng: 2.350564
+    },
+    selected: true
+}, {
+    name: "Eiffel Tower",
+    city: "Paris France",
+    mapcenter: {
+        lat: 48.858261,
+        lng: 2.294507
+    },
+    selected: false
+}, {
+    name: "Porte d'Italie",
+    city: "Paris France",
+    mapcenter: {
+        lat: 48.819067,
+        lng: 2.360230
+    },
+    selected: false
+}, {
+    name: "Place de la Nation",
+    city: "Paris France",
+    mapcenter: {
+        lat: 48.847895,
+        lng: 2.395984
+    },
+    selected: false
+}, {
+    name: "Porte de la Chapelle",
+    city: "Paris France",
+    mapcenter: {
+        lat: 48.896748,
+        lng: 2.363993
+    },
+    selected: false
+}]
+
+/* Function to define javascript subclass */
 function inherit(subClass, superClass) {
     subClass.prototype = Object.create(superClass.prototype); // delegate to prototype
     subClass.prototype.Constructor = subClass; // update constructor on prototype
 }
 
-/* remove the display: none of an element */
+/* 
+* function to remove the display: none of an element 
+* the <HTML> script contains two DOM elements ( options and markers). They are created to hide other 
+* DOM element util KO is initialized. The display:none are moved once Ko is initialized 
+*/
 function toggledisplay(id) {
     (function(style) {
         style.display = style.display === 'none' ? '' : 'none';
@@ -12,7 +174,7 @@ function toggledisplay(id) {
 };
 
 
-/* custom alert box
+/* Define a Custom alert box
 * it is used to alert on error
 * there are 2 methods : render and ok
 * render to display the error message
@@ -42,17 +204,15 @@ function CustomAlert() {
         document.getElementById('alertoverlay').style.display = "none";
     }
 }
-/* create an alert instance */
+/* create an alert object*/
 var Alert = new CustomAlert();
 
 
-/* Google Maps Location class
+/*Google Maps Location class
 *
-*   An instance per location
-*   gMaps() ( creator)
-*   pinLocations ( not actually used)
-*   searchResults (not actually used)
-*   createLocMarker()
+*   The application will create a Location object per location
+*
+*   gMaps() (contructor)
 *   setCenter()
 *   nearbySearch()
 *   getResults()
@@ -61,12 +221,15 @@ var Alert = new CustomAlert();
 *   removeMarkers()
 *   createMarkers()
 *   addInfoWindow()
+*   pinLocations ( not actually used)
+*   searchResults (not actually used)
+*   createLocMaker ( not actually used)
 *   etc ,
 *
 */
 
+/* Location class */
 function gMaps() {
-    // this.mapCenter = mapOptions.center;
     this.markers = [];
     this.infoWindow = new google.maps.InfoWindow({
         pixelOffset: new google.maps.Size(-23, -10),
@@ -76,49 +239,8 @@ function gMaps() {
     this.map = map;
 };
 
-/*
-    pinPoster(locations) takes in the array of locations created by locationFinder()
-    and fires off Google place searches for each location
-*/
-gMaps.prototype.pinLocations = function(locations) {
-    var service = new google.maps.places.PlacesService(this.map);
-    locations.forEach(function(place) {
-        console.log(place);
-        var request = {
-            query: place.name
-        };
-        // Actually searches the Google Maps API for location data and runs the callback
-        // function with the search results after each search.
-        service.textSearch(request, this.searchResults);
-    });
-};
-
-/*
-    callback(results, status) makes sure the search returned results for a location.
-    If so, it creates a new map marker for that location.
-*/
-gMaps.prototype.searchResults = function(results, status) {
-    if (status == google.maps.places.PlacesServiceStatus.OK) {
-        var place = results[0];
-        var location = place.geometry.location;
-        var address = place.formatted_address;
-        console.log(address, location);
-        this.createLocMarker(place);
-    };
-};
-
 /* create a marker for a location */
-gMaps.prototype.createLocMarker = function(place) {
-    var name = place.formatted_address;
-    var bounds = window.mapBounds; // current boundaries of the map window
-    var marker = new google.maps.Marker({
-        map: this.map,
-        position: place.geometry.location,
-        title: name
-    });
-}
-
-/* create a marker for a location */
+/* used by the initLocations, addLocation and selectLocation methods to mark  the location on the map*/
 gMaps.prototype.markLocation = function() {
     var name = this.name();
     var position = new google.maps.LatLng(this.mapcenter().lat, this.mapcenter().lng);
@@ -137,7 +259,6 @@ gMaps.prototype.setCenter = function() {
     map.setCenter(new google.maps.LatLng(this.mapcenter().lat, this.mapcenter().lng));
     map.setZoom(13);
 };
-
 
 /**
  * The method  nearbySearch call google maps places API and search pagination request
@@ -208,25 +329,23 @@ gMaps.prototype.initAutocomplete = function() {
     });
 
     /*
-     * Search for new place is handled by the modelview getPlaces function
-     * However, if the searck keyword startwith ":", the modelview getPlaces function just do nothing and the boxsearch is used to
-     * for searching a new location ( using searchBox)
+     * If there are more than one keywords, the searchbox will use thes keywords to look for a new location
      *
-     * boysearch: only search for a new location is valid, as for instance
      *
-     *  :Newyork Central Square
-     *  :London Picadilly Circus
+     *  Newyork Central Square
+     *  London Picadilly Circus
+     *  any Full address
      *
-     *  Other type of searches are ignored
+     *  single keyword search is ignored
+     *    as for instance London ( london UK is accepted)
      */
     function boxSearch() {
-        var searchedPlaces = [];
-        // var map = this.map;
+
         var self = this.self;
-        if (searchInput.value.substring(0, 1) == ":") {
-            searchInput.value = searchInput.value.slice(1);
-            searchedPlaces = searchBox.getPlaces();
-        }
+        var input = searchInput.value.split(" ");
+        if (input.length ==  1) return;
+
+        var searchedPlaces = searchBox.getPlaces();
         var places = searchedPlaces.length;
         if (places == 1) {
             var place = searchedPlaces[0]; // take the first result
@@ -458,7 +577,7 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
     });
 };
 
-
+/* return the website of a place */
 gMaps.prototype.getWebsite = function(place) {
 
     if (place.website) {
@@ -530,6 +649,48 @@ gMaps.prototype.getOpenings = function(place) {
     return opening;
 };
 
+/*
+    pinPoster(locations) takes in the array of locations created by locationFinder()
+    and fires off Google place searches for each location
+    This function is not actutally used 
+*/
+gMaps.prototype.pinLocations = function(locations) {
+    var service = new google.maps.places.PlacesService(this.map);
+    locations.forEach(function(place) {
+        console.log(place);
+        var request = {
+            query: place.name
+        };
+        // Actually searches the Google Maps API for location data and runs the callback
+        // function with the search results after each search.
+        service.textSearch(request, this.searchResults);
+    });
+};
+
+/*
+    callback(results, status) makes sure the search returned results for a location.
+    If so, it creates a new map marker for that location.
+*/
+gMaps.prototype.searchResults = function(results, status) {
+    if (status == google.maps.places.PlacesServiceStatus.OK) {
+        var place = results[0];
+        var location = place.geometry.location;
+        var address = place.formatted_address;
+        console.log(address, location);
+        this.createLocMarker(place);
+    };
+};
+
+/* create a marker for a location */
+gMaps.prototype.createLocMarker = function(place) {
+    var name = place.formatted_address;
+    var bounds = window.mapBounds; // current boundaries of the map window
+    var marker = new google.maps.Marker({
+        map: this.map,
+        position: place.geometry.location,
+        title: name
+    });
+}
 // END of Google maps location class
 
 /*
@@ -537,7 +698,7 @@ gMaps.prototype.getOpenings = function(place) {
 */
 
 function ViewModel() {
-
+     
     var ENTER_KEY = 13;
     // A factory function we can use to create binding handlers for specific
     // keycodes.
@@ -588,9 +749,9 @@ function ViewModel() {
     self.showView = ko.observable(false); // control the street view page
     self.currentPhoto = ko.observable(); // current photo holder
     self.currentIndex = ko.observable(0); // cirrent photo index holder
-    self.keyword = ko.observable();
-    self.mapPlaceTypes = ko.observableArray(mapPlaceTypes);
-    self.myCategories = ko.observableArray(myCategories);
+    self.keyword = ko.observable(); // search box keyword
+    self.mapPlaceTypes = ko.observableArray(mapPlaceTypes); // ko array of all the place types supported by Google map search nearby services
+    self.myCategories = ko.observableArray(myCategories);   // ko array of the selected place types
 
     /*
      *  Location is a subclass of the gMaps class
@@ -644,13 +805,6 @@ function ViewModel() {
 
     var    streetViewApiKey = "AIzaSyAUYlUoaLYjM8hidnMVQ05zXiEXJ87dFiY",
         streeViewURL = "http://maps.googleapis.com/maps/api/streetview?";
-        /*
-    var nyturl = "http://api.nytimes.com/svc/search/v2/articlesearch.json?",
-        nytArtSearchKey = "befcd9ed183aa5edba4a379ed537e27f:10:73683129",
-        wikiOpenSearchURL = "http://en.wikipedia.org/w/api.php?action=opensearch&search=%data%&format=json&callback=wikiCallback",
-        wikiarticle = 'http://fr.wikipedia.org/wiki/',
-        streeViewURL = "http://maps.googleapis.com/maps/api/streetview?";
-    */
 
     /* function to return string starting with prefix */
     function stringStartsWith(string, prefix) {
@@ -776,7 +930,7 @@ function ViewModel() {
 
     /*
      *   close wiki pages only when there are some
-     */
+    */
 
     self.closeWiki = function() {
         self.wikiarticles([]);
@@ -784,14 +938,14 @@ function ViewModel() {
 
     /*
      *   close new york times article
-     */
+    */
     self.closeNyt = function() {
         self.nytarticles([]);
     };
 
     /*
      *  close the review view
-     */
+    */
 
     self.closeReview = function() {
         self.placeReviews([]);
@@ -814,19 +968,22 @@ function ViewModel() {
       Search near by  places or new locations
       input : Place types. Place type should be separated with space
       ex: cafe restaurant gas food etc ..
-      if keyword start with : the application will use the keywords ( location) to search for new location
-      ( Google Maps searchBox is trigger to serach for a new location)
+
+      if there are more than one keywords, the application will use these keywords ( location) to search for a new location
+      ( Google Maps searchBox is used  to search the geolocalisation of the new location, a textsearch could also be used 
+
+      ifnot a nearby search will be  launched for the all the current locations
+
+      Use the the categories button ( 3 bares) to look for multiple places
     */
 
     self.getPlace = function() {
-        /* reset the categories */
         var keywords = self.keyword().trim();
-        // The Search box will handle all keywords start with :
-        if (keywords.substring(0, 1) == ":") {
-            return;
-        }
-        myCategories = [];
         var categories = keywords.split(" ");
+        if (categories.length > 1){
+            return
+        } ;
+        myCategories = [];
         self.getPlaces(categories);
         self.showLocation(false);
         self.showCategory(false);
@@ -1140,7 +1297,6 @@ function ViewModel() {
        showResults();
     };
 };
-
 // end of the MODEL VIEW
 
 
@@ -1153,19 +1309,23 @@ if (localStorage.myCategories) {
     myCategories = JSON.parse(localStorage.myCategories);
 };
 
-/* create and binf the model to knockout.js */
-var model = new ViewModel();
-
 /* ko is asynchronulsy loaded
-*  Check ko is ready before binding
+*  Check if ko  is ready before binding
+*  if ready then bind the view model
+*  if not then 
+*    wait 5 ms then retry 20 times
+*  Alert if ko can't be loaded
+*  
 */
 var numretry = 0;
+var model ;
+
 (function koIsReady() {
     if (typeof ko === "undefined") {
         console.log("knockout.js is not loaded, retry in 5 ms",numretry);
         numretry++;
         if (numretry < 20) {
-           setTimeout(koisReady(numretry), 5);
+           setTimeout(koIsReady(numretry), 5);
            return;
         } else {
             Alert.render("Knockout.js can't be loaded, the application is not working");
@@ -1174,17 +1334,21 @@ var numretry = 0;
      };
      // bind  the viewmodel to ko
     console.log("Ko binding model is done");
+    // var model = new ViewModel();
+    model = new ViewModel();
     ko.applyBindings(model);
+
 })(numretry);
 
-/* it is time to remove the display:none style of  the following dom element */
+/* it is time to remove the display:none style of  the following DOM elements 
+*  these DOM elements are created to hide other DOMs during the loading phases
+*/
 toggledisplay("marker");
 toggledisplay("options");
 
 /*
 * jQuery is asynchrounly loaded, check/retry  before continue
-* if jquery can't be loaded the application function without  third parties API ( New york times and Wikipedia)
-*
+* if jquery can't be loaded the application will  work without  third parties API ( New york times and Wikipedia)
 */
 var numretry = 0;
 (function jqIsReady() {
@@ -1201,18 +1365,14 @@ var numretry = 0;
         }
     };
     console.log("jQuery was loaded");
+    
     /*
-    $(window).resize(function() {
-        model.showResults();
-    });
-    */
-    /*
-        Add Search wikipedia articles about the  place ( City)
+        Add Search wikipedia articles about a  place ( City)
+        if the search fail ( time out of 5 sec) or the API could not be loaded, an Alert will be raised
     */
     model.openSearchWikipedia = function(place) {
         self = this;
         self.wikiarticles([]);
-
         var wikiOpenSearchURL = "http://en.wikipedia.org/w/api.php?action=opensearch&search=%data%&format=json&callback=wikiCallback",
             wikiarticle = 'http://fr.wikipedia.org/wiki/';
         var location = self.getLocality(place),
@@ -1223,12 +1383,10 @@ var numretry = 0;
         };
         var url = wikiOpenSearchURL.replace("%data%", query);
         var wikiarticle = 'http://fr.wikipedia.org/wiki/';
-        // var wikiTemplate = $('script[data-template="wiki"]').html();
         var wikiTemplate = document.getElementById('wiki-temp').innerHTML;
         self.wikiInFocus("about " + query);
         var wikiRequestTimeout = setTimeout(function() {
-            articles.push("<p>failed to query wiki resources</p>");
-            this.wikiarticles(articles);
+            Alert.render("Failed to query Wiki resources");
         }, 5000);
 
         $.ajax({
@@ -1247,12 +1405,13 @@ var numretry = 0;
             }.bind(self)) /* "self" is passed to the function as "this" */
 
         .fail(function(e) {
-            articles.push("<p>Wiki could bot be loaded</p>");
-            this.wikiarticles(articles);
+            Alert.render("Wiki API could bot be loaded");
         }.bind(self)); /* "self" is passed to the function as "this" */
     };
 
-    /*  Add Search for   ew york times articles
+    /*  
+    *  Add Search for new york times articles's services
+    *  if the search fail ( time out of 5 sec) or the API could not be loaded, an Alert will be raised
     */
 
     model.getNytArticle = function(place) {
@@ -1266,15 +1425,12 @@ var numretry = 0;
         if (location.region) {
             query += location.region;
         }
-        //var query = location.locality;
         var filter = location.country;
         var articles = [];
-        // var nytTemplate = $('script[data-template="nytimes"]').html();
         var nytTemplate = document.getElementById('nytimes-temp').innerHTML;
         self.nytInFocus("about " + filter + " " + query);
         var wikiRequestTimeout = setTimeout(function() {
-            articles.push("<p>failed to query New York times resources</p>");
-            this.nytarticles(articles);
+             Alert.render("failed to query New York times resources");
         }.bind(self), 5000);
 
         $.getJSON(url, {
@@ -1287,7 +1443,6 @@ var numretry = 0;
             })
             .done(function(data) {
                 if (data.status == "OK") {
-                    //console.log(this, self);
                     $.each(data.response.docs, function(key, value) {
                         var headline = value.headline.main;
                         if (headline != null) {
@@ -1300,8 +1455,7 @@ var numretry = 0;
             }.bind(self)) /* "self" is passed to the function as "this" */
 
         .fail(function(e) {
-            articles.push("<p>New York Times Articles could bot be loaded</p>");
-            this.nytarticles(articles);
+            Alert.render("New York Times Articles could bot be loaded");
         }.bind(self)); /* "self" is passed to the function as "this" */
     };
 

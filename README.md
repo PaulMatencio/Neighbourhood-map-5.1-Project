@@ -8,30 +8,29 @@ This is my  fifth project of the Udacity Front-end developer nanodegree. To comp
 * HTML 5 (Element Errors due to KO)
 * CSS 3 (validated)
 * CSS Media query
-* Bootstrap CSS
-* knockout.js
+* Bootstrap CSS ( grid and Button)
+* knockout.js ( async)
 * Google Maps API ( async)
-* AJAX
 * Newyork times API
 * Wikipedia API ( )
 * Street view API
-* jQuery ( for third party services)
-* Local Storage
+* AJAX ( jQuery)
+* jQuery ( async ). jQuery is only used for searching  third party services 
+* Local Storage ( store categories and locations)
 * Gulp
 
 ### new version
-The difference with the first version are
+The difference with the previous version are
 
 * Google maps API is asynchronously loaded
 * Knockoout.js is asynchronously loaded
 * jQuery is asynchronously loaded
 * There 5 different hard coded locations but only one is originally selected. You can select/unselect a location or add any new location to the list via the searchbox
-* button to show/hide the list of locations
-* button to display the list of categories that user can use to select category palces. Multiple options is permitted
-* a list of locations ( hidden by default)
-* a list of place types (hidden by default)
-* In addition to look for places categories nearby locations, the search box can be used to add a new location via to Google Maps searchbox.
-* To add  a new location, you must prefix your desired location with a double colon :  ( as for instance :NewYork central park or a full address)
+* button to show/hide the list of locations ** Plus Sign ⊕ ** .  
+* button to display the list of categories that user can use to select category palces. Multiple options is permitted ** 3 bares ☰ **
+* a list of locations ( hidden by default). User can select/unselect/remove a location 
+* a list of place types (hidden by default). user can select multiple places types
+* The search box is used to add a new location via to Google Maps searchbox or to look for a place type 
 
 
 
@@ -50,31 +49,30 @@ Develop a single page application featuring a map of a neighborhood you would li
 Google Maps, knockout.js and jQuery are loaded asynchnously
 For Google maps, a callback function is executed when the API is loaded
 For jQuery and Knockout.js, the application will wait 5ms and retry 20 times until they are loaded
+
 The application can opearte without jQuery ( third parties services will not be available)
 
 ###How to use the app
 
-* SEARCH BOX ( used to filter  google Maps categories or add a new Location to the locations list)
+* SEARCH BOX ( used to filter  google Maps categories or to add a new Location to the active locations list)
 
-  Use the search box to find nearby places ( cafe, restaurant, movie , atm , shopping) of the locations which are selected. You can type multiple place types, they must be separated by blank space. There are 5 hard coded locations in Paris. When you type any categories in the Search box, the application will look for nearby places for  all the selected locations. The more locations are selected, the longer it will take. On mobile with low network bandwidth it is recommend to select one location at a time
+  Use the search box to find nearby places ( cafe, restaurant, movie , atm , shopping) of the locations which are currently selected. You can enter only one place at a time( multiple keywords will be treated as for a new location). Use the category button instead to select multiple places at once. 
 
-  The application will call Google maps nearby search services, therefore typed in keyword must matched Google Maps place types. Some filter to map keyword to Google Place types are attempted. Further mapping must be done. You can also use the second button ( for category places) on the right ofthe Search box to select multiple all the  google applicable categories ( See categories list)
+  There are 5 hard coded locations in Paris. When you type a place type in the Search box, the application will look for such place type for  all the currently selected locations. The more locations are selected, the longer it will take.  The application will call Google maps nearby search services, therefore typed in keyword must matched Google Maps place types. Some filter to map keyword to Google Place types are attempted. 
 
-  To add a new  location, type :new-location as for instance :London picadelly square or :Newyork central park or any full address.
-  When a new location is entered, the application will use the Google maps searchBox services to look ONLY for coordinates ( textsearch services could be used instead), it will not use the nearby places returned by Google Search box. The coordinated returmed by search-box are used to mark the location, then the nearby search services is used to look for nearby places of the new location
+  You must also use the category button ( 3 barres ☰) on the right of the Search box to select multiple categories( place type) at a time( See categories list)
+
+  To add a new  location, type  multiple keywords as for instance London picadelly square or Newyork central park or any full address. When a new location is entered, the application will use the Google maps searchBox services to look ONLY for the coordinates ( textsearch services could be used instead), it will not use the nearby places returned by Google Search box. The coordinated returned by search-box are used to mark the location, then the nearby search services will be used to look for nearby places of the new location
 
   Places returned by nearby places services  are used to display the Place list and to make google maps markers.
 
 * BUTTONS (for controlling locations and place types)
 
-  There are 3 buttons after the SEARCH BOX
+  There are 2  buttons after the SEARCH BOX
 
-  The first button ( 3 barres ) is to display the list of Locations, and to select, unselect or remove a Location. Adding a location is done with the Search-Box. The updated list of locations is saved on Local storage when a location is removed. Select or unselect operations are not saved to local storage for the moment. When the ko.toJS() issues is solved, it will be implemented
+  The first button ( Plus Sign ⊕) is to display the list of Locations, and to select, unselect or remove a Location. Adding a location is done with the Search-Box. The updated list of locations is saved on Local storage when a location is removed. Select or unselect operations are not saved to local storage for the moment. When the ko.toJS() issues is solved, it will be implemented
 
-  The second button (plus sign) can be used to select/unselect multiple categories ( place types). Every time, place types are updated (select or inselect), a new nearby search is performed for every selected location.
-
-  The third one is to refresh the list of categories ( place types). ** This button has be removed **. User can use the refresh button on top of the tool bar (on left of the application window) . The refresh button will reset the place types ( empty all previously selected place types)
-
+  The second button ( 3 bares  ☰) can be used to select/unselect multiple categories ( place types). Every time, place types are updated (select or inselect), a new nearby search is performed for every selected location.
 
 * LOCATION LIST ( Location filter)
 

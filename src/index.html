@@ -11,6 +11,65 @@
     <meta name="author" content="Paul Matencio">
     <title>Project 5 Neighborhood-Map</title>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js" async></script>
+    <script type="text/javascript">
+        // callback function when google Maps API is loaded
+        var map,
+        mapOptions = {
+            center: {lat: 48.852729, lng: 2.350564},
+            zoomControl: true,
+            zoom: 14,
+            minZoom: 2,
+            maxZoom: 20,
+            disableDefaultUI: true,
+            streetViewControl: true
+        },
+        mapStyle = [{
+            "featureType": "road.local",
+            "elementType": "labels",
+            "stylers": [{
+                "hue": "#00a1ff"
+            }, {
+                "gamma": 0.8
+            }]
+            }, {
+            "featureType": "road.highway",
+            "stylers": [{
+                "lightness": 12
+            }, {
+                "gamma": 1.31
+            }, {
+                "hue": "#ffa200"
+            }]
+            }, {
+            "featureType": "landscape.natural"
+            }];
+        function initMap() {
+            map = new google.maps.Map(document.querySelector('#map-canvas'), mapOptions);
+            var styledMap = new google.maps.StyledMapType(mapStyle, {
+                 name: "Styled Map"
+            });
+            map.mapTypes.set('map_style', styledMap);
+            map.setMapTypeId('map_style');
+            // append the app.js script  when the MAPS API is loaded
+            (function(d) {
+                var script = d.createElement('script');
+                var s = d.scripts[d.scripts.length-1];
+                script.src = 'js/app.js';
+                script.async = true;
+                s.parentNode.insertBefore(script, s.nextSibling);
+            })(document);
+        }
+    </script>
+    <script>
+        (function (d) {
+            var script = d.createElement('script');
+            script.type = 'text/javascript';
+            script.async = true;
+            script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js';
+            var s = d.scripts[0] ;
+            s.parentNode.insertBefore(script, s);
+        })(document);
+    </script>
 </head>
 
 <body>
@@ -23,10 +82,10 @@
     </div>
     <div group="hz-buttons">
         <button type="core" data-bind="click: $root.toggleLocation" class="hz-button">
-            <span style="font-size: 24px;"> ☰</span>
+            <span style="font-size: 24px;"> ⊕ </span>
         </button>
         <button type="core" data-bind="click: $root.toggleCategory" class="hz-button">
-            <span style="font-size: 24px;"> ⊕ </span>
+            <span style="font-size: 24px;"> ☰ </span>
         </button>
         <!--button type="core" data-bind="click: $root.resetIcons" class="hz-button">
              <span> ⚡⚡</span>
@@ -297,69 +356,6 @@
     <script id="wiki-temp" type="text/template" data-template="wiki">
         <p class="article"><a href="{{articleUrl}}" target="_blank">{{wikiarticle}}</p>
     </script>
-
-    <!-- load scripts -->
-    <script>
-        (function (d) {
-            var script = d.createElement('script');
-            script.type = 'text/javascript';
-            script.async = true;
-            script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js';
-            var s = d.scripts[0] ;
-            s.parentNode.insertBefore(script, s);
-        })(document);
-    </script>
-
-    <script type="text/javascript">
-        // callback function when google Maps API is loaded
-        var map,
-        mapOptions = {
-            center: {lat: 48.852729, lng: 2.350564},
-            zoomControl: true,
-            zoom: 14,
-            minZoom: 2,
-            maxZoom: 20,
-            disableDefaultUI: true,
-            streetViewControl: true
-        },
-        mapStyle = [{
-            "featureType": "road.local",
-            "elementType": "labels",
-            "stylers": [{
-                "hue": "#00a1ff"
-            }, {
-                "gamma": 0.8
-            }]
-            }, {
-            "featureType": "road.highway",
-            "stylers": [{
-                "lightness": 12
-            }, {
-                "gamma": 1.31
-            }, {
-                "hue": "#ffa200"
-            }]
-            }, {
-            "featureType": "landscape.natural"
-            }];
-        function initMap() {
-            map = new google.maps.Map(document.querySelector('#map-canvas'), mapOptions);
-            var styledMap = new google.maps.StyledMapType(mapStyle, {
-                 name: "Styled Map"
-            });
-            map.mapTypes.set('map_style', styledMap);
-            map.setMapTypeId('map_style');
-            // append the app.js script  when the MAPS API is loaded
-            (function(d) {
-                var script = d.createElement('script');
-                var s = d.scripts[d.scripts.length-1];
-                script.src = 'js/app.js';
-                script.defer = true;
-                // script.setAttribute('defer',"");
-                s.parentNode.insertBefore(script, s.nextSibling);
-            })(document);
-        }
-    </script>
     <script type="text/javascript">
       WebFontConfig = {
         google: {
@@ -372,11 +368,7 @@
        s.parentNode.insertBefore(wf, s);
       })(document);
     </script>
-    <!--script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script-->
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&callback=initMap" async></script>
-    <!--script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js" async></script-->
-    <!--script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" async></script-->
-    <script type="text/javascript" src="js/gMaps.js" async></script>
   </body>
 
 </html>
