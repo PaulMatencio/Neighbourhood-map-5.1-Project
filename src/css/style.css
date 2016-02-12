@@ -84,6 +84,7 @@ strong {
     display: inline;
     position: absolute;
     left: 50%;
+    cursor: pointer;
 }
 
 [group~=review-lists] {
@@ -582,6 +583,89 @@ img.street-view {
 
 #location-list li:hover .destroy {
     display: block;
+}
+
+#myLocations:hover span {
+    display: block;
+}
+
+#myLocations span{
+    background: none repeat scroll 0 0 #F8F8F8;
+    border: 5px solid #DFDFDF;
+    z-index: 106;
+    color: #717171;
+    font-size: 13px;
+    height: 30px;
+    letter-spacing: 1px;
+    line-height: 30px;
+    margin: 0 auto;
+    position: relative;
+    text-align: center;
+    top: -80px;
+    left:-30px;
+    display:none;
+    padding:0 20px;
+
+}
+
+#myLocations span:after {
+    content:'List of locations';
+    position:absolute;
+    /* bottom:-10px; */
+    width:150px;
+    height:30px;
+    border-bottom:5px solid #dfdfdf;
+    border-right:5px solid #dfdfdf;
+    background:#f8f8f8;
+    top: 80px;
+    /* left: 50%; */
+    margin-left:-5px;
+    border-radius: 5px;
+    -moz-transform:none;
+    -webkit-transform:none;
+    transform:none;
+}
+
+
+#myCategories:hover span {
+    display: block;
+}
+
+#myCategories span{
+    background: none repeat scroll 0 0 #F8F8F8;
+    border: 5px solid #DFDFDF;
+    z-index: 106;
+    color: #717171;
+    font-size: 13px;
+    height: 30px;
+    letter-spacing: 1px;
+    line-height: 30px;
+    margin: 0 auto;
+    position: relative;
+    text-align: center;
+    top: -80px;
+    left:-30px;
+    display:none;
+    padding:0 20px;
+
+}
+
+#myCategories span:after {
+    content:'List of categories';
+    position:absolute;
+    /* bottom:-10px; */
+    width:150px;
+    height:30px;
+    border-bottom:5px solid #dfdfdf;
+    border-right:5px solid #dfdfdf;
+    background:#f8f8f8;
+    top: 80px;
+    /* left: calc(50% + 10px); */
+    margin-left:-5px;
+    border-radius: 5px;
+    -moz-transform:none;
+    -webkit-transform:none;
+    transform:none;
 }
 
 /* custom alert box */

@@ -78,14 +78,14 @@
 
     <!--  search box -->
     <div id="search-box" group="controls">
-        <input id="search-input" type="text" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlace" placeholder="Looking for places (separated by blank)  or :location ...">
+        <input id="search-input" type="text" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlace" placeholder="Looking for a place category or adding alocation ...">
     </div>
     <div group="hz-buttons">
         <button type="core" data-bind="click: $root.toggleLocation" class="hz-button">
-            <span style="font-size: 24px;"> ⊕ </span>
+            <p id="myLocations" style="font-size: 24px;"> ⊕ <span ></span></p>
         </button>
         <button type="core" data-bind="click: $root.toggleCategory" class="hz-button">
-            <span style="font-size: 24px;"> ☰ </span>
+            <p id="myCategories" style="font-size: 24px;"> ☰ <span><span></p>
         </button>
         <!--button type="core" data-bind="click: $root.resetIcons" class="hz-button">
              <span> ⚡⚡</span>
