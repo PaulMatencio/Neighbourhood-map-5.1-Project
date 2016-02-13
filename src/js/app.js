@@ -1099,6 +1099,7 @@ function ViewModel() {
     */
     self.setCenter = function() {
         if (self.currentLocation()) {
+            console.log(self.currentLocation());
             self.currentLocation().setCenter();
             return;
         }
