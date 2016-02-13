@@ -3,19 +3,19 @@
 
 This is my  fifth project of the Udacity Front-end developer nanodegree. To complete this project, I have been using following.
 
-* Javasctipt
+* Javasctipt ( validated with jshint)
 * Javscript OO
 * HTML 5 (Element Errors due to KO)
-* CSS 3 (validated)
+* CSS 3 ("http://jigsaw.w3.org/css-validator/images/vcss")
 * CSS Media query
-* Bootstrap CSS ( grid and Button)
-* knockout.js ( async)
-* Google Maps API ( async)
-* Newyork times API
-* Wikipedia API ( )
+* Bootstrap CSS (Grid and Button)
+* knockout.js (async)
+* Google Maps API (async)
+* Newyork times API(search)
+* Wikipedia API(openSearch)
 * Street view API
-* AJAX ( jQuery)
-* jQuery ( async ). jQuery is only used for searching  third party services 
+* AJAX ( with jQuery)
+* jQuery (async). jQuery is only used for searching  third party services  ( new york times and wikipedia)
 * Local Storage ( store categories and locations)
 * Gulp
 
@@ -52,13 +52,23 @@ For jQuery and Knockout.js, the application will wait 5ms and retry 20 times unt
 
 The application can opearte without jQuery ( third parties services will not be available)
 
+###How to deploy the app
+
+go to the folder of the application
+run both line ommands  gulp and gulp mini-html-1
+
+###Google page speed
+
+  Mobil : 59//100 for speed and 99/100 for user experience
+  Desktop: 79/100 for speed
+
 ###How to use the app
 
 * SEARCH BOX ( used to filter  google Maps categories or to add a new Location to the active locations list)
 
   Use the search box to find nearby places ( cafe, restaurant, movie , atm , shopping) of the locations which are currently selected. You can enter only one place at a time( multiple keywords will be treated as for a new location). Use the category button instead to select multiple places at once. 
 
-  There are 5 hard coded locations in Paris. When you type a place type in the Search box, the application will look for such place type for  all the currently selected locations. The more locations are selected, the longer it will take.  The application will call Google maps nearby search services, therefore typed in keyword must matched Google Maps place types. Some filter to map keyword to Google Place types are attempted. 
+  There are 5 hard coded locations in Paris. When you type a place type in the Search box, the application will look for such place type for  all the currently selected locations. The more locations are selected, the longer it will take.  The application will call Google maps nearby search services, therefore typed in keyword must matched Google Maps place types( a check is performed) and nothing happen if keyword does not match. Some filter to map keyword to Google Place types are attempted. 
 
   You must also use the category button ( 3 barres ☰) on the right of the Search box to select multiple categories( place type) at a time( See categories list)
 
@@ -77,6 +87,8 @@ The application can opearte without jQuery ( third parties services will not be 
 * LOCATION LIST ( Location filter)
 
   There are 5 hard coded locations in Paris, only 1 is selected by default. User can select them one by one afterwards using the search box. Moreover, as stated above, user can add/remove new locations using the Search Box as mentioned above.
+
+  user can use the Location list to navigate betwwen locations. The center of the map will changed accordingly.
 
   To select/unselect a location you must ** click on the label of that location. Checking/unchecking is not enough. **
   To add a new location, use the SEARCH BOX ( type in the new location prefixed by a double colon :. ** The new location will be placed on top of the existing list of locations. **

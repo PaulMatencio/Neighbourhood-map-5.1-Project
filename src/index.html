@@ -5,71 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Front-end developer Project 5">
-    <!--link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"-->
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <!--link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"-->
     <link rel="stylesheet" type="text/css" href="css/style.css" media="screen" title="no title">
     <meta name="author" content="Paul Matencio">
     <title>Project 5 Neighborhood-Map</title>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js" async></script>
-    <script type="text/javascript">
-        // callback function when google Maps API is loaded
-        var map,
-        mapOptions = {
-            center: {lat: 48.852729, lng: 2.350564},
-            zoomControl: true,
-            zoom: 14,
-            minZoom: 2,
-            maxZoom: 20,
-            disableDefaultUI: true,
-            streetViewControl: true
-        },
-        mapStyle = [{
-            "featureType": "road.local",
-            "elementType": "labels",
-            "stylers": [{
-                "hue": "#00a1ff"
-            }, {
-                "gamma": 0.8
-            }]
-            }, {
-            "featureType": "road.highway",
-            "stylers": [{
-                "lightness": 12
-            }, {
-                "gamma": 1.31
-            }, {
-                "hue": "#ffa200"
-            }]
-            }, {
-            "featureType": "landscape.natural"
-            }];
-        function initMap() {
-            map = new google.maps.Map(document.querySelector('#map-canvas'), mapOptions);
-            var styledMap = new google.maps.StyledMapType(mapStyle, {
-                 name: "Styled Map"
-            });
-            map.mapTypes.set('map_style', styledMap);
-            map.setMapTypeId('map_style');
-            // append the app.js script  when the MAPS API is loaded
-            (function(d) {
-                var script = d.createElement('script');
-                var s = d.scripts[d.scripts.length-1];
-                script.src = 'js/app.js';
-                script.async = true;
-                s.parentNode.insertBefore(script, s.nextSibling);
-            })(document);
-        }
-    </script>
-    <script>
-        (function (d) {
-            var script = d.createElement('script');
-            script.type = 'text/javascript';
-            script.async = true;
-            script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js';
-            var s = d.scripts[0] ;
-            s.parentNode.insertBefore(script, s);
-        })(document);
-    </script>
+    
 </head>
 
 <body>
@@ -80,13 +21,13 @@
     <div id="search-box" group="controls">
         <input id="search-input" type="text" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlace" placeholder="Looking for a place category or adding alocation ...">
     </div>
-    <div group="hz-buttons">
-        <button type="core" data-bind="click: $root.toggleLocation" class="hz-button">
+    <div class="hz-buttons">
+        <div type="core" data-bind="click: $root.toggleLocation" class="hz-button">
             <p id="myLocations" style="font-size: 24px;"> ⊕ <span ></span></p>
-        </button>
-        <button type="core" data-bind="click: $root.toggleCategory" class="hz-button">
-            <p id="myCategories" style="font-size: 24px;"> ☰ <span><span></p>
-        </button>
+        </div>
+        <div type="core" data-bind="click: $root.toggleCategory" class="hz-button">
+            <p id="myCategories" style="font-size: 24px;"> ☰ <span></span></p>
+        </div>
         <!--button type="core" data-bind="click: $root.resetIcons" class="hz-button">
              <span> ⚡⚡</span>
         </button-->
@@ -108,15 +49,15 @@
         </div>
         <div class="mycategories" group="controls" data-bind="visible:$root.showCategory">
             <div class="select">
-                <h3 style="background-color:#6890C1;padding:5px;color:white">Choose multiple categories</h3>
-                <select style="padding:15px;" data-bind="options: mapPlaceTypes, selectedOptions: myCategories" size="15" multiple="true"></select>
+                <h3 style="background-color:#6890C1;padding:5px;color:white">Choose your categories</h3>
+                <select style="padding:15px;" data-bind="options: mapPlaceTypes, selectedOptions: myCategories" size="9" multiple="true"></select>
             </div>
         </div>
         <!-- button to hide or show the search result list -->
         <div class="hide-result" group="controls">
-            <button type="core" data-bind="click: $root.toggleResults">
-                <span style="font-size: 24px;"> ☷ </span>
-            </button>
+            <div type="core" data-bind="click: $root.toggleResults">
+                <p id="myResults" style="font-size: 24px;"> ☷ <span></span></p>
+            </div>
         </div>
 
     </div>
@@ -150,19 +91,17 @@
                     <div class="col-sm-12 col-md-8">
                         <h3 class="longtext" data-bind="text: $data.name"></h3>
                         <p class="place-category"><span data-bind="text: $root.formattedType($data)"></span></p>
-                        <p>
-                            <div data-bind="if: $data.rating">
+                        <div data-bind="if: $data.rating">
                             <div>
                                 <span class="rating-number" data-bind="text: $data.rating"></span>
                                 <div style="display: inline;" data-bind="foreach: $root.rateStar($data.rating)">
                                     <img class="rate-star" data-bind="attr:{src: star}" alt="*">
                                 </div>
                             </div>
-                            </div>
-                            <span data-bind="ifnot: $data.rating">
-                                <em>no rating available.</em>
-                            </span>
-                        </p>
+                        </div>
+                        <span data-bind="ifnot: $data.rating">
+                            <em>no rating available.</em>
+                        </span>
                         <p class="place-address"><span data-bind="text: $root.getAddress($data)"></span></p>
                     </div>
                 <!-- end of place inforantion -->
@@ -177,7 +116,7 @@
     <!-- Tools bar -->
     <div data-bind="visible: showResults">
         <div id="btn-toolbar" group="controls">
-            <button type="core" class="btn" style="display: block" data-bind="click: $root.resetIcons">
+            <button type="core" class="btn" style="display: block; background-color:#4b86b4;" data-bind="click: $root.resetIcons">
                 <span style="font-size: 24px;"> ↺ </span>
             </button>
             <div class="btn-group" data-bind="foreach: icons" role="group" aria-label="plane">
@@ -187,7 +126,7 @@
                 </button>
                 <br>
             </div>
-            <button id="hide" type="core" class="btn" style="display: block">
+            <button id="hide" type="core" class="btn" style="display: block;background-color: #4b86b4;">
                 <span style="font-size:24px;">⊲</span>
             </button>
         </div>
@@ -299,7 +238,6 @@
                 <button type="core" data-bind="click:$root.closeView" class="navButton" group="closeButton" style="display: block">
                      <span style="font-size:24px;">⇦</span>
                 </button>
-
                 <div id="streeview">
                     <img class="street-view" data-bind="attr:{src: streetView, alt: noimage}">
                 </div>
@@ -315,7 +253,6 @@
             <div id="alertboxfoot"></div>
         </div>
     </div>
-
     <!-- html templates for infowindow -->
     <script id="review-long" type="text/template" data-template="review-long">
         <div id="infoWindow" class="infoWindow">
@@ -356,10 +293,71 @@
     <script id="wiki-temp" type="text/template" data-template="wiki">
         <p class="article"><a href="{{articleUrl}}" target="_blank">{{wikiarticle}}</p>
     </script>
+    <script>
+        (function (d) {
+            var script = d.createElement('script');
+            script.type = 'text/javascript';
+            script.async = true;
+            script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js';
+            var s = d.scripts[0] ;
+            s.parentNode.insertBefore(script, s);
+        })(document);
+    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js" async></script>
+    <script type="text/javascript">
+        // callback function when google Maps API is loaded
+        var map,
+        mapOptions = {
+            center: {lat: 48.852729, lng: 2.350564},
+            zoomControl: true,
+            zoom: 14,
+            minZoom: 2,
+            maxZoom: 20,
+            disableDefaultUI: true,
+            streetViewControl: true
+        },
+        mapStyle = [{
+            "featureType": "road.local",
+            "elementType": "labels",
+            "stylers": [{
+                "hue": "#00a1ff"
+            }, {
+                "gamma": 0.8
+            }]
+            }, {
+            "featureType": "road.highway",
+            "stylers": [{
+                "lightness": 12
+            }, {
+                "gamma": 1.31
+            }, {
+                "hue": "#ffa200"
+            }]
+            }, {
+            "featureType": "landscape.natural"
+            }];
+        function initMap() {
+            map = new google.maps.Map(document.querySelector('#map-canvas'), mapOptions);
+            var styledMap = new google.maps.StyledMapType(mapStyle, {
+                 name: "Styled Map"
+            });
+            map.mapTypes.set('map_style', styledMap);
+            map.setMapTypeId('map_style');
+            // append the app.js script  when the MAPS API is loaded
+            (function(d) {
+                var script = d.createElement('script');
+                var s = d.scripts[d.scripts.length-1];
+                script.src = 'js/app.js';
+                script.async = true;
+                s.parentNode.insertBefore(script, s.nextSibling);
+            })(document);
+        }
+    </script>
+    
     <script type="text/javascript">
       WebFontConfig = {
         google: {
-        families: ['Roboto:100,300']
+        families: ['Roboto:300,400,500,700']
       }
       };
       (function(d) {

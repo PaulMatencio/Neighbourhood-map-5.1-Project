@@ -11,13 +11,23 @@ var gulp = require('gulp'),
 gulp.task('mini-html', function() {
   var opts = {
     conditionals: true,
-    spare:true
+    spare: true
   };
 
   return gulp.src('src/*.html')
     .pipe(minifyhtml(opts))
-    .pipe(plumber())
     .pipe(gulp.dest('./'));
+});
+
+gulp.task('mini-html-1', function() {
+  var opts = {
+    conditionals: true,
+    spare: true
+  };
+
+  return gulp.src('*.html')
+    .pipe(minifyhtml(opts))
+    .pipe(gulp.dest(''));
 });
 
 gulp.task('mini-critical-html', function() {
@@ -39,7 +49,6 @@ gulp.task('mini-inline', function() {
 // JavaScript  minifier
 gulp.task('mini-js', function() {
   gulp.src('src/js/*.js')
-    .pipe(plumber())
     .pipe(uglify())
     .pipe(gulp.dest('./js'));
 });
@@ -47,7 +56,6 @@ gulp.task('mini-js', function() {
 // CSS minifier
 gulp.task('mini-css', function() {
   gulp.src('src/css/*.css')
-    .pipe(plumber())
     .pipe(minifycss({compatibility: 'ie8'}))
     .pipe(gulp.dest('./css'));
 });
@@ -91,7 +99,6 @@ gulp.task('optimize-image', function() {
 // Image compress
 gulp.task('compress-image', function() {
   gulp.src('src/images/*')
-    .pipe(plumber())
     .pipe(imagemin())
     .pipe(gulp.dest('./images'));
 })
@@ -105,4 +112,4 @@ gulp.task('watch', function() {
   gulp.watch('src/images/*', ['optimize-image']);
 });
 
-gulp.task('default', ['mini-html', 'mini-js','mini-css', 'compress-image','critical','mini-critical-html','watch']);
+gulp.task('default', ['mini-html', 'mini-js','mini-css', 'compress-image','critical','mini-html-1','watch']);

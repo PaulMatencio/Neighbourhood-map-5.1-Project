@@ -154,7 +154,7 @@ var myLocations = [{
         lng: 2.363993
     },
     selected: false
-}]
+}];
 
 /* Function to define javascript subclass */
 function inherit(subClass, superClass) {
@@ -171,7 +171,7 @@ function toggledisplay(id) {
     (function(style) {
         style.display = style.display === 'none' ? '' : 'none';
     })(document.getElementById(id).style);
-};
+}
 
 
 /* Define a Custom alert box
@@ -196,13 +196,13 @@ function CustomAlert() {
         document.getElementById('alertboxhead').innerHTML = "Error message, please aknowledge";
         document.getElementById('alertboxbody').innerHTML = dialog;
         document.getElementById('alertboxfoot').innerHTML = '<button onclick="Alert.ok()">OK</button>';
-    }
+    };
 
     // the ok method
     this.ok = function() {
         document.getElementById('alertbox').style.display = "none";
         document.getElementById('alertoverlay').style.display = "none";
-    }
+    };
 }
 /* create an alert object*/
 var Alert = new CustomAlert();
@@ -237,7 +237,7 @@ function gMaps() {
     });
     this.marker_animation = google.maps.Animation.DROP;
     this.map = map;
-};
+}
 
 /* create a marker for a location */
 /* used by the initLocations, addLocation and selectLocation methods to mark  the location on the map*/
@@ -251,7 +251,7 @@ gMaps.prototype.markLocation = function() {
         title: name
     });
     this.marker = marker;
-}
+};
 
 // center the map around a location
 gMaps.prototype.setCenter = function() {
@@ -290,7 +290,7 @@ gMaps.prototype.getResults = function(results, status, pagination) {
     // process  places returned the nearby search services
     if (status == google.maps.places.PlacesServiceStatus.OK) {
         results.forEach(function(place) {
-            if (place.types.filter(isPolitical).length == 0) {
+            if (place.types.filter(isPolitical).length === 0) {
                 nearByPlaces.push(place);
                 bounds.extend(place.geometry.location);
             }
@@ -298,7 +298,7 @@ gMaps.prototype.getResults = function(results, status, pagination) {
         map.fitBounds(bounds);
         this.nearByPlaces(nearByPlaces);
         this.createMarkers(this.nearByPlaces());
-    };
+    }
 
     /* set the location to the first  selected entry of the myLocations array
      * instead of location.setCenter();
@@ -343,7 +343,9 @@ gMaps.prototype.initAutocomplete = function() {
 
         var self = this.self;
         var input = searchInput.value.split(" ");
-        if (input.length ==  1) return;
+        if (input.length ==  1) {
+            return;
+        }
         var searchedPlaces = searchBox.getPlaces();
         var places = searchedPlaces.length;
         if (places == 1) {
@@ -356,18 +358,18 @@ gMaps.prototype.initAutocomplete = function() {
             // myLocations = []; // reset the hard coded location array
             // create a new location based on information returned by searchBox.getPlaces()
             var location = {};
-            location.name = searchInput.value,
-                location.city = searchInput.value,
-                location.mapcenter = {
-                    lat: place.geometry.location.lat(),
-                    lng: place.geometry.location.lng(),
-                };
+            location.name = searchInput.value;
+            location.city = searchInput.value;
+            location.mapcenter = {
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng(),
+            };
             location.selected = true;
             // set a new location and search places for nearby this location
             self.addLocation(location);
-        };
+        }
         searchInput.value = "";
-    };
+    }
 
     searchBox.addListener('places_changed', boxSearch.bind(this));
 };
@@ -399,7 +401,6 @@ gMaps.prototype.removeMarkers = function() {
  */
 
 gMaps.prototype.createMarkers = function(places) {
-    // var iconSize = Math.sqrt($(window).width()) + 24;
     var iconSize = Math.sqrt(window.innerWidth) + 24;
     // Clear out the old markers for this location
     this.removeMarkers();
@@ -470,7 +471,7 @@ gMaps.prototype.createMarkers = function(places) {
 
 
 /*
- * Get details about place corresponded to the clicked marker and build the infoWindow.
+ * Get details about place corresponded to the clicked marker and build the infoWindow for the markers
  */
 
 gMaps.prototype.addInfoWindow = function(place, marker) {
@@ -492,10 +493,8 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
             var reviewsTemplate;
             if (winWidth < 800) {
                 self.showResults(false);
-                // reviewsTemplate = $('script[data-template="review-short"]').html();
                 reviewsTemplate = document.getElementById('review-short').innerHTML ;
             } else {
-                // reviewsTemplate = $('script[data-template="reviews"]').html();
                 reviewsTemplate = document.getElementById('review-long').innerHTML ;
                 reviewsTemplate = reviewsTemplate.replace(/{{opening}}/, Map.getOpenings(place));
             }
@@ -505,7 +504,6 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
             var rev = reviewsTemplate.replace(/{{name}}/, place.name).replace(/{{formatted_address}}/, place.formatted_address).replace(/{{rating}}/, Map.getRating(place)).replace(/{{photos}}/, Map.getPhotoes(place));
             infoWindow.setContent(rev.replace(/{{website}}/g, website).replace(/{{phone}}/, Map.getPhone(place)));
             infoWindow.open(Map.map, marker);
-            // $('.infoWindow').fadeIn(200);
 
             /*
                Open the photo-page  dom when photo link is clicked
@@ -518,7 +516,7 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
                     self.currentIndex(0);
                     self.currentPhoto(self.placePhotos()[0]);
                 });
-            };
+            }
 
             /*
                Open the reviews page when reviews is clicked
@@ -533,7 +531,7 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
                         }
                     });
                 });
-            };
+            }
 
             /*
               Open the nyt article when the nyt link is clicked
@@ -543,7 +541,7 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
                 nytlink.addEventListener("click",function() {
                     self.getNytArticle(place);
                 });
-            }; /* end nyt */
+            } /* end nyt */
 
 
             /*
@@ -554,7 +552,7 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
                 wikilink.addEventListener("click",function() {
                 self.openSearchWikipedia(place);
                 });
-            };
+            }
 
             /*
               Open the street view page when it is clicked
@@ -565,7 +563,7 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
                 streetLink.addEventListener("click",function() {
                     self.getStreetView(place);
                 });
-            };
+            }
         }
     });
 
@@ -644,7 +642,7 @@ gMaps.prototype.getOpenings = function(place) {
             "Sun:" + place.opening_hours.periods[0].open.time + "-" + place.opening_hours.periods[0].close.time;
     } catch (e) {
         opening = 'Work time not available';
-    };
+    }
     return opening;
 };
 
@@ -677,7 +675,7 @@ gMaps.prototype.searchResults = function(results, status) {
         var address = place.formatted_address;
         console.log(address, location);
         this.createLocMarker(place);
-    };
+    }
 };
 
 /* create a marker for a location */
@@ -689,7 +687,7 @@ gMaps.prototype.createLocMarker = function(place) {
         position: place.geometry.location,
         title: name
     });
-}
+};
 // END of Google maps location class
 
 /*
@@ -732,8 +730,9 @@ function ViewModel() {
     create KO observable
     */
     self.myLocations = ko.observableArray([]); // ko array for hard coded locations
-    self.showLocation = ko.observable(false);
-    self.showCategory = ko.observable(false);
+    self.currentLocation = ko.observable(null); // current selected location or the top of the myLocations
+    self.showLocation = ko.observable(false); // use to show or hide the liste of Locations
+    self.showCategory = ko.observable(false); // use to show or hode the list of Categories
     self.showResults = ko.observable(false); // boolean to hide or show the places returned by google Map places API nearby search services
     self.numberPlaces = ko.observable(0); // total number of nearby places
     self.placeReviews = ko.observableArray([]); // ko array for place review objects returned by google map places API getDetails() service
@@ -767,7 +766,7 @@ function ViewModel() {
         this.markers = []; // array of markers for nearby places of this location
         this.marker = null; // maker for this location
         this.self = self;
-    };
+    }
 
     /* Initialize the self.myLocations observable array with the locations array (the hard coded locations)
      * Mark each location on the map if it is selected
@@ -783,7 +782,7 @@ function ViewModel() {
                 loc.marker.setMap(null);
             }
         });
-    }
+    };
 
     // initialize the observable self.myLocations Array
     self.initLocations(myLocations);
@@ -819,7 +818,7 @@ function ViewModel() {
         var next = (current + direction) % numberPhotos;
         if (next < 0) {
             next = numberPhotos - 1;
-        };
+        }
         self.currentPhoto(self.placePhotos()[next]);
         self.currentIndex(next);
     }
@@ -858,7 +857,7 @@ function ViewModel() {
 
     /* show or hide the location view */
     self.toggleLocation = function() {
-        if (self.myLocations().length == 0) {
+        if (self.myLocations().length === 0) {
             self.showLocation(false);
         } else {
             self.showLocation(!self.showLocation());
@@ -903,16 +902,18 @@ function ViewModel() {
                 location.marker.setMap(null);
             }
             // re-center the map with  the first selected entry of the locations aray
+            self.currentLocation(null);
             self.setCenter();
         } else {
             location.markLocation(); // add a marker for that location
+            self.currentLocation(location);
         }
-        // remove or add markers depending on the option
+        // remove or ceate markers depending on the option
         location.createMarkers(location.nearByPlaces());
-        if (self.numberPlaces() == 0) {
+        if (self.numberPlaces() === 0) {
             self.numberPlaces(0);
             self.showResults(false);
-        };
+        }
     };
 
     /* computed observable to return the city name of a location */
@@ -923,7 +924,7 @@ function ViewModel() {
             return location.selected();
         });
         if (locations.length > 0) {
-            return locations[0].city();
+            return locations[0].city().toUpperCase();
         } else return "";
     });
 
@@ -971,41 +972,44 @@ function ViewModel() {
       if there are more than one keywords, the application will use these keywords ( location) to search for a new location
       ( Google Maps searchBox is used  to search the geolocalisation of the new location, a textsearch could also be used 
 
-      ifnot a nearby search will be  launched for the all the current locations
+      ifnot a nearby search will be  launched for the all the current locations triggered the altered observable myCategories array)
 
-      Use the the categories button ( 3 bares) to look for multiple places
+      Use the the categories button ( 3 bares) to look for multiple place categories
     */
 
     self.getPlace = function() {
         var keywords = self.keyword().trim();
         var categories = keywords.split(" ");
         if (categories.length > 1){
-            return
-        } ;
+            return;
+        } 
         myCategories = [];
-        self.getPlaces(categories);
-        self.showLocation(false);
-        self.showCategory(false);
-
+        self.getPlaces(categories); 
+        self.showLocation(false);  // hide the locations list
+        self.showCategory(false); // hide the categories list
+        self.keyword('');  // reset the keyword
     };
 
     self.getPlaces = function(categories) {
         // map some input keyword  to map Google place types
+        // and altet the myCategories oberservable array
         categories.forEach(function(cat) {
             if (cat.substring(0, 5) == "clini") cat = "hospital";
             if (cat == "fitness") cat = "gym";
             if (cat.substring(0, 3) == "eat") cat = "food";
             if (cat.substring(0, 5) == "metro") cat = "subway";
             mapplacetype = mapPlaceTypes.filter(getCat);
-
-            mapplacetype.forEach(function(type) {
-                myCategories.push(type);
-            });
-            self.myCategories(myCategories);
+            // check if the category exist
+            if (mapplacetype.length > 0 ) {
+                mapplacetype.forEach(function(type) {
+                    myCategories.push(type);
+                });
+                self.myCategories(myCategories);
+            }
 
             function getCat(maptype) {
                 return stringStartsWith(maptype, cat);
-            };
+            }
         });
         self.numberPlaces(0);
         // save the updated categories array in local storage
@@ -1015,9 +1019,10 @@ function ViewModel() {
 
     };
 
+
     self.getCategories = function() {
         console.log(self.myCategories());
-    }
+    };
 
     /* Init the self.myLocations() observable array
      *  Add new location on top of the myLocations Array
@@ -1029,6 +1034,7 @@ function ViewModel() {
         var loc = new Location(location); // instancie a new location
         self.myLocations.unshift(loc);    // add it to the top of the observable location array and THAT's IT
         loc.markLocation(); // mark the new location
+        self.currentLocation(location); // set the current Location to the new location
         localStorage.myLocations = JSON.stringify(myLocations); // save the myLocations array to local storage
     };
 
@@ -1059,10 +1065,10 @@ function ViewModel() {
                     return location;
                 }
             }));
-            if (self.myLocations().length == 0) self.showLocation(false);
+            if (self.myLocations().length === 0) self.showLocation(false);
             // save the new locations array on the local storage
             myLocations = myLocations.filter(function(location) {
-                if (location.remove == false) return location;
+                if (location.remove === false) return location;
             });
             localStorage.myLocations = JSON.stringify(myLocations);
 
@@ -1088,10 +1094,14 @@ function ViewModel() {
             */
     };
 
-    /* set the center of the map using the goelocalisation of first selected
-    * entry of the locationhs array
+    /* set the center of current Locatio  or the the map using the goelocalisation of first selected
+    * entry of the locations array 
     */
     self.setCenter = function() {
+        if (self.currentLocation()) {
+            self.currentLocation().setCenter();
+            return;
+        }
         var locations = self.myLocations().filter(function(location) {
             return location.selected();
         });
@@ -1123,29 +1133,29 @@ function ViewModel() {
             idx2 = 0;
         //console.log(add);
         // extract the locailty
-        idx1 = add.indexOf(clocality)
+        idx1 = add.indexOf(clocality);
         if (idx1 > 0) {
             start = idx1 + clocality.length;
             idx2 = add.indexOf('</span>', start);
             location.locality = add.slice(start, idx2);
-        };
+        }
         // extract region
         idx1 = add.indexOf('class="region"', idx2 + 7);
         if (idx1 > 0) {
             start = idx1 + cregion.length;
-            idx2 = add.indexOf('</span>', start)
+            idx2 = add.indexOf('</span>', start);
             location.region = add.slice(start, idx2);
-        };
+        }
         // extract the country-name
         idx1 = add.indexOf('class="country-name"', idx2 + 7);
         if (idx1 > 0) {
             start = idx1 + ccountry.length;
-            idx2 = add.indexOf('</span>', start)
+            idx2 = add.indexOf('</span>', start);
             location.country = add.slice(start, idx2);
-        };
+        }
         //console.log(location);
         return location;
-    }
+    };
 
     /**
       hide/show  the list of places returned by google Map places API nearby search services
@@ -1160,9 +1170,10 @@ function ViewModel() {
     /**
      *   Add the firt 9 icons of the nearby places to the  iconDict arrray
      *   which are displayed in the btn-toolbar
-     *   use the search-box for other google Maps categories
+     *   use the search-box or the category list for other Google map categories
      */
     self.icons = ko.computed(function() {
+        var iconnum = 0;
         var iconSet = new Set();
         var iconDict = [];
         self.myLocations().forEach(function(location) {
@@ -1178,7 +1189,11 @@ function ViewModel() {
                 "icon": icon
             });
         });
-        return iconDict.slice(0, 8);
+        console.log(window.innerWidth,iconDict.length);
+        if (window.innerWidth < 800) {
+            iconnum=7;
+        } else iconnum= iconDict.length; 
+        return iconDict.slice(0, iconnum);
     });
 
 
@@ -1224,19 +1239,18 @@ function ViewModel() {
      */
     self.clickMarker = function(place) {
         google.maps.event.trigger(place.marker, 'click');
-    }
+    };
 
     /*
      *  Navigate photo viewer
      */
     self.photoBackward = function() {
         navigate(-1);
-    }
+    };
 
     self.photoForward = function() {
         navigate(1);
-
-    }
+    };
 
     /*
        Display the view of the street based on the formatted address of the place
@@ -1251,7 +1265,7 @@ function ViewModel() {
 
     self.closeView = function() {
         self.showView(false);
-    }
+    };
 
     /**
       Based on which icon is pressed, map API nearby search is called with altered categories
@@ -1265,7 +1279,7 @@ function ViewModel() {
         function Category(value) {
             var val = value.split('_')[0];
             if (rawCategory.indexOf(val) != -1) return value;
-        };
+        }
         myCategories = mapPlaceTypes.filter(Category);
         self.myCategories(myCategories);
         self.numberPlaces(0); // reset the total number of places for these categories
@@ -1294,22 +1308,26 @@ function ViewModel() {
         // To do
     };
 
-    /* showResults is a local function to the modelview function*/
+    /* hide results when  window size is smaller than 800px */
     window.onresize = function() {
        showResults();
     };
-};
+
+    window.onload = function() {
+        showResults();
+    };
+}
 // end of the MODEL VIEW
 
 
 /* load myCategories and myLocations from local storage if they have been saved */
 if (localStorage.myLocations) {
     myLocations = JSON.parse(localStorage.myLocations);
-};
+}
 
 if (localStorage.myCategories) {
     myCategories = JSON.parse(localStorage.myCategories);
-};
+}
 
 /* ko is asynchronulsy loaded
 *  Check if ko  is ready before binding
@@ -1333,7 +1351,7 @@ var model ;
             Alert.render("Knockout.js can't be loaded, the application is not working");
             return;
         }
-     };
+     }
      // bind  the viewmodel to ko
     console.log("Ko binding model is done");
     // var model = new ViewModel();
@@ -1358,14 +1376,14 @@ var numretry = 0;
     if (typeof $ === "undefined") {
         console.log("jQuery is not loaded, retry in 5 ms", numretry);
         numretry++;
-        if (numretry < 20) {
+        if (numretry < 40) {
             setTimeout(jqIsReady(numretry), 5);
             return;
         } else {
-            Alert.render("jQuery can't be loaded, the application will run without third parties services");
+            Alert.render("jQuery can't be loaded, run without third parties services or reload");
             return;
         }
-    };
+    }
     console.log("jQuery was loaded");
     
     /*
@@ -1382,9 +1400,8 @@ var numretry = 0;
         var query = location.locality + " ";
         if (location.region) {
             query += location.region;
-        };
+        }
         var url = wikiOpenSearchURL.replace("%data%", query);
-        var wikiarticle = 'http://fr.wikipedia.org/wiki/';
         var wikiTemplate = document.getElementById('wiki-temp').innerHTML;
         self.wikiInFocus("about " + query);
         var wikiRequestTimeout = setTimeout(function() {
@@ -1447,11 +1464,11 @@ var numretry = 0;
                 if (data.status == "OK") {
                     $.each(data.response.docs, function(key, value) {
                         var headline = value.headline.main;
-                        if (headline != null) {
+                        if (headline !== null) {
                             articles.push(nytTemplate.replace(/{{headline}}/, headline).replace(/{{articleUrl}}/, value.web_url));
                         }
                     });
-                };
+                }
                 this.nytarticles(articles);
                 clearTimeout(wikiRequestTimeout);
             }.bind(self)) /* "self" is passed to the function as "this" */
