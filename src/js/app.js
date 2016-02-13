@@ -1034,7 +1034,7 @@ function ViewModel() {
         var loc = new Location(location); // instancie a new location
         self.myLocations.unshift(loc);    // add it to the top of the observable location array and THAT's IT
         loc.markLocation(); // mark the new location
-        self.currentLocation(location); // set the current Location to the new location
+        self.currentLocation(loc); // set the current Location to the new location
         localStorage.myLocations = JSON.stringify(myLocations); // save the myLocations array to local storage
     };
 
