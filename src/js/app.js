@@ -892,7 +892,7 @@ function ViewModel() {
          *  if unselect,
          *   Remove the markers from the map for this location,
          *   Decrement the totoal number of displayed pplace
-         *  the total number of places is incremented with the nearby search functions
+         *   the total number of places is incremented by the nearby search functions
          */
         if (!location.selected()) {
             self.numberPlaces(self.numberPlaces() - location.nearByPlaces().length);
@@ -901,11 +901,19 @@ function ViewModel() {
             if (location.marker) {
                 location.marker.setMap(null);
             }
-            // re-center the map with  the first selected entry of the locations aray
+            // re-center the map with  the coordinated of first entry which is selected of the locations array
             self.currentLocation(null);
             self.setCenter();
         } else {
             location.markLocation(); // add a marker for that location
+            // Move the  selected location the top of the myLocations Array
+            var name = location.name();
+            var myLocations = {};
+            myLocations = self.myLocations().filter(function(loc){
+                return loc.name() != name;
+            });
+            myLocations.unshift(location);
+            self.myLocations(myLocations);
             self.currentLocation(location);
         }
         // remove or ceate markers depending on the option
@@ -993,7 +1001,9 @@ function ViewModel() {
     self.getPlaces = function(categories) {
         // map some input keyword  to map Google place types
         // and altet the myCategories oberservable array
+
         categories.forEach(function(cat) {
+            cat = cat.toLowerCase();
             if (cat.substring(0, 5) == "clini") cat = "hospital";
             if (cat == "fitness") cat = "gym";
             if (cat.substring(0, 3) == "eat") cat = "food";
