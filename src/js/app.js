@@ -166,47 +166,12 @@ function inherit(subClass, superClass) {
 * function to remove the display: none of an element 
 * the <HTML> script contains two DOM elements ( options and markers). They are created to hide other 
 * DOM element util KO is initialized. The display:none are moved once Ko is initialized 
-*/
+*/ 
 function toggledisplay(id) {
     (function(style) {
         style.display = style.display === 'none' ? '' : 'none';
     })(document.getElementById(id).style);
 }
-
-
-/* Define a Custom alert box
-* it is used to alert on error
-* there are 2 methods : render and ok
-* render to display the error message
-* ok to acknowledge the message
-*/
-
-function CustomAlert() {
-
-    // the render method
-    this.render = function(dialog) {
-        var winW = window.innerWidth;
-        var winH = window.innerHeight;
-        var overlay = document.getElementById('alertoverlay');
-        var alert = document.getElementById('alertbox');
-        overlay.style.display = "block";
-        overlay.style.height = winH + "px";
-
-        alert.style.display = "block";
-        document.getElementById('alertboxhead').innerHTML = "Error message, please aknowledge";
-        document.getElementById('alertboxbody').innerHTML = dialog;
-        document.getElementById('alertboxfoot').innerHTML = '<button onclick="Alert.ok()">OK</button>';
-    };
-
-    // the ok method
-    this.ok = function() {
-        document.getElementById('alertbox').style.display = "none";
-        document.getElementById('alertoverlay').style.display = "none";
-    };
-}
-/* create an alert object*/
-var Alert = new CustomAlert();
-
 
 /*Google Maps Location class
 *
@@ -331,7 +296,6 @@ gMaps.prototype.initAutocomplete = function() {
     /*
      * If there are more than one keywords, the searchbox will use thes keywords to look for a new location
      *
-     *
      *  Newyork Central Square
      *  London Picadilly Circus
      *  any Full address
@@ -343,12 +307,12 @@ gMaps.prototype.initAutocomplete = function() {
 
         var self = this.self;
         var input = searchInput.value.split(" ");
-        if (input.length ==  1) {
+        if (input.length ===1) {
             return;
         }
         var searchedPlaces = searchBox.getPlaces();
         var places = searchedPlaces.length;
-        if (places == 1) {
+        if (places === 1) {
             var place = searchedPlaces[0]; // take the first result
             if (!place.geometry) {
                 Alert.render("SearchBox's returned place contains no geometry");
@@ -431,7 +395,7 @@ gMaps.prototype.createMarkers = function(places) {
             offsetX = 150,
             offsetY = -height / 5;
 
-        if (width < 800) {
+        if (width < 750) {
             offsetX = -30;
             offsetY = -1 * (height / 2 + 40); /* +50 */
         }
@@ -491,14 +455,11 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
 
         if (status === google.maps.places.PlacesServiceStatus.OK) {
             var reviewsTemplate;
-            if (winWidth < 800) {
+            if (winWidth < 750) {
                 self.showResults(false);
-                reviewsTemplate = document.getElementById('review-short').innerHTML ;
-            } else {
-                reviewsTemplate = document.getElementById('review-long').innerHTML ;
-                reviewsTemplate = reviewsTemplate.replace(/{{opening}}/, Map.getOpenings(place));
-            }
-
+            } 
+            reviewsTemplate = document.getElementById('review-long').innerHTML ;
+            reviewsTemplate = reviewsTemplate.replace(/{{opening}}/,Map.getOpenings(place));
             /* set infoWinoow content */
             var website = Map.getWebsite(place);
             var rev = reviewsTemplate.replace(/{{name}}/, place.name).replace(/{{formatted_address}}/, place.formatted_address).replace(/{{rating}}/, Map.getRating(place)).replace(/{{photos}}/, Map.getPhotoes(place));
@@ -618,7 +579,6 @@ gMaps.prototype.getPhone = function(place) {
     }
 };
 
-
 /*
  * Get photo urls from place object
  */
@@ -733,6 +693,8 @@ function ViewModel() {
     self.currentLocation = ko.observable(null); // current selected location or the top of the myLocations
     self.showLocation = ko.observable(false); // use to show or hide the liste of Locations
     self.showCategory = ko.observable(false); // use to show or hode the list of Categories
+    self.showIcons = ko.observable(true);    // use to hide or show the icons n the tool bar
+    self.controlIcon = ko.observable("⊲");   // control the display of the icons
     self.showResults = ko.observable(false); // boolean to hide or show the places returned by google Map places API nearby search services
     self.numberPlaces = ko.observable(0); // total number of nearby places
     self.placeReviews = ko.observableArray([]); // ko array for place review objects returned by google map places API getDetails() service
@@ -829,7 +791,7 @@ function ViewModel() {
     function showResults() {
         // var $winWidth = $(window).width();
         var winWidth = window.innerWidth;
-        if (winWidth > 800) {
+        if (winWidth > 750) {
             self.showResults(true);
         } else self.showResults(false);
 
@@ -1200,10 +1162,9 @@ function ViewModel() {
                 "icon": icon
             });
         });
-        console.log(window.innerWidth,iconDict.length);
-        if (window.innerWidth < 800) {
+        if (window.innerWidth < 750) {
             iconnum=7;
-        } else iconnum= iconDict.length; 
+        } else iconnum= Math.min(iconDict.length,14); 
         return iconDict.slice(0, iconnum);
     });
 
@@ -1315,8 +1276,15 @@ function ViewModel() {
         */
     };
 
-    self.hideIcons = function() {
-        // To do
+    self.toggleIcons = function() {
+        console.log(self.controlIcon());
+        if (self.controlIcon() === "⊲") {
+            self.controlIcon("⊳");
+            self.showIcons(false);
+        } else if (self.controlIcon() === "⊳") {
+            self.controlIcon("⊲");
+            self.showIcons(true);
+        }
     };
 
     /* hide results when  window size is smaller than 800px */
@@ -1372,10 +1340,9 @@ var model ;
 })(numretry);
 
 /* it is time to remove the display:none style of  the following DOM elements 
-*  these DOM elements are created to hide other DOMs during the loading phases
+*  these DOM elements are created to hide other DOMs during the loading phase
 */
-toggledisplay("marker");
-toggledisplay("options");
+
 
 /*
 * jQuery is asynchrounly loaded, check/retry  before continue
@@ -1488,18 +1455,5 @@ var numretry = 0;
             Alert.render("New York Times Articles could bot be loaded");
         }.bind(self)); /* "self" is passed to the function as "this" */
     };
-
-    $('#hide').click(function() {
-
-        var $span = $(this).children('span');
-        var $direction = $span.text();
-        if ($direction == "⊳") {
-            $direction = "⊲";
-        } else $direction = "⊳";
-        $span.text($direction);
-        $(this).siblings('div').animate({
-            width: "toggle"
-        }, 500);
-    });
 
 })(numretry);

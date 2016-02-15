@@ -64,6 +64,20 @@ run both line ommands  gulp and gulp mini-html-1
 
 ###How to use the app
 
+* There are  3 filters for place categories and 1 filter for location.
+
+    SEARCHBOX input-text : It can be  used to filter a place category OR search for a specific place category OR to ADD a new location (multiple keywords). 
+    Single keyword: the application use this keyword to search places category on the map. Nearby services will be used to filter these categories.
+    Single keyword starting with a double colon ( : ): it will be used to filter existing category places.
+    Multiple keywords: the application will use them to add a new location to the location list. Searchbox will be used to look for a new location
+
+    TOOL-BOX: it is equivalent to search box single keyword, however users use icon and do not need to know a category place name. Nevertheless the number of place types is limited therefore choices are limited.
+    
+    CATEGORIES LIST:  User can filter and select multiple category places. Nearby searches are triggered.
+
+    LOCATION LIST:  User can use this filter to select/deselect a location or to remove any location ( default locations or locations added with the SEARCHBOX)
+
+
 * SEARCH BOX ( used to filter  google Maps categories or to add a new Location to the active locations list)
 
   Use the search box to find nearby places ( cafe, restaurant, movie , atm , shopping) of the locations which are currently selected. You can enter only one place at a time( multiple keywords will be treated as for a new location). Use the category button instead to select multiple places at once. 
@@ -96,9 +110,11 @@ run both line ommands  gulp and gulp mini-html-1
 
   When user unselect a location, all markers (map) and places (list view) of that location will be hidden. When a location is selected, markers and places will be displayed again.
 
-* CATEGORIES LIST ( categories filter)
+* CATEGORIES LIST ( User can filter and select multiple place categories)
 
-  Using this list ( The google maps places types), a user select/unselect multiple place types ( same as the search box). However when a category ( type) is selected, immediately the application will look the nearby places for this type for the currenz selected locations.
+  Using this list ( The google maps places types), a user select/unselect ** multiple place types ** . However when a category ( type) is selected, immediately the application will look the nearby places for this type for the current locations that were selected.
+
+  The diference with are  the TOOLBAR : Multiple selected options and a complete list of place types are offered to the user  
 
 * PLACES LIST VIEW:
 
@@ -117,7 +133,9 @@ run both line ommands  gulp and gulp mini-html-1
   You can use this button to hide or show the Placse list and the Button toolbar if the number of places are > 0. Clicking on this button while the list of places is empty has no effect.
 
 
-* TOOLBAR ( filter place categories)
+* TOOLBAR ( User can filter and select a single place category)
+
+   ( Use the CATEGORIES LIST to select multiple place types)
 
    This toolbar dynamically changes with the neighborhood. It will show the set of the markers returned be the near by search or searchbox. The number of icons is limited to 9, use the search-box to filter other google Maps categories
 

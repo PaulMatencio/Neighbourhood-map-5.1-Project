@@ -77,17 +77,6 @@ strong {
     position: absolute;
     background-color: white;
 }
-/*
-[group~=hz-buttons] {
-    z-index: 105;
-    top: 0;
-    margin: 0px 5px 0px 5px;
-    display: inline;
-    position: absolute;
-    left: 50%;
-    cursor: pointer;
-}
-*/
 
 [group~=review-lists] {
     position: absolute;
@@ -221,7 +210,6 @@ strong {
 }
 
 .results {
-    width: 25%;
     height: 72%;
     border-radius: 5px;
     z-index: 105;
@@ -447,6 +435,7 @@ img.street-view {
     margin-left: 6px;
 }
 
+
 .rating_group {
     display: inline;
     float: right;
@@ -493,6 +482,11 @@ img.street-view {
 .opening, .rating {
     color: #4a7ea7;
     white-space: normal;
+    display: inline;
+}
+
+.review-short {
+        display: inline;
 }
 
 .nytimes-header,.wiki-header {
@@ -507,6 +501,16 @@ img.street-view {
     top: 60px;
     left: 40%;
     border-radius: 5px;
+}
+
+.myCategories-header {
+    background-color: #6890C1;
+    padding: 5px;
+    color: white;
+}
+
+.category {
+    padding:15px;
 }
 
 .select {
@@ -792,7 +796,7 @@ img.street-view {
 /* Media query */
 @media screen and (min-width: 1170px) {
     .results {
-        width: 22%;
+        width: 25%;
         max-width: 350px;
     }
 
@@ -805,7 +809,7 @@ img.street-view {
 @media screen and (min-width: 750px) and (max-width: 1169px) {
 
     .results {
-        width: 23%;
+        width: 26%;
         max-width: 350px;
         height: 65%;
     }
@@ -834,6 +838,11 @@ img.street-view {
 
     .btn-toolbar-img {
         width: 100%;
+    }
+
+    .btn-toolbar-ctl {
+        display: block; 
+        background-color: #4b86b4;
     }
 
     .infolist {
@@ -870,16 +879,17 @@ img.street-view {
         font-weight: bold;
     }
 
-    h2 {
+    h2,h3 {
         font-size: 1.1em;
     }
 
-    h3 {
-        font-size: 1.1em;
-    }
 }
 
 @media screen and (max-width: 749px) {
+
+    h2,h3 {
+        font-size: 1em;
+    }
 
     .col-md-4, .col-md-2 {
         display: none;
@@ -892,7 +902,7 @@ img.street-view {
     }
 
     .results {
-        width: 27%;
+        width: 35%;
         max-width: 350px;
         height: 65%;
     }
@@ -931,5 +941,13 @@ img.street-view {
     .btn {
         width: 30px;
         height: 30px;
+    }
+
+    .opening {
+        display: none; 
+    }
+    
+    .review-short {
+        display: none;
     }
 }
