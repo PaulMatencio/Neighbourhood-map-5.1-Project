@@ -25,12 +25,12 @@ The difference with the previous version are
 * Google maps API is asynchronously loaded
 * Knockoout.js is asynchronously loaded
 * jQuery is asynchronously loaded
-* There 5 different hard coded locations but only one is originally selected. You can select/unselect a location or add any new location to the list via the searchbox
-* button to show/hide the list of locations ** Plus Sign ⊕ ** .  
+* There 5 different hard coded locations but only one is originally selected. You can select/deselect a location or add any new location to the list via the searchbox
+* button to show/hide the list of locations ** Plus Sign ⊕ ** .
 * button to display the list of categories that user can use to select category palces. Multiple options is permitted ** 3 bares ☰ **
-* a list of locations ( hidden by default). User can select/unselect/remove a location 
+* a list of locations ( hidden by default). User can select/deselect/remove a location
 * a list of place types (hidden by default). user can select multiple places types
-* The search box is used to add a new location via to Google Maps searchbox or to look for a place type 
+* The search box is used to add a new location via to Google Maps searchbox or to look for a place type
 
 
 
@@ -66,23 +66,27 @@ run both line ommands  gulp and gulp mini-html-1
 
 * There are  3 filters for place categories and 1 filter for location.
 
-    SEARCHBOX input-text : It can be  used to filter a place category OR search for a specific place category OR to ADD a new location (multiple keywords). 
-    Single keyword: the application use this keyword to search places category on the map. Nearby services will be used to filter these categories.
-    Single keyword starting with a double colon ( : ): it will be used to filter existing category places.
-    Multiple keywords: the application will use them to add a new location to the location list. Searchbox will be used to look for a new location
+    SEARCHBOX input-text : It can be  used to filter a place category OR search for a specific place category OR to ADD a new location (multiple keywords).
+
+    Single keyword: the application use this keyword to search places category. Google maps nearby services will be used to search these categories. the results come from Google maps nearbySearch()
+
+    Single keyword starting with a double colon ( : ). it will be used to filter a  category type for the currently selected locations. The resulting places are filtered from previously nearby search places (no new submit Google map nearbysearch). Use the TOOLBAR or omit the ":"" to lauch new nearbysearch for a specific category place. Use the CATEGORIES LIST to  search for multiple place types.
+    It should be noted that the category name is not removed from the search-box since it will be reused when user select a new location ( from the LOCATIONS list), Google map nerabysearch is triggered for this new location and resulting places of the new locations are filtered against this category name
+
+    Multiple keywords: the application will use them to add a new location to the location list. Google map Searchbox will be used to look for a new location
 
     TOOL-BOX: it is equivalent to search box single keyword, however users use icon and do not need to know a category place name. Nevertheless the number of place types is limited therefore choices are limited.
-    
-    CATEGORIES LIST:  User can filter and select multiple category places. Nearby searches are triggered.
+
+    CATEGORIES LIST:  User can filter and select multiple category places. Google map nearby searches are  triggered for currently selected location
 
     LOCATION LIST:  User can use this filter to select/deselect a location or to remove any location ( default locations or locations added with the SEARCHBOX)
 
 
 * SEARCH BOX ( used to filter  google Maps categories or to add a new Location to the active locations list)
 
-  Use the search box to find nearby places ( cafe, restaurant, movie , atm , shopping) of the locations which are currently selected. You can enter only one place at a time( multiple keywords will be treated as for a new location). Use the category button instead to select multiple places at once. 
+  Use the search box to find nearby places ( cafe, restaurant, movie , atm , shopping) of the locations which are currently selected. You can enter only one place at a time( multiple keywords will be treated as for a new location). Use the category button instead to select multiple places at once.
 
-  There are 5 hard coded locations in Paris. When you type a place type in the Search box, the application will look for such place type for  all the currently selected locations. The more locations are selected, the longer it will take.  The application will call Google maps nearby search services, therefore typed in keyword must matched Google Maps place types( a check is performed) and nothing happen if keyword does not match. Some filter to map keyword to Google Place types are attempted. 
+  There are 5 hard coded locations in Paris. When you type a place type in the Search box, the application will look for such place type for  all the currently selected locations. The more locations are selected, the longer it will take.  The application will call Google maps nearby search services, therefore typed in keyword must matched Google Maps place types( a check is performed) and nothing happen if keyword does not match. Some filter to map keyword to Google Place types are attempted.
 
   You must also use the category button ( 3 barres ☰) on the right of the Search box to select multiple categories( place type) at a time( See categories list)
 
@@ -94,9 +98,9 @@ run both line ommands  gulp and gulp mini-html-1
 
   There are 2  buttons after the SEARCH BOX
 
-  The first button ( Plus Sign ⊕) is to display the list of Locations, and to select, unselect or remove a Location. Adding a location is done with the Search-Box. The updated list of locations is saved on Local storage when a location is removed. Select or unselect operations are not saved to local storage for the moment. When the ko.toJS() issues is solved, it will be implemented
+  The first button ( Plus Sign ⊕) is to display the list of Locations, and to select, deselect or remove a Location. Adding a location is done with the Search-Box. The updated list of locations is saved on Local storage when a location is removed. Select or deselect operations are not saved to local storage for the moment. When the ko.toJS() issues is solved, it will be implemented
 
-  The second button ( 3 bares  ☰) can be used to select/unselect multiple categories ( place types). Every time, place types are updated (select or inselect), a new nearby search is performed for every selected location.
+  The second button ( 3 bares  ☰) can be used to select/deselect multiple categories ( place types). Every time, place types are updated (select or inselect), a new nearby search is performed for every selected location.
 
 * LOCATION LIST ( Location filter)
 
@@ -104,17 +108,17 @@ run both line ommands  gulp and gulp mini-html-1
 
   user can use the Location list to navigate betwwen locations. The center of the map will changed accordingly.
 
-  To select/unselect a location you must ** click on the label of that location. Checking/unchecking is not enough. **
+  To select/deselect a location you must ** click on the label of that location. Checking/unchecking is not enough. **
   To add a new location, use the SEARCH BOX ( type in the new location prefixed by a double colon :. ** The new location will be placed on top of the existing list of locations. **
   To delete a new location, click on the remove button on the right of the location label. This button is shown when user pass the mouse over the label.
 
-  When user unselect a location, all markers (map) and places (list view) of that location will be hidden. When a location is selected, markers and places will be displayed again.
+  When user deselect a location, all markers (map) and places (list view) of that location will be hidden. When a location is selected, markers and places will be displayed again.
 
 * CATEGORIES LIST ( User can filter and select multiple place categories)
 
-  Using this list ( The google maps places types), a user select/unselect ** multiple place types ** . However when a category ( type) is selected, immediately the application will look the nearby places for this type for the current locations that were selected.
+  Using this list ( The google maps places types), a user select/deselect ** multiple place types ** . However when a category ( type) is selected, immediately the application will look the nearby places for this type for the current locations that were selected.
 
-  The diference with are  the TOOLBAR : Multiple selected options and a complete list of place types are offered to the user  
+  The diference with are  the TOOLBAR : Multiple selected options and a complete list of place types are offered to the user
 
 * PLACES LIST VIEW:
 
@@ -184,8 +188,9 @@ run both line ommands  gulp and gulp mini-html-1
 
   On smaller screen size:
 
-  The infowiew of a marker provides less information about a place.
-  The listview and tool bars are hidden when user click on a marker. Use the hambuger menu on the top right corner to display them back.
+  The infowindow  of a marker is progessive and some information are hiiden on smaller screen
+
+  The LISTVIEW and TOOLBAR are hidden. Use the hambuger menu on the top right corner to display them back.
 
 *  Google Maps is asynchronously loaded and the script app.js is appened ât the end of the document script's array with the defer option by the initMap() function. However, for any reason, knockout.js may not be loaded when app.js will start, an alert box will be displayed if this happen.
 

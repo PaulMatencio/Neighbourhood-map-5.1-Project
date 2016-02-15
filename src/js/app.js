@@ -108,11 +108,11 @@ var mapPlaceTypes = [
     radius = 2000;
 
 /* default locations array which is used for the first time
-* they  will be updated and saved in local storage
-* sub sequence use of the applications, the locastorage copy will be used.
-* to reuse this copy, you should clear the localstorage copy
-* localstorage.myLocations.clear()
-*/
+ * they  will be updated and saved in local storage
+ * sub sequence use of the applications, the locastorage copy will be used.
+ * to reuse this copy, you should clear the localstorage copy
+ * localstorage.myLocations.clear()
+ */
 var myLocations = [{
 
     name: "Notre Dame de Paris",
@@ -162,36 +162,42 @@ function inherit(subClass, superClass) {
     subClass.prototype.Constructor = subClass; // update constructor on prototype
 }
 
-/* 
-* function to remove the display: none of an element 
-* the <HTML> script contains two DOM elements ( options and markers). They are created to hide other 
-* DOM element util KO is initialized. The display:none are moved once Ko is initialized 
-*/ 
+/*
+
+* function to remove the display: none of an element
+* the <HTML> script contains two DOM elements ( options and markers). They are created to hide other
+* DOM element util KO is initialized. The display:none are moved once Ko is initialized
+
+This toggledisplay() function  has been removed to respect the specification
+
 function toggledisplay(id) {
     (function(style) {
         style.display = style.display === 'none' ? '' : 'none';
     })(document.getElementById(id).style);
 }
 
-/*Google Maps Location class
-*
-*   The application will create a Location object per location
-*
-*   gMaps() (contructor)
-*   setCenter()
-*   nearbySearch()
-*   getResults()
-*   initAutocomplete()
-*   boxSearch()
-*   removeMarkers()
-*   createMarkers()
-*   addInfoWindow()
-*   pinLocations ( not actually used)
-*   searchResults (not actually used)
-*   createLocMaker ( not actually used)
-*   etc ,
-*
 */
+
+/*
+ *    Google Maps Location class
+ *
+ *   The application will create a Location object per location
+ *
+ *   gMaps() (contructor)
+ *   setCenter()
+ *   nearbySearch()
+ *   getResults()
+ *   initAutocomplete()
+ *   boxSearch()
+ *   removeMarkers()
+ *   createMarkers()
+ *   addInfoWindow()
+ *   pinLocations ( not actually used)
+ *   searchResults (not actually used)
+ *   createLocMaker ( not actually used)
+ *   etc ,
+ *
+ */
 
 /* Location class */
 function gMaps() {
@@ -262,11 +268,13 @@ gMaps.prototype.getResults = function(results, status, pagination) {
         });
         map.fitBounds(bounds);
         this.nearByPlaces(nearByPlaces);
+        this.savePlaces = nearByPlaces ; // this will be used when user filter places  ( specification 5)
         this.createMarkers(this.nearByPlaces());
     }
 
-    /* set the location to the first  selected entry of the myLocations array
-     * instead of location.setCenter();
+    /*
+     *  set the location to the first  selected entry of the myLocations array
+     *
      */
     self.setCenter();
     self.numberPlaces(self.numberPlaces() + nearByPlaces.length);
@@ -298,16 +306,17 @@ gMaps.prototype.initAutocomplete = function() {
      *
      *  Newyork Central Square
      *  London Picadilly Circus
-     *  any Full address
+     *  or any Full address
      *
-     *  single keyword search is ignored
-     *    as for instance London ( london UK is accepted)
+     *  single keyword search is ignored as for instance London ( london UK is accepted)
      */
     function boxSearch() {
 
         var self = this.self;
-        var input = searchInput.value.split(" ");
-        if (input.length ===1) {
+        // var input = searchInput.value.split(" ");
+        var keyword = self.keyword();
+        var input = keyword.split(" ");
+        if (input.length === 1) {
             return;
         }
         var searchedPlaces = searchBox.getPlaces();
@@ -322,8 +331,8 @@ gMaps.prototype.initAutocomplete = function() {
             // myLocations = []; // reset the hard coded location array
             // create a new location based on information returned by searchBox.getPlaces()
             var location = {};
-            location.name = searchInput.value;
-            location.city = searchInput.value;
+            location.name = keyword;
+            location.city = keyword;
             location.mapcenter = {
                 lat: place.geometry.location.lat(),
                 lng: place.geometry.location.lng(),
@@ -332,7 +341,8 @@ gMaps.prototype.initAutocomplete = function() {
             // set a new location and search places for nearby this location
             self.addLocation(location);
         }
-        searchInput.value = "";
+        // searchInput.value = "";
+        self.keyword("");
     }
 
     searchBox.addListener('places_changed', boxSearch.bind(this));
@@ -443,8 +453,10 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
     var service = new google.maps.places.PlacesService(this.map);
     var Map = this;
     var self = this.self;
-    var infoWindow = this.infoWindow;
-    //var $winWidth = $(window).width();
+
+    //var infoWindow = this.infoWindow;
+    var infoWindow = self.infoWindow(); // used a observable infoWindow instead of the infoWindow of this location
+
     var winWidth = window.innerWidth;
     // hide the location and categories list no matter their state
     self.showCategory(false);
@@ -457,9 +469,9 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
             var reviewsTemplate;
             if (winWidth < 750) {
                 self.showResults(false);
-            } 
-            reviewsTemplate = document.getElementById('review-long').innerHTML ;
-            reviewsTemplate = reviewsTemplate.replace(/{{opening}}/,Map.getOpenings(place));
+            }
+            reviewsTemplate = document.getElementById('review-long').innerHTML;
+            reviewsTemplate = reviewsTemplate.replace(/{{opening}}/, Map.getOpenings(place));
             /* set infoWinoow content */
             var website = Map.getWebsite(place);
             var rev = reviewsTemplate.replace(/{{name}}/, place.name).replace(/{{formatted_address}}/, place.formatted_address).replace(/{{rating}}/, Map.getRating(place)).replace(/{{photos}}/, Map.getPhotoes(place));
@@ -472,7 +484,7 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
             if (place.photos) {
                 var numberPhotos = place.photos.length;
                 var photolink = document.getElementById('photos');
-                photolink.addEventListener("click", function(){
+                photolink.addEventListener("click", function() {
                     self.placePhotos(place.photos);
                     self.currentIndex(0);
                     self.currentPhoto(self.placePhotos()[0]);
@@ -482,9 +494,9 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
             /*
                Open the reviews page when reviews is clicked
             */
-            var reviews =  document.getElementById('reviews');
+            var reviews = document.getElementById('reviews');
             if (reviews) {
-                reviews.addEventListener("click",function() {
+                reviews.addEventListener("click", function() {
                     self.placeInFocus(place);
                     place.reviews.forEach(function(review) {
                         if (review.text !== "") {
@@ -497,9 +509,9 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
             /*
               Open the nyt article when the nyt link is clicked
             */
-            var nytlink =  document.getElementById('nytLink');
+            var nytlink = document.getElementById('nytLink');
             if (nytlink) {
-                nytlink.addEventListener("click",function() {
+                nytlink.addEventListener("click", function() {
                     self.getNytArticle(place);
                 });
             } /* end nyt */
@@ -508,10 +520,10 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
             /*
               Open the wikit article when the nyt link is clicked
             */
-            var wikilink =  document.getElementById('wikiLink');
+            var wikilink = document.getElementById('wikiLink');
             if (wikilink) {
-                wikilink.addEventListener("click",function() {
-                self.openSearchWikipedia(place);
+                wikilink.addEventListener("click", function() {
+                    self.openSearchWikipedia(place);
                 });
             }
 
@@ -521,7 +533,7 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
 
             var streetLink = document.getElementById('streetLink');
             if (streetLink) {
-                streetLink.addEventListener("click",function() {
+                streetLink.addEventListener("click", function() {
                     self.getStreetView(place);
                 });
             }
@@ -606,10 +618,30 @@ gMaps.prototype.getOpenings = function(place) {
     return opening;
 };
 
+/* return a place type for this location */
+gMaps.prototype.getPlace = function(type) {
+    console.log(type);
+    function getPlacetype(place) {
+        console.log(place.types,type);
+        for (var i = 0; i < place.types.length; i++) {
+            if (type === place.types[i]) return place;
+        }
+    }
+    /*
+    *  this.savePlaces contain the places returned by previous nearbyservice
+    *  filter the savePlaces with a place type and update the nearbyPlaces for this location
+    *  create marker for filtered place type of this location
+    */
+    this.nearByPlaces(this.savePlaces.filter(getPlacetype));
+    this.createMarkers(this.nearByPlaces());
+};
+
+
+
 /*
     pinPoster(locations) takes in the array of locations created by locationFinder()
     and fires off Google place searches for each location
-    This function is not actutally used 
+    This function is not actutally used
 */
 gMaps.prototype.pinLocations = function(locations) {
     var service = new google.maps.places.PlacesService(this.map);
@@ -655,10 +687,13 @@ gMaps.prototype.createLocMarker = function(place) {
 */
 
 function ViewModel() {
-     
+
+    /*
+     * A factory function we can use to create binding handlers for specific
+     * keycodes.
+     */
     var ENTER_KEY = 13;
-    // A factory function we can use to create binding handlers for specific
-    // keycodes.
+
     function keyhandlerBindingFactory(keyCode) {
         return {
             init: function(element, valueAccessor, allBindingsAccessor, data, bindingContext) {
@@ -683,7 +718,6 @@ function ViewModel() {
 
     // a custom binding to handle the enter key
     ko.bindingHandlers.enterKey = keyhandlerBindingFactory(ENTER_KEY);
-
     var self = this;
 
     /*
@@ -693,8 +727,8 @@ function ViewModel() {
     self.currentLocation = ko.observable(null); // current selected location or the top of the myLocations
     self.showLocation = ko.observable(false); // use to show or hide the liste of Locations
     self.showCategory = ko.observable(false); // use to show or hode the list of Categories
-    self.showIcons = ko.observable(true);    // use to hide or show the icons n the tool bar
-    self.controlIcon = ko.observable("⊲");   // control the display of the icons
+    self.showIcons = ko.observable(true); // use to hide or show the icons n the tool bar
+    self.controlIcon = ko.observable("⊲"); // control the display of the icons
     self.showResults = ko.observable(false); // boolean to hide or show the places returned by google Map places API nearby search services
     self.numberPlaces = ko.observable(0); // total number of nearby places
     self.placeReviews = ko.observableArray([]); // ko array for place review objects returned by google map places API getDetails() service
@@ -711,8 +745,13 @@ function ViewModel() {
     self.currentIndex = ko.observable(0); // cirrent photo index holder
     self.keyword = ko.observable(); // search box keyword
     self.mapPlaceTypes = ko.observableArray(mapPlaceTypes); // ko array of all the place types supported by Google map search nearby services
-    self.myCategories = ko.observableArray(myCategories);   // ko array of the selected place types
-
+    self.myCategories = ko.observableArray(myCategories); // ko array of the selected place types
+    self.infoWindow = ko.observable(infoWindow);
+    // self.filterExisting(false);
+    self.myError = ko.observable(false);
+    self.alertHeader = ko.observable("Error message, please aknowledge");
+    self.alertBody = ko.observable("");
+    self.alertFooter = ko.observable("");
     /*
      *  Location is a subclass of the gMaps class
      */
@@ -754,16 +793,16 @@ function ViewModel() {
      * initAutocomplete
      */
     var myMaps, marker_animation, infoWindow;
-
     myMaps = new gMaps();
-    infoWindow = myMaps.infoWindow;
+    infoWindow = myMaps.infoWindow; // this infowWindow is a global infoWindow which will be used to display information about a place
+    self.infoWindow(infoWindow);
     marker_animation = myMaps.marker_animation;
     myMaps.initAutocomplete();
     myMaps.self = self;
 
     /* define third parties  servies url */
 
-    var    streetViewApiKey = "AIzaSyAUYlUoaLYjM8hidnMVQ05zXiEXJ87dFiY",
+    var streetViewApiKey = "AIzaSyAUYlUoaLYjM8hidnMVQ05zXiEXJ87dFiY",
         streeViewURL = "http://maps.googleapis.com/maps/api/streetview?";
 
     /* function to return string starting with prefix */
@@ -794,9 +833,18 @@ function ViewModel() {
         if (winWidth > 750) {
             self.showResults(true);
         } else self.showResults(false);
-
-
     }
+    /*
+     *  Custome Alert Box to be used after ko is initialzed
+     */
+    self.CustomAlert = function(message) {
+        self.myError(true);
+        self.alertBody(message);
+    };
+
+    self.errorOK = function() {
+        self.myError(false);
+    };
 
     /*
       fonction to display nearby places
@@ -871,15 +919,24 @@ function ViewModel() {
             // Move the  selected location the top of the myLocations Array
             var name = location.name();
             var myLocations = {};
-            myLocations = self.myLocations().filter(function(loc){
+            myLocations = self.myLocations().filter(function(loc) {
                 return loc.name() != name;
             });
             myLocations.unshift(location);
             self.myLocations(myLocations);
             self.currentLocation(location);
         }
-        // remove or ceate markers depending on the option
-        location.createMarkers(location.nearByPlaces());
+        /* remove or ceate markers depending on the option
+            if (user filter a place type) location.getPlace(type)
+
+        */
+        if (self.keyword() && self.keyword().slice(0,1) === ":") {
+            var type = self.keyword().slice(1);
+            console.log(type);
+            location.getPlace(type);
+        } else location.createMarkers(location.nearByPlaces());
+
+        // location.createMarkers(location.nearByPlaces());
         if (self.numberPlaces() === 0) {
             self.numberPlaces(0);
             self.showResults(false);
@@ -900,7 +957,7 @@ function ViewModel() {
 
     /*
      *   close wiki pages only when there are some
-    */
+     */
 
     self.closeWiki = function() {
         self.wikiarticles([]);
@@ -908,14 +965,14 @@ function ViewModel() {
 
     /*
      *   close new york times article
-    */
+     */
     self.closeNyt = function() {
         self.nytarticles([]);
     };
 
     /*
      *  close the review view
-    */
+     */
 
     self.closeReview = function() {
         self.placeReviews([]);
@@ -940,24 +997,40 @@ function ViewModel() {
       ex: cafe restaurant gas food etc ..
 
       if there are more than one keywords, the application will use these keywords ( location) to search for a new location
-      ( Google Maps searchBox is used  to search the geolocalisation of the new location, a textsearch could also be used 
+      ( Google Maps searchBox is used  to search the geolocalisation of the new location, a textsearch could also be used
 
       ifnot a nearby search will be  launched for the all the current locations triggered the altered observable myCategories array)
 
       Use the the categories button ( 3 bares) to look for multiple place categories
+
+    function getPlacetype(place) {
+        for (var i = 0; i < place.types.length; i++) {
+                if (type === place.types[i]) return place;
+        }
+    }
     */
 
     self.getPlace = function() {
         var keywords = self.keyword().trim();
         var categories = keywords.split(" ");
-        if (categories.length > 1){
+        if (categories.length > 1) {
             return;
-        } 
+        }
+        // filter place of existing locations on the map
+        if (categories[0].slice(0,1) === ":") {
+            var type = categories[0].slice(1);
+            self.myLocations().forEach( function(location) {
+                if (location.selected()) {
+                    location.getPlace(type);
+                }
+            });
+            return;
+        }
         myCategories = [];
-        self.getPlaces(categories); 
-        self.showLocation(false);  // hide the locations list
+        self.getPlaces(categories);
+        self.showLocation(false); // hide the locations list
         self.showCategory(false); // hide the categories list
-        self.keyword('');  // reset the keyword
+        self.keyword(''); // reset the keyword
     };
 
     self.getPlaces = function(categories) {
@@ -972,7 +1045,7 @@ function ViewModel() {
             if (cat.substring(0, 5) == "metro") cat = "subway";
             mapplacetype = mapPlaceTypes.filter(getCat);
             // check if the category exist
-            if (mapplacetype.length > 0 ) {
+            if (mapplacetype.length > 0) {
                 mapplacetype.forEach(function(type) {
                     myCategories.push(type);
                 });
@@ -1004,8 +1077,11 @@ function ViewModel() {
     self.addLocation = function(location) {
         myLocations.unshift(location);
         var loc = new Location(location); // instancie a new location
-        self.myLocations.unshift(loc);    // add it to the top of the observable location array and THAT's IT
+        self.myLocations.unshift(loc); // add it to the top of the observable location array
         loc.markLocation(); // mark the new location
+
+        // self.myLocations(myLocations);
+
         self.currentLocation(loc); // set the current Location to the new location
         localStorage.myLocations = JSON.stringify(myLocations); // save the myLocations array to local storage
     };
@@ -1017,19 +1093,38 @@ function ViewModel() {
         if fail then use a work around ( which is much less efficient)
     */
     self.removeLocation = function(location) {
-            var name = location.name;
-            // unselect the location if it is selected which will decrease the number of current places
-            if (location.selected()) {
-                self.selectLocation(location);
+        var name = location.name;
+        // unselect the location if it is selected which will decrease the number of current places
+        if (location.selected()) {
+            self.selectLocation(location);
+        }
+
+        /* remove the location of the locations observable array and that's it */
+
+        /*  I get a security or timeout issue with
+         *       ko.toJS(self.myLocations()
+         *    Below is a work around to Jsonify the mylocations array ( not really efficient but it works)
+         */
+
+        self.myLocations(self.myLocations().filter(function(location, idx) {
+            myLocations[idx].remove = true;
+            if (location.name != name) {
+                myLocations[idx].remove = false;
+                return location;
             }
+        }));
+        if (self.myLocations().length === 0) self.showLocation(false);
+        // save the new locations array on the local storage
+        myLocations = myLocations.filter(function(location) {
+            if (location.remove === false) return location;
+        });
+        localStorage.myLocations = JSON.stringify(myLocations);
 
-            /* remove the location of the locations observable array and that's it */
-
-            /*  I get a security or timeout issue with
-             *       ko.toJS(self.myLocations()
-             *    Below is a work around to Jsonify the mylocations array ( not really efficient but it works)
-            */
-
+        /*
+        try {
+            localStorage.myLocations = ko.toJS(self.myLocations());
+        } catch (e) {
+            console.log(e);
             self.myLocations(self.myLocations().filter(function(location, idx) {
                 myLocations[idx].remove = true;
                 if (location.name != name) {
@@ -1037,41 +1132,22 @@ function ViewModel() {
                     return location;
                 }
             }));
-            if (self.myLocations().length === 0) self.showLocation(false);
+
             // save the new locations array on the local storage
             myLocations = myLocations.filter(function(location) {
-                if (location.remove === false) return location;
+                if (location.remove == false) return location;
             });
             localStorage.myLocations = JSON.stringify(myLocations);
-
-            /*
-            try {
-                localStorage.myLocations = ko.toJS(self.myLocations());
-            } catch (e) {
-                console.log(e);
-                self.myLocations(self.myLocations().filter(function(location, idx) {
-                    myLocations[idx].remove = true;
-                    if (location.name != name) {
-                        myLocations[idx].remove = false;
-                        return location;
-                    }
-                }));
-
-                // save the new locations array on the local storage
-                myLocations = myLocations.filter(function(location) {
-                    if (location.remove == false) return location;
-                });
-                localStorage.myLocations = JSON.stringify(myLocations);
-            };
-            */
+        };
+        */
     };
 
     /* set the center of current Locatio  or the the map using the goelocalisation of first selected
-    * entry of the locations array 
-    */
+     * entry of the locations array
+     */
     self.setCenter = function() {
         if (self.currentLocation()) {
-            console.log(self.currentLocation());
+            // console.log(self.currentLocation());
             self.currentLocation().setCenter();
             return;
         }
@@ -1163,8 +1239,8 @@ function ViewModel() {
             });
         });
         if (window.innerWidth < 750) {
-            iconnum=7;
-        } else iconnum= Math.min(iconDict.length,14); 
+            iconnum = 7;
+        } else iconnum = Math.min(iconDict.length, 14);
         return iconDict.slice(0, iconnum);
     });
 
@@ -1269,15 +1345,9 @@ function ViewModel() {
         self.myCategories(myCategories);
         self.numberPlaces(0);
         localStorage.myCategories = JSON.stringify(myCategories);
-        /*
-        self.myLocations().forEach(function(location) {
-            self.displayLocation(location);
-        });
-        */
     };
 
     self.toggleIcons = function() {
-        console.log(self.controlIcon());
         if (self.controlIcon() === "⊲") {
             self.controlIcon("⊳");
             self.showIcons(false);
@@ -1289,7 +1359,7 @@ function ViewModel() {
 
     /* hide results when  window size is smaller than 800px */
     window.onresize = function() {
-       showResults();
+        showResults();
     };
 
     window.onload = function() {
@@ -1309,29 +1379,29 @@ if (localStorage.myCategories) {
 }
 
 /* ko is asynchronulsy loaded
-*  Check if ko  is ready before binding
-*  if ready then bind the view model
-*  if not then 
-*    wait 5 ms then retry 20 times
-*  Alert if ko can't be loaded
-*  
-*/
+ *  Check if ko  is ready before binding
+ *  if ready then bind the view model
+ *  if not then
+ *    wait 5 ms then retry 20 times
+ *  Alert if ko can't be loaded
+ *
+ */
 var numretry = 0;
-var model ;
+var model = null;
 
 (function koIsReady() {
     if (typeof ko === "undefined") {
-        console.log("knockout.js is not loaded, retry in 5 ms",numretry);
+        console.log("knockout.js is not loaded, retry in 5 ms", numretry);
         numretry++;
         if (numretry < 20) {
-           setTimeout(koIsReady(numretry), 5);
-           return;
+            setTimeout(koIsReady(numretry), 5);
+            return;
         } else {
-            Alert.render("Knockout.js can't be loaded, the application is not working");
+            Alert.render("Knockout.js can't be loaded, the application is not working. Check your network and reload");
             return;
         }
-     }
-     // bind  the viewmodel to ko
+    }
+    // bind  the viewmodel to ko
     console.log("Ko binding model is done");
     // var model = new ViewModel();
     model = new ViewModel();
@@ -1339,22 +1409,16 @@ var model ;
 
 })(numretry);
 
-/* it is time to remove the display:none style of  the following DOM elements 
-*  these DOM elements are created to hide other DOMs during the loading phase
-*/
-
-
 /*
-* jQuery is asynchrounly loaded, check/retry  before continue
-* if jquery can't be loaded the application will  work without  third parties API ( New york times and Wikipedia)
-*/
+ * jQuery is asynchrounly loaded, check/retry  before continue
+ * if jquery can't be loaded the application will  work without  third parties API ( New york times and Wikipedia)
+ */
 var numretry = 0;
 (function jqIsReady() {
-
     if (typeof $ === "undefined") {
         console.log("jQuery is not loaded, retry in 5 ms", numretry);
         numretry++;
-        if (numretry < 40) {
+        if (numretry < 2) {
             setTimeout(jqIsReady(numretry), 5);
             return;
         } else {
@@ -1363,97 +1427,102 @@ var numretry = 0;
         }
     }
     console.log("jQuery was loaded");
-    
     /*
         Add Search wikipedia articles about a  place ( City)
         if the search fail ( time out of 5 sec) or the API could not be loaded, an Alert will be raised
     */
-    model.openSearchWikipedia = function(place) {
-        self = this;
-        self.wikiarticles([]);
-        var wikiOpenSearchURL = "http://en.wikipedia.org/w/api.php?action=opensearch&search=%data%&format=json&callback=wikiCallback",
-            wikiarticle = 'http://fr.wikipedia.org/wiki/';
-        var location = self.getLocality(place),
-            articles = [];
-        var query = location.locality + " ";
-        if (location.region) {
-            query += location.region;
-        }
-        var url = wikiOpenSearchURL.replace("%data%", query);
-        var wikiTemplate = document.getElementById('wiki-temp').innerHTML;
-        self.wikiInFocus("about " + query);
-        var wikiRequestTimeout = setTimeout(function() {
-            Alert.render("Failed to query Wiki resources");
-        }, 5000);
+    if (model) { // check if ko model was bound
+        model.openSearchWikipedia = function(place) {
+            self = this;
+            self.wikiarticles([]);
+            var wikiOpenSearchURL = "http://en.wikipedia.org/w/api.php?action=opensearch&search=%data%&format=json&callback=wikiCallback",
+                wikiarticle = 'http://fr.wikipedia.org/wiki/';
+            var location = self.getLocality(place),
+                articles = [];
+            var query = location.locality + " ";
+            if (location.region) {
+                query += location.region;
+            }
+            var url = wikiOpenSearchURL.replace("%data%", query);
+            var wikiTemplate = document.getElementById('wiki-temp').innerHTML;
+            self.wikiInFocus("about " + query);
+            var wikiRequestTimeout = setTimeout(function() {
+                // Alert.render("Failed to query Wiki resources");
+                self.customAlert("Failed to query Wiki resources");
+            }, 5000);
 
-        $.ajax({
-                url: url,
-                dataType: "jsonp"
-            })
-            .done(function(response) {
-                var article = response[1];
-                $.each(article, function(key, value) {
-                    var articleurl = wikiarticle + value;
-                    articles.push(wikiTemplate.replace(/{{wikiarticle}}/, value).replace(/{{articleUrl}}/, articleurl));
-                });
-                this.wikiarticles(articles);
-                // console.log(this.wikiarticles().length);
-                clearTimeout(wikiRequestTimeout);
-            }.bind(self)) /* "self" is passed to the function as "this" */
-
-        .fail(function(e) {
-            Alert.render("Wiki API could bot be loaded");
-        }.bind(self)); /* "self" is passed to the function as "this" */
-    };
-
-    /*  
-    *  Add Search for new york times articles's services
-    *  if the search fail ( time out of 5 sec) or the API could not be loaded, an Alert will be raised
-    */
-
-    model.getNytArticle = function(place) {
-        self = this;
-        self.nytarticles([]);
-        var nyturl = "http://api.nytimes.com/svc/search/v2/articlesearch.json?",
-            nytArtSearchKey = "befcd9ed183aa5edba4a379ed537e27f:10:73683129";
-        var location = self.getLocality(place),
-            url = nyturl;
-        var query = location.locality + " ";
-        if (location.region) {
-            query += location.region;
-        }
-        var filter = location.country;
-        var articles = [];
-        var nytTemplate = document.getElementById('nytimes-temp').innerHTML;
-        self.nytInFocus("about " + filter + " " + query);
-        var wikiRequestTimeout = setTimeout(function() {
-             Alert.render("failed to query New York times resources");
-        }.bind(self), 5000);
-
-        $.getJSON(url, {
-                "q": query,
-                "fq": filter,
-                "page": 0,
-                "sort": "newest",
-                "hl": true,
-                "api-key": nytArtSearchKey
-            })
-            .done(function(data) {
-                if (data.status == "OK") {
-                    $.each(data.response.docs, function(key, value) {
-                        var headline = value.headline.main;
-                        if (headline !== null) {
-                            articles.push(nytTemplate.replace(/{{headline}}/, headline).replace(/{{articleUrl}}/, value.web_url));
-                        }
+            $.ajax({
+                    url: url,
+                    dataType: "jsonp"
+                })
+                .done(function(response) {
+                    var article = response[1];
+                    $.each(article, function(key, value) {
+                        var articleurl = wikiarticle + value;
+                        articles.push(wikiTemplate.replace(/{{wikiarticle}}/, value).replace(/{{articleUrl}}/, articleurl));
                     });
-                }
-                this.nytarticles(articles);
-                clearTimeout(wikiRequestTimeout);
-            }.bind(self)) /* "self" is passed to the function as "this" */
+                    this.wikiarticles(articles);
+                    // console.log(this.wikiarticles().length);
+                    clearTimeout(wikiRequestTimeout);
+                }.bind(self)) /* "self" is passed to the function as "this" */
 
-        .fail(function(e) {
-            Alert.render("New York Times Articles could bot be loaded");
-        }.bind(self)); /* "self" is passed to the function as "this" */
-    };
+            .fail(function(e) {
+                self.customAlert("Wiki API could bot be loaded");
+                //  Alert.render("Wiki API could bot be loaded");
+            }.bind(self)); /* "self" is passed to the function as "this" */
+        };
+
+        /*
+         *  Add Search for new york times articles's services
+         *  if the search fail ( time out of 5 sec) or the API could not be loaded, an Alert will be raised
+         */
+
+        model.getNytArticle = function(place) {
+            self = this;
+            self.nytarticles([]);
+            var nyturl = "http://api.nytimes.com/svc/search/v2/articlesearch.json?",
+                nytArtSearchKey = "befcd9ed183aa5edba4a379ed537e27f:10:73683129";
+            var location = self.getLocality(place),
+                url = nyturl;
+            var query = location.locality + " ";
+            if (location.region) {
+                query += location.region;
+            }
+            var filter = location.country;
+            var articles = [];
+            var nytTemplate = document.getElementById('nytimes-temp').innerHTML;
+            self.nytInFocus("about " + filter + " " + query);
+            var wikiRequestTimeout = setTimeout(function() {
+                // Alert.render("failed to query New York times resources");
+                self.customAlert("failed to query New York times resources");
+            }.bind(self), 5000);
+
+            $.getJSON(url, {
+                    "q": query,
+                    "fq": filter,
+                    "page": 0,
+                    "sort": "newest",
+                    "hl": true,
+                    "api-key": nytArtSearchKey
+                })
+                .done(function(data) {
+                    if (data.status == "OK") {
+                        $.each(data.response.docs, function(key, value) {
+                            var headline = value.headline.main;
+                            if (headline !== null) {
+                                articles.push(nytTemplate.replace(/{{headline}}/, headline).replace(/{{articleUrl}}/, value.web_url));
+                            }
+                        });
+                    }
+                    this.nytarticles(articles);
+                    clearTimeout(wikiRequestTimeout);
+                }.bind(self)) /* "self" is passed to the function as "this" */
+
+            .fail(function(e) {
+                //Alert.render("New York Times Articles could bot be loaded");
+                self.customAlert("New York Times Articles could bot be loaded");
+            }.bind(self)); /* "self" is passed to the function as "this" */
+        };
+    }
 
 })(numretry);

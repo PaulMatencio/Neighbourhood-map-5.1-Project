@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="css/style.css" media="screen" title="no title">
     <meta name="author" content="Paul Matencio">
     <title>Project 5 Neighborhood-Map</title>
-    
+
 </head>
 
 <body>
@@ -19,7 +19,7 @@
 
     <!--  search box -->
     <div id="search-box" group="controls">
-        <input id="search-input" type="text" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlace" placeholder="Looking for a place category or adding alocation ...">
+        <input id="search-input" type="text" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlace" placeholder="Looking for a place category or adding a location ...">
     </div>
     <div class="hz-buttons">
         <div type="core" data-bind="click: $root.toggleLocation" class="hz-button">
@@ -243,13 +243,21 @@
         </div>
     </div>
     <!--/div-->
-    <!-- custom alert box -->
-    <div id="alertoverlay"></div>
+    <!-- custom alert box  which will be used before ko is initialized to alert on error-->
+    <div id="alertoverlay"> </div>
     <div id="alertbox">
         <div>
             <div id="alertboxhead"></div>
             <div id="alertboxbody"></div>
             <div id="alertboxfoot"></div>
+        </div>
+    </div>
+    <!-- custom alert box  which will be used after  ko is initialized to alert on error-->
+    <div id="alertbox1" data-bind= "visible: $root.myError">
+        <div>
+            <div  data-bind="text: alertHeader"></div>
+            <div data-bind="text:alertBody"></div>
+            <div  data-bind="click= $root.errorOk()">OK</div>
         </div>
     </div>
     <!-- html templates for infowindow -->
@@ -264,7 +272,7 @@
             <p><span>{{phone}} </span></p>
             <p><div class="longtext"><a class="longtext" href="{{website}}" target="_blank">{{website}}<a></div></p>
             <hr style="background: #ffbccd;">
-            <!-- class = review-short will hide these elements when screen is small --> 
+            <!-- class = review-short will hide these elements when screen is small -->
             <img class="review-short" style="width: 20px;" src= "images/NYT-logo.png"><a href="#" id="nytLink" class="review-short"> NYT articles</a>
             <span style="font-size :20px; color:black; font-weight: bold;">&#87;</span>
             <a href="#" id="wikiLink" style="display:inline;"> Wikipedia articles</a>
@@ -322,8 +330,8 @@
             "featureType": "landscape.natural"
             }];
         /* custom Alert box */
-        /* it must be using javascript and not knockout.js data binding since 
-        *  it is used also to display the alert box if knockout.js , jquery or Google maps can't be loaded 
+        /* it must be using javascript and not knockout.js data binding since
+        *  it is used also to display the alert box if knockout.js , jquery or Google maps can't be loaded
         */
         function CustomAlert() {
             this.render = function(dialog) {
@@ -365,7 +373,7 @@
             })(document);
         }
     </script>
-    
+
     <script type="text/javascript">
       WebFontConfig = {
         google: {
