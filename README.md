@@ -66,33 +66,35 @@ run both line ommands  gulp and gulp mini-html-1
 
 * There are  3 filters for place categories and 1 filter for location.
 
-    SEARCHBOX input-text : It can be  used to filter a place category OR search for a specific place category OR to ADD a new location (multiple keywords).
+    SEARCHBOX & input-text : It can be  used to filter existing categories place OR search for a specific category place OR to ADD a new location (multiple keywords).
 
-    Single keyword: the application use this keyword to search places category. Google maps nearby services will be used to search these categories. the results come from Google maps nearbySearch()
+    -Single keyword: the application use this single keyword as a place type to fire Google nearbySearch services for all currently selected locations ( see Locations list). A space will reset the category list filter. Use the CATEGORIES LIST to  search for multiple place types.
 
-    Single keyword starting with a double colon ( : ). it will be used to filter a  category type for the currently selected locations. The resulting places are filtered from previously nearby search places (no new submit Google map nearbysearch). Use the TOOLBAR or omit the ":"" to lauch new nearbysearch for a specific category place. Use the CATEGORIES LIST to  search for multiple place types.
-    It should be noted that the category name is not removed from the search-box since it will be reused when user select a new location ( from the LOCATIONS list), Google map nerabysearch is triggered for this new location and resulting places of the new locations are filtered against this category name
+    -Single keyword starting with a double colon [:]. This keyword is used to filter a place type from the existing nearby places for the already selected locations ( Location list). The category keyword is not removed from the input-text of the searchbox, it is reused when user select a new location from the LOCATIONS list. When a location is selected, the application fires nearby search  for this new location and results placesare filtered against this keyword as long as it is not removed by the user or by the reset button of the TOOLBOX
 
-    Multiple keywords: the application will use them to add a new location to the location list. Google map Searchbox will be used to look for a new location
-
-    TOOL-BOX: it is equivalent to search box single keyword, however users use icon and do not need to know a category place name. Nevertheless the number of place types is limited therefore choices are limited.
-
-    CATEGORIES LIST:  User can filter and select multiple category places. Google map nearby searches are  triggered for currently selected location
-
-    LOCATION LIST:  User can use this filter to select/deselect a location or to remove any location ( default locations or locations added with the SEARCHBOX)
+    -Multiple keywords: the application will use them to add a new location to the location list via Google map Searchbox.
 
 
-* SEARCH BOX ( used to filter  google Maps categories or to add a new Location to the active locations list)
+    TOOL-BOX: it is equivalent to search box single keyword, however users use icon instead of text. Choices are limited by the number of icons. It is not yet 100% consistent and will be improved. Use the Input-text or the CATEGORIES LIST  instead.
 
-  Use the search box to find nearby places ( cafe, restaurant, movie , atm , shopping) of the locations which are currently selected. You can enter only one place at a time( multiple keywords will be treated as for a new location). Use the category button instead to select multiple places at once.
+    CATEGORIES LIST:  User can filter and select multiple category places. Google map nearby searches is fired of for all the currently selected location. To reset the category list, use the reset button of the tool-box or enter a space in the input-text Searchbox.
 
-  There are 5 hard coded locations in Paris. When you type a place type in the Search box, the application will look for such place type for  all the currently selected locations. The more locations are selected, the longer it will take.  The application will call Google maps nearby search services, therefore typed in keyword must matched Google Maps place types( a check is performed) and nothing happen if keyword does not match. Some filter to map keyword to Google Place types are attempted.
+    LOCATION LIST:  User can use this list to select/deselect a location or to remove a location. Removing a location will reset all the places for this location. The list of Location is saved in local storage. Clear the local storage to use the default locations.
 
-  You must also use the category button ( 3 barres ☰) on the right of the Search box to select multiple categories( place type) at a time( See categories list)
 
-  To add a new  location, type  multiple keywords as for instance London picadelly square or Newyork central park or any full address. When a new location is entered, the application will use the Google maps searchBox services to look ONLY for the coordinates ( textsearch services could be used instead), it will not use the nearby places returned by Google Search box. The coordinated returned by search-box are used to mark the location, then the nearby search services will be used to look for nearby places of the new location
+* SEARCH BOX ( used to filter  google Maps categories or to ADD a new Location to the active locations list)
 
-  Places returned by nearby places services  are used to display the Place list and to make google maps markers.
+  Use the search box to find nearby places ( cafe, restaurant, movie , atm , shopping) of all the currently selected locations. You can enter only one place at a time( multiple keywords will be used to ADD a new location). Use the category list button to select multiple place types.
+
+  To filter places on the map without firing Google nearbySearch services, prefix your request with a double collon [:]
+
+  There are 5 hard coded locations in Paris, one is delected by default. When you type a place in the input text Searchbox, the application will fire Google maps nearby services for all the currently selected locations. As google map nearbySearch services is used, keyword must match Google Maps place types(a check is performed agaisnt the list) and nothing happen there is no match. Some filter to map other keywords to Google place types are attempted.
+
+  Use the category button ( 3 barres ☰) on the right of the Search box to select multiple categories( place type) at a time( See categories list)
+
+  To add a new  location, type  multiple keywords as for instance London picadelly square or Newyork central park or any full address. When a new location is entered, the application will use the Google maps searchBox services to look ONLY for the coordinates ( textsearch services could be used instead), it will not use the nearby places returned by Google Search box. The coordinated returned by search-box are used to mark the location, then the nearbySearch services is used to search for nearby places of the new location.
+
+  Places returned by nearbySeach places services  are used to display the Place list and to make google maps markers.
 
 * BUTTONS (for controlling locations and place types)
 
@@ -106,13 +108,15 @@ run both line ommands  gulp and gulp mini-html-1
 
   There are 5 hard coded locations in Paris, only 1 is selected by default. User can select them one by one afterwards using the search box. Moreover, as stated above, user can add/remove new locations using the Search Box as mentioned above.
 
-  user can use the Location list to navigate betwwen locations. The center of the map will changed accordingly.
+  User can use the Location list to navigate betwwen locations. When a location is selected, it will be put on top of the list,  markers, places view list and the center of the map will changed accordingly.
 
   To select/deselect a location you must ** click on the label of that location. Checking/unchecking is not enough. **
-  To add a new location, use the SEARCH BOX ( type in the new location prefixed by a double colon :. ** The new location will be placed on top of the existing list of locations. **
+  To add a new location, use the SEARCH BOX (** type in at lew two keywords separated **. The new location will be placed on top of the LOCATIONs LIST. **
   To delete a new location, click on the remove button on the right of the location label. This button is shown when user pass the mouse over the label.
 
-  When user deselect a location, all markers (map) and places (list view) of that location will be hidden. When a location is selected, markers and places will be displayed again.
+  When user deselect a location, all markers (map) and places (list view) of that location will be removed. 
+
+
 
 * CATEGORIES LIST ( User can filter and select multiple place categories)
 

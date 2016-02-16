@@ -762,33 +762,44 @@ img.street-view {
     background: #000;
     border-radius: 7px;
     top: 30%;
-    left: 25%;
-    width: 50%;
+    left: 30%;
+    width: 40%;
     z-index: 110;
 }
 
-#alertbox > div {
-    background: #FFF;
+#alertbox1 {
+    position: absolute;
+    background: #000;
+    /* border-radius: 7px; */
+    top: 30%;
+    left: 30%;
+    width: 40%;
+    z-index: 110;    
+}
+
+#alertbox > div, #alertbox1 > div {
+    background: #fff;
     margin: 8px;
 }
 
-#alertbox > div > #alertboxhead {
-    background: #4b86b4;
-    font-size: 19px;
+#alertbox > div > #alertboxhead,.alertboxhead {
+    background: #aaa;
+    font-size: 16px;
     padding: 10px;
-    color: #CCC;
+    color: #fff;
 }
 
-#alertbox > div > #alertboxbody {
+#alertbox > div > #alertboxbody,.alertboxbody {
     background: #333;
     padding: 20px;
-    color: #FFF;
+    font-size: 14px;
+    color: #fff;
 }
 
-#alertbox > div > #alertboxfoot {
-    background: #4b86b4;
+#alertbox > div > #alertboxfoot,.alertboxfoot {
+    background: #aaa;
     padding: 10px;
-    text-align: right;
+    text-align: center;
 }
 
 

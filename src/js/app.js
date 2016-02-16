@@ -269,7 +269,12 @@ gMaps.prototype.getResults = function(results, status, pagination) {
         map.fitBounds(bounds);
         this.nearByPlaces(nearByPlaces);
         this.savePlaces = nearByPlaces ; // this will be used when user filter places  ( specification 5)
-        this.createMarkers(this.nearByPlaces());
+        // new 
+        // this.createMarkers(this.nearByPlaces());
+        if (self.keyword() && self.keyword().slice(0,1) === ":") {
+            var type = self.keyword().slice(1);
+            this.getPlace(type);
+        } else this.createMarkers(this.nearByPlaces());
     }
 
     /*
@@ -620,9 +625,7 @@ gMaps.prototype.getOpenings = function(place) {
 
 /* return a place type for this location */
 gMaps.prototype.getPlace = function(type) {
-    console.log(type);
     function getPlacetype(place) {
-        console.log(place.types,type);
         for (var i = 0; i < place.types.length; i++) {
             if (type === place.types[i]) return place;
         }
@@ -837,7 +840,7 @@ function ViewModel() {
     /*
      *  Custome Alert Box to be used after ko is initialzed
      */
-    self.CustomAlert = function(message) {
+    self.customAlert = function(message) {
         self.myError(true);
         self.alertBody(message);
     };
@@ -930,11 +933,7 @@ function ViewModel() {
             if (user filter a place type) location.getPlace(type)
 
         */
-        if (self.keyword() && self.keyword().slice(0,1) === ":") {
-            var type = self.keyword().slice(1);
-            console.log(type);
-            location.getPlace(type);
-        } else location.createMarkers(location.nearByPlaces());
+        location.createMarkers(location.nearByPlaces());
 
         // location.createMarkers(location.nearByPlaces());
         if (self.numberPlaces() === 0) {
@@ -1002,12 +1001,6 @@ function ViewModel() {
       ifnot a nearby search will be  launched for the all the current locations triggered the altered observable myCategories array)
 
       Use the the categories button ( 3 bares) to look for multiple place categories
-
-    function getPlacetype(place) {
-        for (var i = 0; i < place.types.length; i++) {
-                if (type === place.types[i]) return place;
-        }
-    }
     */
 
     self.getPlace = function() {
@@ -1030,7 +1023,7 @@ function ViewModel() {
         self.getPlaces(categories);
         self.showLocation(false); // hide the locations list
         self.showCategory(false); // hide the categories list
-        self.keyword(''); // reset the keyword
+        self.keyword(""); // reset the keyword
     };
 
     self.getPlaces = function(categories) {
@@ -1341,9 +1334,11 @@ function ViewModel() {
      * re-request Nearby places with google API
      **/
     self.resetIcons = function() {
+        self.keyword("");
         myCategories = [];
         self.myCategories(myCategories);
         self.numberPlaces(0);
+
         localStorage.myCategories = JSON.stringify(myCategories);
     };
 
@@ -1363,7 +1358,9 @@ function ViewModel() {
     };
 
     window.onload = function() {
-        showResults();
+        if ( self.numberPlaces() > 0) {
+                showResults();
+        }
     };
 }
 // end of the MODEL VIEW
@@ -1397,7 +1394,7 @@ var model = null;
             setTimeout(koIsReady(numretry), 5);
             return;
         } else {
-            Alert.render("Knockout.js can't be loaded, the application is not working. Check your network and reload");
+            Alert.render("Timeout: Knockout.js can't be loaded, the application is not working. Check your network and reload");
             return;
         }
     }
@@ -1412,20 +1409,24 @@ var model = null;
 /*
  * jQuery is asynchrounly loaded, check/retry  before continue
  * if jquery can't be loaded the application will  work without  third parties API ( New york times and Wikipedia)
+ *  if ko is initialzed, use the ko self.customAlert() function, if not use the javascript custom alert box
  */
 var numretry = 0;
 (function jqIsReady() {
     if (typeof $ === "undefined") {
         console.log("jQuery is not loaded, retry in 5 ms", numretry);
         numretry++;
-        if (numretry < 2) {
+        if (numretry < 40) {
             setTimeout(jqIsReady(numretry), 5);
             return;
         } else {
-            Alert.render("jQuery can't be loaded, run without third parties services or reload");
+            var message = "Timeout: jQuery can't be loaded, run without third parties services or reload";
+            if (typeof ko === "undefined") {
+                 Alert.render(message);
+            } else self.customAlert(message);
             return;
         }
-    }
+    };
     console.log("jQuery was loaded");
     /*
         Add Search wikipedia articles about a  place ( City)
@@ -1447,8 +1448,7 @@ var numretry = 0;
             var wikiTemplate = document.getElementById('wiki-temp').innerHTML;
             self.wikiInFocus("about " + query);
             var wikiRequestTimeout = setTimeout(function() {
-                // Alert.render("Failed to query Wiki resources");
-                self.customAlert("Failed to query Wiki resources");
+                self.customAlert("Timeout: Failed to query Wiki resources");
             }, 5000);
 
             $.ajax({
@@ -1462,13 +1462,11 @@ var numretry = 0;
                         articles.push(wikiTemplate.replace(/{{wikiarticle}}/, value).replace(/{{articleUrl}}/, articleurl));
                     });
                     this.wikiarticles(articles);
-                    // console.log(this.wikiarticles().length);
                     clearTimeout(wikiRequestTimeout);
                 }.bind(self)) /* "self" is passed to the function as "this" */
 
             .fail(function(e) {
                 self.customAlert("Wiki API could bot be loaded");
-                //  Alert.render("Wiki API could bot be loaded");
             }.bind(self)); /* "self" is passed to the function as "this" */
         };
 
@@ -1493,8 +1491,7 @@ var numretry = 0;
             var nytTemplate = document.getElementById('nytimes-temp').innerHTML;
             self.nytInFocus("about " + filter + " " + query);
             var wikiRequestTimeout = setTimeout(function() {
-                // Alert.render("failed to query New York times resources");
-                self.customAlert("failed to query New York times resources");
+                self.customAlert("Timeout: failed to query New York times resources");
             }.bind(self), 5000);
 
             $.getJSON(url, {
@@ -1519,7 +1516,6 @@ var numretry = 0;
                 }.bind(self)) /* "self" is passed to the function as "this" */
 
             .fail(function(e) {
-                //Alert.render("New York Times Articles could bot be loaded");
                 self.customAlert("New York Times Articles could bot be loaded");
             }.bind(self)); /* "self" is passed to the function as "this" */
         };

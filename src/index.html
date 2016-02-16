@@ -243,22 +243,20 @@
         </div>
     </div>
     <!--/div-->
-    <!-- custom alert box  which will be used before ko is initialized to alert on error-->
+    <!-- custom alert box  which will be used before ko is initialized to raise an alert on error-->
     <div id="alertoverlay"> </div>
     <div id="alertbox">
-        <div>
-            <div id="alertboxhead"></div>
-            <div id="alertboxbody"></div>
-            <div id="alertboxfoot"></div>
-        </div>
+        <div id="alertboxhead"></div>
+        <div id="alertboxbody"></div>
+        <div id="alertboxfoot"></div>
     </div>
-    <!-- custom alert box  which will be used after  ko is initialized to alert on error-->
+    <!-- custom alert box  which will be used after  ko is initialized to raise an alert on error-->
     <div id="alertbox1" data-bind= "visible: $root.myError">
-        <div>
-            <div  data-bind="text: alertHeader"></div>
-            <div data-bind="text:alertBody"></div>
-            <div  data-bind="click= $root.errorOk()">OK</div>
-        </div>
+        <div class="alertboxhead" data-bind="text: alertHeader"></div>
+        <div class="alertboxbody" data-bind="text:alertBody"></div>
+        <div class="alertboxfoot" data-bind="click:$root.errorOK">
+            <span style="font-size:24px;">⇦</span>
+        </div>      
     </div>
     <!-- html templates for infowindow -->
     <script id="review-long" type="text/template" data-template="review-long">
