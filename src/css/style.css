@@ -399,12 +399,12 @@ img.street-view {
     text-align: center;
 }
 
-.fit { 
+.fit {
     width: 50%;
     padding-right: 5px;
-    -moz-box-sizing: border-box; 
-    -webkit-box-sizing: border-box;     
-    box-sizing: border-box; 
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .navButton:hover,.hz-button:hover {
@@ -434,7 +434,6 @@ img.street-view {
     vertical-align: middle;
     margin-left: 6px;
 }
-
 
 .rating_group {
     display: inline;
@@ -521,7 +520,6 @@ img.street-view {
     width: 20px;
     height: 20px;
 }
-
 
 /* location list */
 #location {
@@ -747,24 +745,23 @@ img.street-view {
 
 #alertoverlay {
     display: none;
-    opacity: .8;
     position: fixed;
     top: 0px;
     left: 0px;
     background: #FFF;
     width: 100%;
-    z-index: 110;
+    z-index: 115;
 }
 
 #alertbox {
     display: none;
     position: fixed;
     background: #000;
-    border-radius: 7px;
+    /* border-radius: 7px; */
     top: 30%;
     left: 30%;
     width: 40%;
-    z-index: 110;
+    z-index: 115;
 }
 
 #alertbox1 {
@@ -774,35 +771,33 @@ img.street-view {
     top: 30%;
     left: 30%;
     width: 40%;
-    z-index: 110;    
+    z-index: 110;
 }
 
-#alertbox > div, #alertbox1 > div {
-    background: #fff;
+#alertbox, #alertbox1 {
+    background: #f0f0f0;
     margin: 8px;
 }
 
-#alertbox > div > #alertboxhead,.alertboxhead {
-    background: #aaa;
+.alertboxhead {
+    background: #a0a0a0;
     font-size: 16px;
     padding: 10px;
-    color: #fff;
+    color: #883434;
 }
 
-#alertbox > div > #alertboxbody,.alertboxbody {
+.alertboxbody {
     background: #333;
     padding: 20px;
     font-size: 14px;
-    color: #fff;
+    color: #FFF;
 }
 
-#alertbox > div > #alertboxfoot,.alertboxfoot {
-    background: #aaa;
+.alertboxfoot {
+    background: #a0a0a0;
     padding: 10px;
     text-align: center;
 }
-
-
 
 /* Media query */
 @media screen and (min-width: 1170px) {
@@ -852,7 +847,7 @@ img.street-view {
     }
 
     .btn-toolbar-ctl {
-        display: block; 
+        display: block;
         background-color: #4b86b4;
     }
 
@@ -918,7 +913,7 @@ img.street-view {
         height: 65%;
     }
 
-  [    type~=core] {
+    [type~=core] {
         background-color: #4b86b4;
         color: white;
         height: 30px;
@@ -934,7 +929,7 @@ img.street-view {
         font-size: 14px;
     }
 
-  [    group~=lists] {
+    [group~=lists] {
         font-size: 14px;
     }
 
@@ -955,9 +950,9 @@ img.street-view {
     }
 
     .opening {
-        display: none; 
+        display: none;
     }
-    
+
     .review-short {
         display: none;
     }

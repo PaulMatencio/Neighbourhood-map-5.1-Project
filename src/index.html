@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,13 +9,10 @@
     <link rel="stylesheet" type="text/css" href="css/style.css" media="screen" title="no title">
     <meta name="author" content="Paul Matencio">
     <title>Project 5 Neighborhood-Map</title>
-
 </head>
-
 <body>
     <!--div tag that holds the google map-->
     <div id="map-canvas"></div>
-
     <!--  search box -->
     <div id="search-box" group="controls">
         <input id="search-input" type="text" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlace" placeholder="Looking for a place category or adding a location ...">
@@ -29,7 +25,6 @@
             <p id="myCategories" style="font-size: 24px;"> ☰ <span></span></p>
         </div>
     </div>
-
     <!--div id="options" style="display: none;"-->
         <!-- location list-->
     <div data-bind="visible: $root.showLocation || Locations().length > 0">
@@ -56,9 +51,7 @@
             <p id="myResults" style="font-size: 24px;"> ☷ <span></span></p>
         </div>
     </div>
-
     <!--/div-->
-
     <!-- place search result -->
     <div class="results container-fluide" group="controls" data-bind="visible: $root.showResults">
         <div class="info-header row">
@@ -69,7 +62,6 @@
                 <h2 data-bind="text: $root.myCity"></h2>
             </div>
         </div>
-
         <!--ul class="infolist" data-bind="foreach: $root.myLocations"-->
         <ul class="infolist" data-bind="foreach: $root.filteredLocations">
             <span data-bind="foreach: $data.nearByPlaces">
@@ -131,11 +123,8 @@
         </div>
     </div>
     <!-- end of place search result -->
-
     <!--Review page -->
-
     <!--div id="marker" style="display: none;"-->
-
     <div data-bind="visible: placeReviews().length">
         <div id="review-page" class="viewport">
             <button type="core" data-bind="click:$root.closeReview" class="navButton" group="closeButton" style="display: block">
@@ -172,7 +161,6 @@
         <!-- viewport -->
     </div>
         <!--end review page -->
-
         <!-- Photos display -->
     <div id="photos-page" class="viewport" data-bind="visible: placePhotos().length">
         <button type="core" data-bind="click:$root.closePhoto" class="navButton" group="closeButton" style="display: block">
@@ -193,7 +181,6 @@
             <span style="font-size: 24px;">⊳</span>
         </button>
     </div>
-
     <!-- New york times page -->
     <div id="nytimes-page" class="viewport" data-bind="visible: nytarticles().length">
         <button type="core" data-bind="click:$root.closeNyt" class="navButton" group="closeButton" style="display: block">
@@ -207,13 +194,12 @@
             </div>
             <div class="mylist" data-bind="foreach: nytarticles">
                 <div>
-                    <span class="article" style="padding:10px;" data-bind="html:$data"></span-->
+                    <span class="article" style="padding:10px;" data-bind="html:$data"></span>
                 </div>
             </div>
         </div>
     </div>
     <!--/div-->
-
     <!-- Wikipedia page -->
     <div id="wiki-page" class="viewport" data-bind="visible: wikiarticles().length">
         <button type="core" data-bind="click:$root.closeWiki" class="navButton" group="closeButton" style="display: block">
@@ -238,25 +224,28 @@
                     <span style="font-size:24px;">⇦</span>
             </button>
             <div id="streeview">
-                <img class="street-view" data-bind="attr:{src: streetView, alt: noimage}">
+                <img class="street-view" data-bind="attr:{src: streetView}" alt="noimage">
             </div>
         </div>
     </div>
     <!--/div-->
     <!-- custom alert box  which will be used before ko is initialized to raise an alert on error-->
-    <div id="alertoverlay"> </div>
-    <div id="alertbox">
-        <div id="alertboxhead"></div>
-        <div id="alertboxbody"></div>
-        <div id="alertboxfoot"></div>
+    <div id="alertoverlay">
+        <div id="alertbox">
+            <div class="alertboxhead" id="alertboxhead"></div>
+            <div class="alertboxbody"  id="alertboxbody"></div>
+            <div class="alertboxfoot" id="alertboxfoot"></div>
+        </div>
     </div>
     <!-- custom alert box  which will be used after  ko is initialized to raise an alert on error-->
     <div id="alertbox1" data-bind= "visible: $root.myError">
         <div class="alertboxhead" data-bind="text: alertHeader"></div>
         <div class="alertboxbody" data-bind="text:alertBody"></div>
         <div class="alertboxfoot" data-bind="click:$root.errorOK">
-            <span style="font-size:24px;">⇦</span>
-        </div>      
+            <button>
+                <span style="font-size:24px;">⇦</span>
+            </button>
+        </div>
     </div>
     <!-- html templates for infowindow -->
     <script id="review-long" type="text/template" data-template="review-long">
@@ -270,7 +259,6 @@
             <p><span>{{phone}} </span></p>
             <p><div class="longtext"><a class="longtext" href="{{website}}" target="_blank">{{website}}<a></div></p>
             <hr style="background: #ffbccd;">
-            <!-- class = review-short will hide these elements when screen is small -->
             <img class="review-short" style="width: 20px;" src= "images/NYT-logo.png"><a href="#" id="nytLink" class="review-short"> NYT articles</a>
             <span style="font-size :20px; color:black; font-weight: bold;">&#87;</span>
             <a href="#" id="wikiLink" style="display:inline;"> Wikipedia articles</a>
@@ -342,7 +330,7 @@
                 alert.style.display = "block";
                 document.getElementById('alertboxhead').innerHTML = "Error message, please aknowledge";
                 document.getElementById('alertboxbody').innerHTML = dialog;
-                document.getElementById('alertboxfoot').innerHTML = '<button onclick="Alert.ok()">OK</button>';
+                document.getElementById('alertboxfoot').innerHTML = '<button onclick="Alert.ok()"><span style="font-size:24px;">⇦</span></button>';
             };
             this.ok = function() {
                 document.getElementById('alertbox').style.display = "none";
@@ -350,10 +338,10 @@
             };
         }
         var Alert = new CustomAlert();
-        function mapError() {
-            Alert.render("Google map API could not be loaded, please reload");
+        function mapError(event) {
+            console.log(event);
+            Alert.render("Fail to load Google map API, check the console log");
         }
-
         function initMap() {
             map = new google.maps.Map(document.querySelector('#map-canvas'), mapOptions);
             var styledMap = new google.maps.StyledMapType(mapStyle, {
@@ -371,7 +359,6 @@
             })(document);
         }
     </script>
-
     <script type="text/javascript">
       WebFontConfig = {
         google: {
@@ -384,7 +371,6 @@
        s.parentNode.insertBefore(wf, s);
       })(document);
     </script>
-    <script onerror="mapError()" src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&callback=initMap" async></script>
+    <script onerror="mapError(event)" src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&callback=initMap" async></script>
   </body>
-
 </html>

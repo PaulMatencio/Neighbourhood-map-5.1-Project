@@ -129,7 +129,7 @@ var myLocations = [{
         lat: 48.858261,
         lng: 2.294507
     },
-    selected: false
+    selected: true
 }, {
     name: "Porte d'Italie",
     city: "Paris France",
@@ -137,7 +137,7 @@ var myLocations = [{
         lat: 48.819067,
         lng: 2.360230
     },
-    selected: false
+    selected: true
 }, {
     name: "Place de la Nation",
     city: "Paris France",
@@ -145,7 +145,7 @@ var myLocations = [{
         lat: 48.847895,
         lng: 2.395984
     },
-    selected: false
+    selected: true
 }, {
     name: "Porte de la Chapelle",
     city: "Paris France",
@@ -153,8 +153,17 @@ var myLocations = [{
         lat: 48.896748,
         lng: 2.363993
     },
+    selected: true
+},  {
+    name: "Porte de Versailles",
+    city: "Paris France",
+    mapcenter: {
+        lat: 48.832568,
+        lng: 2.287193
+    },
     selected: false
-}];
+    }
+];
 
 /* Function to define javascript subclass */
 function inherit(subClass, superClass) {
@@ -269,12 +278,15 @@ gMaps.prototype.getResults = function(results, status, pagination) {
         map.fitBounds(bounds);
         this.nearByPlaces(nearByPlaces);
         this.savePlaces = nearByPlaces ; // this will be used when user filter places  ( specification 5)
-        // new 
-        // this.createMarkers(this.nearByPlaces());
+        /* this.createMarkers(this.nearByPlaces()); */
         if (self.keyword() && self.keyword().slice(0,1) === ":") {
             var type = self.keyword().slice(1);
-            this.getPlace(type);
-        } else this.createMarkers(this.nearByPlaces());
+            self.numberPlaces(self.numberPlaces() + nearByPlaces.length);
+            this.getPlace(type); // the self.numberPlaces() is updated by the getPlace() function
+        } else {
+            this.createMarkers(this.nearByPlaces());
+            self.numberPlaces(self.numberPlaces() + nearByPlaces.length);
+        }
     }
 
     /*
@@ -282,11 +294,11 @@ gMaps.prototype.getResults = function(results, status, pagination) {
      *
      */
     self.setCenter();
-    self.numberPlaces(self.numberPlaces() + nearByPlaces.length);
+    // self.numberPlaces(self.numberPlaces() + nearByPlaces.length);
     if (self.numberPlaces() > 0) {
         self.showResults(true);
     }
-    // console.log("results",self.numberPlaces());
+    console.log("results",self.numberPlaces());
 };
 
 /**
@@ -515,7 +527,7 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
               Open the nyt article when the nyt link is clicked
             */
             var nytlink = document.getElementById('nytLink');
-            if (nytlink) {
+            if (nytlink && self.jqload()) {
                 nytlink.addEventListener("click", function() {
                     self.getNytArticle(place);
                 });
@@ -526,7 +538,7 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
               Open the wikit article when the nyt link is clicked
             */
             var wikilink = document.getElementById('wikiLink');
-            if (wikilink) {
+            if (wikilink && self.jqload()) {
                 wikilink.addEventListener("click", function() {
                     self.openSearchWikipedia(place);
                 });
@@ -635,7 +647,13 @@ gMaps.prototype.getPlace = function(type) {
     *  filter the savePlaces with a place type and update the nearbyPlaces for this location
     *  create marker for filtered place type of this location
     */
+    var self = this.self;
+    var before = this.nearByPlaces().length;
+    console.log("before:",before);
     this.nearByPlaces(this.savePlaces.filter(getPlacetype));
+    self.numberPlaces(self.numberPlaces()+ this.nearByPlaces().length - before);
+    if (self.numberPlaces() < 0) self.numberPlaces(0);
+    console.log(self.numberPlaces());
     this.createMarkers(this.nearByPlaces());
 };
 
@@ -731,6 +749,7 @@ function ViewModel() {
     self.showLocation = ko.observable(false); // use to show or hide the liste of Locations
     self.showCategory = ko.observable(false); // use to show or hode the list of Categories
     self.showIcons = ko.observable(true); // use to hide or show the icons n the tool bar
+    self.jqload    = ko.observable(false); // use to hide third party services if jquery is not loaded
     self.controlIcon = ko.observable("⊲"); // control the display of the icons
     self.showResults = ko.observable(false); // boolean to hide or show the places returned by google Map places API nearby search services
     self.numberPlaces = ko.observable(0); // total number of nearby places
@@ -742,7 +761,7 @@ function ViewModel() {
     self.wikiarticles = ko.observableArray([]); //ko array for place wikipedia  artcicle  ( opensearch API)
     self.wikiInFocus = ko.observable();
     self.streetView = ko.observable(); // photo returned by streetview APU
-    self.noimage = ko.observable(); // used for the attribute alt= of <img> to handle street view errors.
+    // self.noimage = ko.observable(); // used for the attribute alt= of <img> to handle street view errors.
     self.showView = ko.observable(false); // control the street view page
     self.currentPhoto = ko.observable(); // current photo holder
     self.currentIndex = ko.observable(0); // cirrent photo index holder
@@ -1017,6 +1036,8 @@ function ViewModel() {
                     location.getPlace(type);
                 }
             });
+            if (self.numberPlaces() === 0) self.showResults(false);
+            else self.showResults(true);
             return;
         }
         myCategories = [];
@@ -1300,7 +1321,7 @@ function ViewModel() {
 
     self.getStreetView = function(place) {
         self.streetView(streeViewURL + 'size=600x400&location=' + place.formatted_address);
-        self.noimage = "Sorry no image for " + place.formatted_address;
+        // self.noimage = "Sorry no image for " + place.formatted_address;
         self.showView(true);
     };
 
@@ -1390,7 +1411,7 @@ var model = null;
     if (typeof ko === "undefined") {
         console.log("knockout.js is not loaded, retry in 5 ms", numretry);
         numretry++;
-        if (numretry < 20) {
+        if (numretry < 1) {
             setTimeout(koIsReady(numretry), 5);
             return;
         } else {
@@ -1420,14 +1441,15 @@ var numretry = 0;
             setTimeout(jqIsReady(numretry), 5);
             return;
         } else {
-            var message = "Timeout: jQuery can't be loaded, run without third parties services or reload";
-            if (typeof ko === "undefined") {
-                 Alert.render(message);
-            } else self.customAlert(message);
-            return;
+            var message = "Timeout: jQuery can't be loaded, run without third parties services or Reload";
+            if (model) model.customAlert(message);
+            else Alert.render(message);
         }
-    };
-    console.log("jQuery was loaded");
+    } else {
+        console.log("jQuery was loaded");
+        if (model) model.jqload(true);
+    }
+
     /*
         Add Search wikipedia articles about a  place ( City)
         if the search fail ( time out of 5 sec) or the API could not be loaded, an Alert will be raised

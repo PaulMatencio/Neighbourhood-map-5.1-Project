@@ -64,18 +64,25 @@ run both line ommands  gulp and gulp mini-html-1
 
 ###How to use the app
 
-* There are  3 filters for place categories and 1 filter for location.
+* There are  3 filters for place categories and 1 filter for locations.
 
     SEARCHBOX & input-text : It can be  used to filter existing categories place OR search for a specific category place OR to ADD a new location (multiple keywords).
 
-    -Single keyword: the application use this single keyword as a place type to fire Google nearbySearch services for all currently selected locations ( see Locations list). A space will reset the category list filter. Use the CATEGORIES LIST to  search for multiple place types.
+    - SEARCH BAR > Single keyword: the application use this single keyword as a place type to fire Google nearbySearch services for all currently selected locations ( see Locations list). A space will reset the category list filter. Use the CATEGORIES LIST to  search for multiple place types.
 
-    -Single keyword starting with a double colon [:]. This keyword is used to filter a place type from the existing nearby places for the already selected locations ( Location list). The category keyword is not removed from the input-text of the searchbox, it is reused when user select a new location from the LOCATIONS list. When a location is selected, the application fires nearby search  for this new location and results placesare filtered against this keyword as long as it is not removed by the user or by the reset button of the TOOLBOX
+    - FILTER BAR >  Single keyword starting with a double colon [:]. This keyword is used to filter a place type from the existing nearby places for thecurrently selected locations ( Location list). The FILTER keyword is not removed from the input-text of the searchbox, it is reused when user select a new location from the LOCATIONS list.
 
-    -Multiple keywords: the application will use them to add a new location to the location list via Google map Searchbox.
+    When a new location is selected (previouly unselected), first the application fires nearby search  for this new location and results places are filtered against this keyword as long as the FILTER keyword is not removed by the user or the reset by button of the TOOLBOX.
+
+    For the moment, when a new location is added (via Google searchbox ), places of this new location is not filtered ( since the filter keyword has been reset), however user use the filter bar to filter against this new Location.
+
+    When user change the filter, places are filtered from the previously nearbySearch.
 
 
-    TOOL-BOX: it is equivalent to search box single keyword, however users use icon instead of text. Choices are limited by the number of icons. It is not yet 100% consistent and will be improved. Use the Input-text or the CATEGORIES LIST  instead.
+    - SEARCH BAR > Multiple keywords separated by a BLANK (not a comma): the application will use them to add a new location to the location list via Google map Searchbox.
+
+
+    TOOL-BOX: it is equivalent to search box single keyword, however users use icon instead of text. Choices are limited by the number of icons. It is experiemental and still inconsistent. Use the Input-text or the CATEGORIES LIST  instead.
 
     CATEGORIES LIST:  User can filter and select multiple category places. Google map nearby searches is fired of for all the currently selected location. To reset the category list, use the reset button of the tool-box or enter a space in the input-text Searchbox.
 
@@ -106,16 +113,19 @@ run both line ommands  gulp and gulp mini-html-1
 
 * LOCATION LIST ( Location filter)
 
-  There are 5 hard coded locations in Paris, only 1 is selected by default. User can select them one by one afterwards using the search box. Moreover, as stated above, user can add/remove new locations using the Search Box as mentioned above.
+  There are 5 hard coded locations in Paris, 5 of them are selected by default. Location entries can be selected/deselected or removed later. As stated above, user can add new locations using the SearchBox input-text ( multiple keywords)
 
-  User can use the Location list to navigate betwwen locations. When a location is selected, it will be put on top of the list,  markers, places view list and the center of the map will changed accordingly.
+  User can use this Location list to navigate between existing locations. When a location is selected, it will be put on top of the list,  markers, places view list and the center of the map will changed accordingly.
 
   To select/deselect a location you must ** click on the label of that location. Checking/unchecking is not enough. **
+
   To add a new location, use the SEARCH BOX (** type in at lew two keywords separated **. The new location will be placed on top of the LOCATIONs LIST. **
-  To delete a new location, click on the remove button on the right of the location label. This button is shown when user pass the mouse over the label.
 
-  When user deselect a location, all markers (map) and places (list view) of that location will be removed. 
+  To delete a location, click on the remove button on the right of the location label. This button is shown when user pass the mouse over the label.
 
+  When user deselect a location, all markers (map) and places (list view) of that location will be removed.
+
+  When there is no more marker on the map, the LISTVIEW and TOOLBOX are hidden.
 
 
 * CATEGORIES LIST ( User can filter and select multiple place categories)
@@ -124,21 +134,17 @@ run both line ommands  gulp and gulp mini-html-1
 
   The diference with are  the TOOLBAR : Multiple selected options and a complete list of place types are offered to the user
 
-* PLACES LIST VIEW:
+* LISTVIEW ( places)
 
-   The place list view is on the right of the application window, you can find the places corresponding to the markers. Clicking on one place will focus the map on the place and will open an info window. Every place contain a refence to its marker.
+   The place listview is on the right of the application window, you can find the places corresponding to the markers. Clicking on one place will focus the map on the place and will open an infowindow. Every place contain a refence to its marker.
 
-   When a info window is opened, the center of the map will slide, and depending on the size if the screen, the Places List can be hidden. The Places list can be shown as described below
+   When a infowindow is opened, the center of the map will slide, and depending on the size if the screen, the Listview can be hidden. Use to HAMBURGER BUTTON on top of the listview to toggle the visibiliy/invisibility of the Listview
 
-   You can use the hamburger button located at top-right of your application window to  hide or show the Places list when the screen is small. It can be useful for devices with small screen.
-
-   Places ( and markers) are moved whena location is unchecked. When all locations are unchecked or deleted, the list of places ( and the tool bars) will be hidden.
+   Places corresponding to the location of the LISTVIEW ( and markers) are removed when this location is deselected. When all locations are unchecked or deleted, the list of places ( and the tool bars) is hidden.
 
 * HAMBURGER BUTTON:
 
-  This button is at the top-rigth of the Place list. This button is hidden on large screen.
-
-  You can use this button to hide or show the Placse list and the Button toolbar if the number of places are > 0. Clicking on this button while the list of places is empty has no effect.
+  This button is at the top-rigth of the Place list.  User can use this button to hide or show the LISTVIEW and the TOOLBAR. Clicking on this button while the number of visible places is empty has no effect.
 
 
 * TOOLBAR ( User can filter and select a single place category)
@@ -158,9 +164,10 @@ run both line ommands  gulp and gulp mini-html-1
 
 * INFO WINDOW:
 
-   You can find useful information here like the name of the place, address, opening hours, newyork times headline/link(if existing), wikipedia link for the city, newyork times articles and street views
+   You can find useful information here like the name of the place, address, opening hours, newyork times headline/link(if existing), wikipedia link for the city, newyork times articles and street views. If jquery is not available, clicking of third parties services has no effect.
+   The Infowindow is responsive, the information change with the size of the window ( CSS)
 
-* PHOTO VIEWER for dispaying photos for a place  [click on Photos link of the info window]
+* PHOTO VIEWER to dipslay a photo slider for a place  [click on Photos link of the infowindow].
 
 * REVIEWS LIST for a place [click on Reviews link of the info window]
 
@@ -168,11 +175,11 @@ run both line ommands  gulp and gulp mini-html-1
 
 * NEW YORK times headline  and latest news for a city and country ( based of the address of the place)  [Click on NYT articles of the info window]
 
-  **Nothing happen** if there is no article
+  **Nothing happen** if there is no article or jQuery is not loaded
 
 * WIKIPEDIA [ click on W link of the info window]
 
-  **Nothing happen** if there is no wiki
+  **Nothing happen** if there is no wiki or jQuery is not loaded
 
 * STREET VIEW [ click on view icon of the info window]
 
