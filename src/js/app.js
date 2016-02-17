@@ -1264,6 +1264,11 @@ function ViewModel() {
         return iconDict.slice(0, iconnum);
     });
 
+
+    /*
+    *   compute the number of places
+    *   this number of places is used to hide the results list ( LISTVIEW) when it is zero
+    */
     self.numPlaces = ko.computed(function() {
         var numplace = 0;
         self.myLocations().forEach( function(location){
