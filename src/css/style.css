@@ -176,7 +176,7 @@ strong {
     z-index: 105;
 }
 
-#photoCounter {
+.photoCounter {
     width: 20%;
     font-size: 25px;
     color: black;
@@ -216,7 +216,7 @@ strong {
     position: fixed;
     top: 40px;
     right: 0px;
-    background-color: #ffffff;
+    background-color: #FFF;
     box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
 
@@ -280,7 +280,7 @@ strong {
     overflow-x: hidden;
     overflow-y: scroll;
     max-height: 72%;
-    margin: 5px 0 5px 0;
+    margin: 5px 0;
     padding: 2px;
 }
 
@@ -293,7 +293,7 @@ strong {
 }
 
 .infolist::-webkit-scrollbar,
-.list-review::-webkit-scrollbar{
+.list-review::-webkit-scrollbar {
     width: 12px;
     overflow: visible;
     margin: 10px;
@@ -309,7 +309,6 @@ strong {
 
 .infolist li {
     padding: 0px 2px 3px 2px;
-    padding-bottom: 3px;
     margin-bottom: 4px;
     color: #989696;
     cursor: pointer;
@@ -324,11 +323,13 @@ strong {
     cursor: pointer;
 }
 
-.infolist li:hover, .list-review li:hover {
+.infolist li:hover,
+.list-review li:hover {
     background-color: #d1e1ec;
 }
 
-.infolist li:active, .list-review li:active {
+.infolist li:active,
+.list-review li:active {
     background-color: #b3cde0;
 }
 
@@ -389,7 +390,7 @@ img.street-view {
     flex-wrap: wrap;
     position: absolute;
     left: 52%;
-    width: 100px;
+    width: 140px;
     cursor: pointer;
 }
 
@@ -407,7 +408,8 @@ img.street-view {
     box-sizing: border-box;
 }
 
-.navButton:hover,.hz-button:hover {
+.navButton:hover,
+.hz-button:hover {
     opacity: 0.8;
 }
 
@@ -488,7 +490,8 @@ img.street-view {
         display: inline;
 }
 
-.nytimes-header,.wiki-header {
+.nytimes-header,
+.wiki-header {
     font-size: 16px;
     font-weight: bold;
 }
@@ -667,7 +670,7 @@ img.street-view {
     display: block;
 }
 
-#myCategories span{
+#myCategories span {
     background: none repeat scroll 0 0 #F8F8F8;
     border: 5px solid #DFDFDF;
     z-index: 106;
@@ -688,6 +691,49 @@ img.street-view {
 
 #myCategories span:after {
     content:'List of categories';
+    position:absolute;
+    width:140px;
+    /* height:28px;*/
+    border-bottom:5px solid #dfdfdf;
+    border-right:5px solid #dfdfdf;
+    background:#f8f8f8;
+    top: 70px;
+    margin-left: 1px;
+    border-radius: 5px;
+    -moz-transform:none;
+    -webkit-transform:none;
+    transform:none;
+}
+
+#myRefresh {
+    margin: 0;
+}
+
+#myRefresh:hover span {
+    display: block;
+}
+
+#myRefresh span {
+    background: none repeat scroll 0 0 #F8F8F8;
+    border: 5px solid #DFDFDF;
+    z-index: 106;
+    color: #717171;
+    font-size: 13px;
+    height: 28px;
+    letter-spacing: 1px;
+    line-height: 30px;
+    margin: 0 auto;
+    position: relative;
+    text-align: center;
+    top: -80px;
+    left:-30px;
+    display:none;
+    padding:0 20px;
+
+}
+
+#myRefresh span:after {
+    content:'Refresh categories';
     position:absolute;
     width:140px;
     /* height:28px;*/
@@ -775,7 +821,7 @@ img.street-view {
 }
 
 #alertbox, #alertbox1 {
-    background: #f0f0f0;
+    background: #FFF;
     margin: 8px;
 }
 
@@ -809,7 +855,6 @@ img.street-view {
     .infoWindow {
         width: 280px;
     }
-
 }
 
 @media screen and (min-width: 750px) and (max-width: 1169px) {
@@ -829,7 +874,7 @@ img.street-view {
         width: 270px;
     }
 
-    #photoCounter {
+    .photoCounter {
         bottom: 2%;
         font-size: 18px;
     }
@@ -888,7 +933,6 @@ img.street-view {
     h2,h3 {
         font-size: 1.1em;
     }
-
 }
 
 @media screen and (max-width: 749px) {
@@ -900,7 +944,6 @@ img.street-view {
     .col-md-4, .col-md-2 {
         display: none;
     }
-
 
     .infoWindow {
         font-size: 12px;

@@ -145,7 +145,7 @@ var myLocations = [{
         lat: 48.847895,
         lng: 2.395984
     },
-    selected: true
+    selected: false
 }, {
     name: "Porte de la Chapelle",
     city: "Paris France",
@@ -153,7 +153,7 @@ var myLocations = [{
         lat: 48.896748,
         lng: 2.363993
     },
-    selected: true
+    selected: false
 },  {
     name: "Porte de Versailles",
     city: "Paris France",
@@ -176,15 +176,6 @@ function inherit(subClass, superClass) {
 * function to remove the display: none of an element
 * the <HTML> script contains two DOM elements ( options and markers). They are created to hide other
 * DOM element util KO is initialized. The display:none are moved once Ko is initialized
-
-This toggledisplay() function  has been removed to respect the specification
-
-function toggledisplay(id) {
-    (function(style) {
-        style.display = style.display === 'none' ? '' : 'none';
-    })(document.getElementById(id).style);
-}
-
 */
 
 /*
@@ -282,11 +273,13 @@ gMaps.prototype.getResults = function(results, status, pagination) {
         if (self.keyword() && self.keyword().slice(0,1) === ":") {
             var type = self.keyword().slice(1);
             //self.numberPlaces(self.numberPlaces() + nearByPlaces.length);
-            this.getPlace(type); // the self.numberPlaces() is updated by the getPlace() function
+            this.getPlacetype(type); // the self.numberPlaces() is updated by the getPlace() function
         } else {
             this.createMarkers(this.nearByPlaces());
             // self.numberPlaces(self.numberPlaces() + nearByPlaces.length);
         }
+    } else {
+        self.customAlert("Problem with Google map nearby place services");
     }
 
     /*
@@ -310,7 +303,7 @@ gMaps.prototype.getResults = function(results, status, pagination) {
 gMaps.prototype.initAutocomplete = function() {
     // var Map = this;
     var map = this.map;
-    var self = this.self;
+    // var self = this.self;
     // Create the search box and link it to the input UI element.
     var searchInput = document.getElementById('search-input');
     var searchBox = new google.maps.places.SearchBox(searchInput);
@@ -322,47 +315,56 @@ gMaps.prototype.initAutocomplete = function() {
     });
 
     /*
-     * If there are more than one keywords, the searchbox will use thes keywords to look for a new location
+     * Multiple keywords, the application will the searchBox.getPlaces()  to look for a new location
      *
      *  Newyork Central Square
      *  London Picadilly Circus
      *  or any Full address
      *
-     *  single keyword search is ignored as for instance London ( london UK is accepted)
+     * Single keyword, the application will get self.getPlaces() to look for a place
      */
     function boxSearch() {
-
         var self = this.self;
-        // var input = searchInput.value.split(" ");
         var keyword = self.keyword();
+        console.log(keyword);
+        if (keyword.slice(0,1) === ":") return;
+
+        console.log("box");
+
         var input = keyword.split(" ");
         if (input.length === 1) {
+            var categories = [];
+            categories.push(keyword);
+            self.getPlaces(categories); // looking for a place categories
             return;
         }
-        var searchedPlaces = searchBox.getPlaces();
-        var places = searchedPlaces.length;
-        if (places === 1) {
-            var place = searchedPlaces[0]; // take the first result
-            if (!place.geometry) {
-                Alert.render("SearchBox's returned place contains no geometry");
-                return;
+
+        /* looking for a new location */
+        if (input.length > 1) {
+            var searchedPlaces = searchBox.getPlaces();
+            var places = searchedPlaces.length;
+            if (places === 1) {
+                var place = searchedPlaces[0]; // take the first result
+                if (!place.geometry) {
+                    self.customAlert("SearchBox's returned place contains no geometry");
+                    return;
+                }
+                this.mapCenter = place.geometry.location;
+                // myLocations = []; // reset the hard coded location array
+                // create a new location based on information returned by searchBox.getPlaces()
+                var location = {};
+                location.name = keyword;
+                location.city = keyword;
+                location.mapcenter = {
+                    lat: place.geometry.location.lat(),
+                    lng: place.geometry.location.lng(),
+                };
+                location.selected = true;
+                // set a new location and search places for nearby this location
+                self.addLocation(location);
             }
-            this.mapCenter = place.geometry.location;
-            // myLocations = []; // reset the hard coded location array
-            // create a new location based on information returned by searchBox.getPlaces()
-            var location = {};
-            location.name = keyword;
-            location.city = keyword;
-            location.mapcenter = {
-                lat: place.geometry.location.lat(),
-                lng: place.geometry.location.lng(),
-            };
-            location.selected = true;
-            // set a new location and search places for nearby this location
-            self.addLocation(location);
+            self.keyword("");
         }
-        // searchInput.value = "";
-        self.keyword("");
     }
 
     searchBox.addListener('places_changed', boxSearch.bind(this));
@@ -502,7 +504,7 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
                Open the photo-page  dom when photo link is clicked
             */
             if (place.photos) {
-                var numberPhotos = place.photos.length;
+                // var numberPhotos = place.photos.length;
                 var photolink = document.getElementById('photos');
                 photolink.addEventListener("click", function() {
                     self.placePhotos(place.photos);
@@ -639,27 +641,28 @@ gMaps.prototype.getOpenings = function(place) {
 };
 
 /* return a place type for this location */
-gMaps.prototype.getPlace = function(type) {
+gMaps.prototype.getPlacetype = function(type) {
     function getPlacetype(place) {
         for (var i = 0; i < place.types.length; i++) {
-            if (type === place.types[i]) return place;
+            if (type.toLowerCase() === place.types[i]) return place;
         }
     }
-    /*
-    *  this.savePlaces contain the places returned by previous nearbyservice
-    *  filter the savePlaces with a place type and update the nearbyPlaces for this location
-    *  create marker for filtered place type of this location
-    */
     var self = this.self;
-    var before = this.nearByPlaces().length;
-    console.log("before:",before);
     this.nearByPlaces(this.savePlaces.filter(getPlacetype));
-    // self.numberPlaces(self.numberPlaces()+ this.nearByPlaces().length - before);
-    // if (self.numberPlaces() < 0) self.numberPlaces(0);
-    // console.log(self.numberPlaces());
     this.createMarkers(this.nearByPlaces());
 };
 
+/* return a place name  for this location */
+gMaps.prototype.getPlacename = function(name) {
+    function getPlacename(place) {
+        if ( name.trim().toLowerCase() === place.name.trim().toLowerCase()) {
+            return place;
+        }
+    }
+    var self = this.self;
+    this.nearByPlaces(this.savePlaces.filter(getPlacename));
+    this.createMarkers(this.nearByPlaces());
+};
 
 
 /*
@@ -697,7 +700,6 @@ gMaps.prototype.searchResults = function(results, status) {
 /* create a marker for a location */
 gMaps.prototype.createLocMarker = function(place) {
     var name = place.formatted_address;
-    var bounds = window.mapBounds; // current boundaries of the map window
     var marker = new google.maps.Marker({
         map: this.map,
         position: place.geometry.location,
@@ -827,14 +829,15 @@ function ViewModel() {
 
     /* define third parties  servies url */
 
-    var streetViewApiKey = "AIzaSyAUYlUoaLYjM8hidnMVQ05zXiEXJ87dFiY",
-        streeViewURL = "http://maps.googleapis.com/maps/api/streetview?";
+    // var streetViewApiKey = "AIzaSyAUYlUoaLYjM8hidnMVQ05zXiEXJ87dFiY",
+    var streeViewURL = "http://maps.googleapis.com/maps/api/streetview?";
+
+
 
     /* function to return string starting with prefix */
     function stringStartsWith(string, prefix) {
         return string.slice(0, prefix.length) == prefix;
     }
-
     /* function for  navigating photo viewer
       The direction is either positif or negatif
      */
@@ -956,14 +959,9 @@ function ViewModel() {
 
         */
         location.createMarkers(location.nearByPlaces());
-
-        // location.createMarkers(location.nearByPlaces());
-
         if (self.numPlaces() === 0) {
-            // self.numberPlaces(0);
             self.showResults(false);
         }
-
     };
 
     /* computed observable to return the city name of a location */
@@ -980,7 +978,7 @@ function ViewModel() {
 
     /*
      *   close wiki pages only when there are some
-     */
+    */
 
     self.closeWiki = function() {
         self.wikiarticles([]);
@@ -988,14 +986,14 @@ function ViewModel() {
 
     /*
      *   close new york times article
-     */
+    */
     self.closeNyt = function() {
         self.nytarticles([]);
     };
 
     /*
      *  close the review view
-     */
+    */
 
     self.closeReview = function() {
         self.placeReviews([]);
@@ -1003,7 +1001,7 @@ function ViewModel() {
 
     /*
      *  close the photo viewer
-     */
+    */
     self.closePhoto = function() {
         self.placePhotos([]);
         self.currentIndex(0);
@@ -1019,43 +1017,59 @@ function ViewModel() {
       input : Place types. Place type should be separated with space
       ex: cafe restaurant gas food etc ..
 
-      if there are more than one keywords, the application will use these keywords ( location) to search for a new location
-      ( Google Maps searchBox is used  to search the geolocalisation of the new location, a textsearch could also be used
-
-      ifnot a nearby search will be  launched for the all the current locations triggered the altered observable myCategories array)
-
-      Use the the categories button ( 3 bares) to look for multiple place categories
+    if the keyword start with (: ) the application will look for category type or place name.
+        If single keyword starting with : , it will look for a place type
+        if multiple keyword staring with :, it will look for a place name
+    otherwsie it will use teh keywords too look for a new location. A new location must have a least 2 words
     */
 
     self.getPlace = function() {
+        self.showLocation(false); // hide the  list of locations
+        self.showCategory(false); // hide the list of categories
         var keywords = self.keyword().trim();
-        var categories = keywords.split(" ");
-        if (categories.length > 1) {
-            return;
+        var numkey = keywords.split(" ").length;
+        if (keywords.slice(0,1) != ":") {
+            return; // let's google boxsearch to look for a location
         }
         // filter place of existing locations on the map
-        if (categories[0].slice(0,1) === ":") {
-            var type = categories[0].slice(1);
+        var keyword = keywords.slice(1);
+        var categories = keyword.split(" ");
+
+        if (categories.length >  1) { // looking for a place name
             self.myLocations().forEach( function(location) {
                 if (location.selected()) {
-                    location.getPlace(type);
+                    location.getPlacename(keyword);
                 }
             });
-            if (self.numPlaces() === 0) self.showResults(false);
-            else self.showResults(true);
-            return;
         }
+
+        if (categories.length ===  1) { // looking for a place type
+            var type = categories[0];
+            self.myLocations().forEach( function(location) {
+                if (location.selected()) {
+                    location.getPlacetype(type);
+                }
+            });
+        }
+
+        if (self.numPlaces() === 0) {
+            self.showResults(false);
+        } else {
+            if (window.innerWidth > 750) self.showResults(true);
+        }
+
+        /*
         myCategories = [];
         self.getPlaces(categories);
         self.showLocation(false); // hide the locations list
         self.showCategory(false); // hide the categories list
         self.keyword(""); // reset the keyword
+        */
     };
 
     self.getPlaces = function(categories) {
         // map some input keyword  to map Google place types
         // and altet the myCategories oberservable array
-
         categories.forEach(function(cat) {
             cat = cat.toLowerCase();
             if (cat.substring(0, 5) == "clini") cat = "hospital";
@@ -1081,11 +1095,6 @@ function ViewModel() {
         // center the map using the geolocalization of first entry of the locations array
         self.setCenter();
 
-    };
-
-
-    self.getCategories = function() {
-        console.log(self.myCategories());
     };
 
     /* Init the self.myLocations() observable array
@@ -1378,8 +1387,6 @@ function ViewModel() {
         self.keyword("");
         myCategories = [];
         self.myCategories(myCategories);
-        // self.numberPlaces(0);
-
         localStorage.myCategories = JSON.stringify(myCategories);
     };
 
@@ -1399,16 +1406,16 @@ function ViewModel() {
     };
 
     window.onload = function() {
-        /* if ( self.numberPlaces() > 0) {
-        */
         if ( self.numPlaces() > 0) {
                 showResults();
         }
-
     };
+
+    window.onerror = (function(message, source, lineno, colno, error) {
+        self.customAlert(message);
+    });
 }
 // end of the MODEL VIEW
-
 
 /* load myCategories and myLocations from local storage if they have been saved */
 if (localStorage.myLocations) {

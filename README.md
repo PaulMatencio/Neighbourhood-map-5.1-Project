@@ -64,36 +64,24 @@ run both line ommands  gulp and gulp mini-html-1
 
 ###How to use the app
 
-* There are  3 filters for place categories and 1 filter for locations.
-
-    SEARCHBOX & input-text : It can be  used to filter existing categories place OR search for a specific category place OR to ADD a new location (multiple keywords).
-
-    - SEARCH BAR > Single keyword: the application use this single keyword as a place type to fire Google nearbySearch services for all currently selected locations ( see Locations list). A space will reset the category list filter. Use the CATEGORIES LIST to  search for multiple place types.
-
-    - FILTER BAR >  Single keyword starting with a double colon [:]. This keyword is used to filter a place type from the existing nearby places for thecurrently selected locations ( Location list). The FILTER keyword is not removed from the input-text of the searchbox, it is reused when user select a new location from the LOCATIONS list.
-
-    When a new location is selected (previouly unselected), first the application fires nearby search  for this new location and results places are filtered against this keyword as long as the FILTER keyword is not removed by the user or the reset by button of the TOOLBOX.
-
-    For the moment, when a new location is added (via Google searchbox ), places of this new location is not filtered ( since the filter keyword has been reset), however user use the filter bar to filter against this new Location.
-
-    When user change the filter, places are filtered from the previously nearbySearch.
 
 
-    - SEARCH BAR > Multiple keywords separated by a BLANK (not a comma): the application will use them to add a new location to the location list via Google map Searchbox.
+* FILTER BAR  It can be  used to filter for all the selected locations without firing Google maps nearbysearch
+
+  -input-text must start with [:]
+
+  -Categories place (single keyword starting with a double colone [:])
+
+  -Place name (multiple keywords starting with a double colone [:]
 
 
-    TOOL-BOX: it is equivalent to search box single keyword, however users use icon instead of text. Choices are limited by the number of icons. It is experiemental and still inconsistent. Use the Input-text or the CATEGORIES LIST  instead.
+* SEARCH BOX ( used to filter  google Maps categories or to ADD a new Location to the active locations list).
 
-    CATEGORIES LIST:  User can filter and select multiple category places. Google map nearby searches is fired of for all the currently selected location. To reset the category list, use the reset button of the tool-box or enter a space in the input-text Searchbox.
+  Input text must not start with a double colon ":"
 
-    LOCATION LIST:  User can use this list to select/deselect a location or to remove a location. Removing a location will reset all the places for this location. The list of Location is saved in local storage. Clear the local storage to use the default locations.
+  -categories place (single keyword). The application will use this single keyword as a place type to fire Google nearbySearch services for all currently selected
 
-
-* SEARCH BOX ( used to filter  google Maps categories or to ADD a new Location to the active locations list)
-
-  Use the search box to find nearby places ( cafe, restaurant, movie , atm , shopping) of all the currently selected locations. You can enter only one place at a time( multiple keywords will be used to ADD a new location). Use the category list button to select multiple place types.
-
-  To filter places on the map without firing Google nearbySearch services, prefix your request with a double collon [:]
+  -Add a new location(multiple keywords with [:] at the first character). The application will use these keywords to add a new location to the location list ( via Google searchbox) and look for current categories nearby this location
 
   There are 5 hard coded locations in Paris, one is delected by default. When you type a place in the input text Searchbox, the application will fire Google maps nearby services for all the currently selected locations. As google map nearbySearch services is used, keyword must match Google Maps place types(a check is performed agaisnt the list) and nothing happen there is no match. Some filter to map other keywords to Google place types are attempted.
 
