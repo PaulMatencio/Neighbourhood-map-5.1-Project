@@ -281,11 +281,11 @@ gMaps.prototype.getResults = function(results, status, pagination) {
         /* this.createMarkers(this.nearByPlaces()); */
         if (self.keyword() && self.keyword().slice(0,1) === ":") {
             var type = self.keyword().slice(1);
-            self.numberPlaces(self.numberPlaces() + nearByPlaces.length);
+            //self.numberPlaces(self.numberPlaces() + nearByPlaces.length);
             this.getPlace(type); // the self.numberPlaces() is updated by the getPlace() function
         } else {
             this.createMarkers(this.nearByPlaces());
-            self.numberPlaces(self.numberPlaces() + nearByPlaces.length);
+            // self.numberPlaces(self.numberPlaces() + nearByPlaces.length);
         }
     }
 
@@ -295,10 +295,13 @@ gMaps.prototype.getResults = function(results, status, pagination) {
      */
     self.setCenter();
     // self.numberPlaces(self.numberPlaces() + nearByPlaces.length);
-    if (self.numberPlaces() > 0) {
+    /* if (self.numberPlaces() > 0) { */
+
+    if (self.numPlaces() > 0) {
         self.showResults(true);
     }
-    console.log("results",self.numberPlaces());
+
+    console.log("results",self.numPlaces());
 };
 
 /**
@@ -651,9 +654,9 @@ gMaps.prototype.getPlace = function(type) {
     var before = this.nearByPlaces().length;
     console.log("before:",before);
     this.nearByPlaces(this.savePlaces.filter(getPlacetype));
-    self.numberPlaces(self.numberPlaces()+ this.nearByPlaces().length - before);
-    if (self.numberPlaces() < 0) self.numberPlaces(0);
-    console.log(self.numberPlaces());
+    // self.numberPlaces(self.numberPlaces()+ this.nearByPlaces().length - before);
+    // if (self.numberPlaces() < 0) self.numberPlaces(0);
+    // console.log(self.numberPlaces());
     this.createMarkers(this.nearByPlaces());
 };
 
@@ -752,7 +755,7 @@ function ViewModel() {
     self.jqload    = ko.observable(false); // use to hide third party services if jquery is not loaded
     self.controlIcon = ko.observable("⊲"); // control the display of the icons
     self.showResults = ko.observable(false); // boolean to hide or show the places returned by google Map places API nearby search services
-    self.numberPlaces = ko.observable(0); // total number of nearby places
+    // self.numberPlaces = ko.observable(0); // total number of nearby places
     self.placeReviews = ko.observableArray([]); // ko array for place review objects returned by google map places API getDetails() service
     self.placePhotos = ko.observableArray([]); //ko array for place photo urls returned by google map places API getDetails() service
     self.placeInFocus = ko.observable(); //place object container when opening photos and reviews via infowindows
@@ -796,7 +799,7 @@ function ViewModel() {
      */
     self.initLocations = function(locations) {
         self.myLocations([]);
-        self.numberPlaces(0);
+        // self.numberPlaces(0);
         locations.forEach(function(location) {
             var loc = new Location(location);
             self.myLocations().push(loc);
@@ -927,7 +930,7 @@ function ViewModel() {
          *   the total number of places is incremented by the nearby search functions
          */
         if (!location.selected()) {
-            self.numberPlaces(self.numberPlaces() - location.nearByPlaces().length);
+            // self.numberPlaces(self.numberPlaces() - location.nearByPlaces().length);
             location.nearByPlaces([]); // reset the nearby  places for this location
             // prepare to remove the markers
             if (location.marker) {
@@ -955,10 +958,12 @@ function ViewModel() {
         location.createMarkers(location.nearByPlaces());
 
         // location.createMarkers(location.nearByPlaces());
-        if (self.numberPlaces() === 0) {
-            self.numberPlaces(0);
+
+        if (self.numPlaces() === 0) {
+            // self.numberPlaces(0);
             self.showResults(false);
         }
+
     };
 
     /* computed observable to return the city name of a location */
@@ -1036,7 +1041,7 @@ function ViewModel() {
                     location.getPlace(type);
                 }
             });
-            if (self.numberPlaces() === 0) self.showResults(false);
+            if (self.numPlaces() === 0) self.showResults(false);
             else self.showResults(true);
             return;
         }
@@ -1070,7 +1075,7 @@ function ViewModel() {
                 return stringStartsWith(maptype, cat);
             }
         });
-        self.numberPlaces(0);
+        // self.numberPlaces(0);
         // save the updated categories array in local storage
         localStorage.myCategories = JSON.stringify(myCategories);
         // center the map using the geolocalization of first entry of the locations array
@@ -1225,7 +1230,8 @@ function ViewModel() {
       it show or hide the results  independently of the screen size
     **/
     self.toggleResults = function() {
-        if (self.numberPlaces() > 0) {
+        /* if (self.numberPlaces() > 0) { */
+        if (self.numPlaces() > 0) {
             self.showResults(!self.showResults());
         }
     };
@@ -1258,6 +1264,15 @@ function ViewModel() {
         return iconDict.slice(0, iconnum);
     });
 
+    self.numPlaces = ko.computed(function() {
+        var numplace = 0;
+        self.myLocations().forEach( function(location){
+            if (location.selected()) {
+                numplace = numplace + location.nearByPlaces().length;
+            }
+        });
+        return numplace;
+    });
 
     /**
        The rateStar() function chains together the rating stars based on place rating.
@@ -1344,7 +1359,7 @@ function ViewModel() {
         }
         myCategories = mapPlaceTypes.filter(Category);
         self.myCategories(myCategories);
-        self.numberPlaces(0); // reset the total number of places for these categories
+        //self.numberPlaces(0); // reset the total number of places for these categories
         self.showLocation(false);
         self.showCategory(false);
         localStorage.myCategories = JSON.stringify(myCategories);
@@ -1358,7 +1373,7 @@ function ViewModel() {
         self.keyword("");
         myCategories = [];
         self.myCategories(myCategories);
-        self.numberPlaces(0);
+        // self.numberPlaces(0);
 
         localStorage.myCategories = JSON.stringify(myCategories);
     };
@@ -1379,9 +1394,12 @@ function ViewModel() {
     };
 
     window.onload = function() {
-        if ( self.numberPlaces() > 0) {
+        /* if ( self.numberPlaces() > 0) {
+        */
+        if ( self.numPlaces() > 0) {
                 showResults();
         }
+
     };
 }
 // end of the MODEL VIEW
