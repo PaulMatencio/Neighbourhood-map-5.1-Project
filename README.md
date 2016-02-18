@@ -65,39 +65,54 @@ run both line ommands  gulp and gulp mini-html-1
 ###How to use the app
 
 
+* Examples
 
-* FILTER BAR  It can be  used to filter for all the selected locations without firing Google maps nearbysearch
+  * Example 1
+    -Select existing locations ( if they are not selected) in the Locations list ( Location List button) or ADD a new Location using the SEARCH BOX
+    -Use the FILTER bar to filter places on the map
 
-  -input-text must start with [:]
+  * Example 2
+    -Select existing locations ( if they are not selected) in the Locations list ( Location List button) or ADD a new Location using the SEARCH BOX
+    -Specify a place category ( using the category list button or Search box with a single keyword[place type] or an icon of the TOOL BOX (experimental)
+    -Use the FILTER bar to filter places on the map for the selected category type in step 2
 
-  -Categories place (single keyword starting with a double colone [:])
+  * Exemple 3
+    - Exemple 1 or Example 2 then  
+    - Select a location in the Location list (button locations list) which is not yet selected, the filter will be applied to this newly selected location
 
-  -Place name (multiple keywords starting with a double colone [:]
+    When user navigate between locations in the Location List, if the filter is not cleared, the appliaction will apply this filter to the focus location. 
 
 
-* SEARCH BOX ( used to filter  google Maps categories or to ADD a new Location to the active locations list).
+* FILTER BAR to filter places for all the selected locations.
 
-  Input text must not start with a double colon ":"
+  * input-text must start with a semi colon[:]
 
-  -categories place (single keyword). The application will use this single keyword as a place type to fire Google nearbySearch services for all currently selected
+  * keywords must be separated by a semi colon [:]. The last one does not need to end with a [;]
 
-  -Add a new location(multiple keywords with [:] at the first character). The application will use these keywords to add a new location to the location list ( via Google searchbox) and look for current categories nearby this location
+  ** The filter will not be cleared by the appliaction. ** When user select (not yet selected) a location in the Locations list, the application will use the filter to filter places returned by nearbysearch services for this new Location. The filter must be cleared by the user (clear input-text, reset button, etc)
 
-  There are 5 hard coded locations in Paris, one is delected by default. When you type a place in the input text Searchbox, the application will fire Google maps nearby services for all the currently selected locations. As google map nearbySearch services is used, keyword must match Google Maps place types(a check is performed agaisnt the list) and nothing happen there is no match. Some filter to map other keywords to Google place types are attempted.
+  ** Example of a filter: Best western:Centre commercial:Tuilierie:Jardin:Parc **
+  
 
-  Use the category button ( 3 barres ☰) on the right of the Search box to select multiple categories( place type) at a time( See categories list)
+* SEARCH BOX ( used to filter places category  or to ADD a new Location to the Locations list).
 
-  To add a new  location, type  multiple keywords as for instance London picadelly square or Newyork central park or any full address. When a new location is entered, the application will use the Google maps searchBox services to look ONLY for the coordinates ( textsearch services could be used instead), it will not use the nearby places returned by Google Search box. The coordinated returned by search-box are used to mark the location, then the nearbySearch services is used to search for nearby places of the new location.
+  * input text must not start with a double colon ":"
 
-  Places returned by nearbySeach places services  are used to display the Place list and to make google maps markers.
+  * a single keyword (categorz type) to fire nearbysearch for a category type. The keyword must match a category, ifnot nothing happen. The application will use this category place to fire Google nearbySearch services for all the currently selected Locations in the  Location list 
 
-* BUTTONS (for controlling locations and place types)
+  * multiple keywords to ADD a new location to the Locations list. The application will use these keywords to add a new location ON TOP of the Location listd ( via Google searchbox) and fire nearbysearch places this new location
 
-  There are 2  buttons after the SEARCH BOX
+  * To add a new  location, type  multiple keywords as for instance London picadelly square or Newyork central park or any full address. When a new location is entered, the application will use the Google maps searchBox services to look ONLY for the coordinates ( textsearch services could be used instead), it will not use the getplaces returned by Google Search box. The coordinated returned by search-box are used to mark the location, then the nearbySearch services is used to search for nearby places of the new location.
 
-  The first button ( Plus Sign ⊕) is to display the list of Locations, and to select, deselect or remove a Location. Adding a location is done with the Search-Box. The updated list of locations is saved on Local storage when a location is removed. Select or deselect operations are not saved to local storage for the moment. When the ko.toJS() issues is solved, it will be implemented
+* BUTTONS ( on the right of  the Filter/search bar)
 
-  The second button ( 3 bares  ☰) can be used to select/deselect multiple categories ( place types). Every time, place types are updated (select or inselect), a new nearby search is performed for every selected location.
+  There are 3  buttons after the SEARCH BOX
+
+  LOCATION LIST BUTTON: The first button ( Plus Sign ⊕) is to display the list of Locations, and to select, deselect or remove a Location. Adding a location is done with the Search-Box. The updated list of locations is saved on Local storage when a location is removed. Select or deselect operations are not saved to local storage for the moment. When the ko.toJS() issues is solved, it will be implemented
+
+  CATEGORY LIST BUTTON: The second button ( 3 bares  ☰) can be used to select/deselect multiple categories ( place types). Every time, place types are updated (select or inselect), a new nearby search is performed for every selected location.
+
+  REFRESH BUTTON: The third button can be used to reset the category options and fire nearbysearch. It is the same button on top of the ToolBox
 
 * LOCATION LIST ( Location filter)
 
@@ -107,7 +122,7 @@ run both line ommands  gulp and gulp mini-html-1
 
   To select/deselect a location you must ** click on the label of that location. Checking/unchecking is not enough. **
 
-  To add a new location, use the SEARCH BOX (** type in at lew two keywords separated **. The new location will be placed on top of the LOCATIONs LIST. **
+  To add a new location, use the SEARCH BOX (** type in at least two keywords separated **. The new location will be placed on top of the LOCATIONs LIST. **
 
   To delete a location, click on the remove button on the right of the location label. This button is shown when user pass the mouse over the label.
 

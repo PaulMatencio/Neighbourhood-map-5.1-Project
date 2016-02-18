@@ -154,7 +154,7 @@ var myLocations = [{
         lng: 2.363993
     },
     selected: false
-},  {
+}, {
     name: "Porte de Versailles",
     city: "Paris France",
     mapcenter: {
@@ -162,8 +162,7 @@ var myLocations = [{
         lng: 2.287193
     },
     selected: false
-    }
-];
+}];
 
 /* Function to define javascript subclass */
 function inherit(subClass, superClass) {
@@ -268,16 +267,16 @@ gMaps.prototype.getResults = function(results, status, pagination) {
         });
         map.fitBounds(bounds);
         this.nearByPlaces(nearByPlaces);
-        this.savePlaces = nearByPlaces ; // this will be used when user filter places  ( specification 5)
-        /* this.createMarkers(this.nearByPlaces()); */
-        if (self.keyword() && self.keyword().slice(0,1) === ":") {
-            var type = self.keyword().slice(1);
-            //self.numberPlaces(self.numberPlaces() + nearByPlaces.length);
-            this.getPlacetype(type); // the self.numberPlaces() is updated by the getPlace() function
+        this.savePlaces = nearByPlaces;
+        /* if the filter keyword is not cleared, it will be used to filer the new location */
+        if (self.keyword() && self.keyword().slice(0, 1) === ":") {
+            var input = self.keyword().slice(1);
+            var keywords = input.split(":");
+            this.getPlacename(keywords);
         } else {
             this.createMarkers(this.nearByPlaces());
-            // self.numberPlaces(self.numberPlaces() + nearByPlaces.length);
         }
+
     } else {
         self.customAlert("Problem with Google map nearby place services");
     }
@@ -287,14 +286,7 @@ gMaps.prototype.getResults = function(results, status, pagination) {
      *
      */
     self.setCenter();
-    // self.numberPlaces(self.numberPlaces() + nearByPlaces.length);
-    /* if (self.numberPlaces() > 0) { */
 
-    if (self.numPlaces() > 0) {
-        self.showResults(true);
-    }
-
-    console.log("results",self.numPlaces());
 };
 
 /**
@@ -327,15 +319,12 @@ gMaps.prototype.initAutocomplete = function() {
         var self = this.self;
         var keyword = self.keyword();
         console.log(keyword);
-        if (keyword.slice(0,1) === ":") return;
-
-        console.log("box");
-
+        if (keyword.slice(0, 1) === ":") return;
         var input = keyword.split(" ");
         if (input.length === 1) {
             var categories = [];
             categories.push(keyword);
-            self.getPlaces(categories); // looking for a place categories
+            self.getPlaces(categories); // nearby search for this category ( Like Toolbox or Categories list)
             return;
         }
 
@@ -366,7 +355,6 @@ gMaps.prototype.initAutocomplete = function() {
             self.keyword("");
         }
     }
-
     searchBox.addListener('places_changed', boxSearch.bind(this));
 };
 
@@ -641,29 +629,31 @@ gMaps.prototype.getOpenings = function(place) {
 };
 
 /* return a place type for this location */
-gMaps.prototype.getPlacetype = function(type) {
-    function getPlacetype(place) {
-        for (var i = 0; i < place.types.length; i++) {
-            if (type.toLowerCase() === place.types[i]) return place;
-        }
+function getPlacetype(place) {
+    for (var i = 0; i < place.types.length; i++) {
+        if (type.toLowerCase() === place.types[i]) return place;
     }
-    var self = this.self;
+}
+
+gMaps.prototype.getPlacetype = function(type) {
     this.nearByPlaces(this.savePlaces.filter(getPlacetype));
     this.createMarkers(this.nearByPlaces());
 };
 
-/* return a place name  for this location */
-gMaps.prototype.getPlacename = function(name) {
-    function getPlacename(place) {
-        if ( name.trim().toLowerCase() === place.name.trim().toLowerCase()) {
-            return place;
+/* return a places  which contain the filter for this location this */
+gMaps.prototype.getPlacename = function(keywords) {
+    var nearbyPlaces = [];
+    keywords.forEach(function(keyword) {
+        keyword = keyword.trim();
+        if (keyword.length > 0) {
+            this.savePlaces.forEach(function(place) {
+                if (place.name.toLowerCase().indexOf(keyword) >= 0) nearbyPlaces.push(place);
+            });
         }
-    }
-    var self = this.self;
-    this.nearByPlaces(this.savePlaces.filter(getPlacename));
+    }.bind(this));
+    this.nearByPlaces(nearbyPlaces);
     this.createMarkers(this.nearByPlaces());
 };
-
 
 /*
     pinPoster(locations) takes in the array of locations created by locationFinder()
@@ -692,7 +682,6 @@ gMaps.prototype.searchResults = function(results, status) {
         var place = results[0];
         var location = place.geometry.location;
         var address = place.formatted_address;
-        console.log(address, location);
         this.createLocMarker(place);
     }
 };
@@ -754,9 +743,9 @@ function ViewModel() {
     self.showLocation = ko.observable(false); // use to show or hide the liste of Locations
     self.showCategory = ko.observable(false); // use to show or hode the list of Categories
     self.showIcons = ko.observable(true); // use to hide or show the icons n the tool bar
-    self.jqload    = ko.observable(false); // use to hide third party services if jquery is not loaded
+    self.jqload = ko.observable(false); // use to hide third party services if jquery is not loaded
     self.controlIcon = ko.observable("⊲"); // control the display of the icons
-    self.showResults = ko.observable(false); // boolean to hide or show the places returned by google Map places API nearby search services
+    self.showResults = ko.observable(true); // boolean to hide or show the places returned by google Map places API nearby search services
     // self.numberPlaces = ko.observable(0); // total number of nearby places
     self.placeReviews = ko.observableArray([]); // ko array for place review objects returned by google map places API getDetails() service
     self.placePhotos = ko.observableArray([]); //ko array for place photo urls returned by google map places API getDetails() service
@@ -956,12 +945,8 @@ function ViewModel() {
         }
         /* remove or ceate markers depending on the option
             if (user filter a place type) location.getPlace(type)
-
         */
         location.createMarkers(location.nearByPlaces());
-        if (self.numPlaces() === 0) {
-            self.showResults(false);
-        }
     };
 
     /* computed observable to return the city name of a location */
@@ -978,7 +963,7 @@ function ViewModel() {
 
     /*
      *   close wiki pages only when there are some
-    */
+     */
 
     self.closeWiki = function() {
         self.wikiarticles([]);
@@ -986,14 +971,14 @@ function ViewModel() {
 
     /*
      *   close new york times article
-    */
+     */
     self.closeNyt = function() {
         self.nytarticles([]);
     };
 
     /*
      *  close the review view
-    */
+     */
 
     self.closeReview = function() {
         self.placeReviews([]);
@@ -1001,7 +986,7 @@ function ViewModel() {
 
     /*
      *  close the photo viewer
-    */
+     */
     self.closePhoto = function() {
         self.placePhotos([]);
         self.currentIndex(0);
@@ -1026,45 +1011,20 @@ function ViewModel() {
     self.getPlace = function() {
         self.showLocation(false); // hide the  list of locations
         self.showCategory(false); // hide the list of categories
-        var keywords = self.keyword().trim();
-        var numkey = keywords.split(" ").length;
-        if (keywords.slice(0,1) != ":") {
-            return; // let's google boxsearch to look for a location
+        var input = self.keyword().trim();
+        if (input.slice(0, 1) != ":") {
+            return; // let's google boxsearch looking for a location
         }
         // filter place of existing locations on the map
-        var keyword = keywords.slice(1);
-        var categories = keyword.split(" ");
-
-        if (categories.length >  1) { // looking for a place name
-            self.myLocations().forEach( function(location) {
+        var input1 = input.slice(1);
+        var keywords = input1.split(":"); // keywords must be separated by a semi colon
+        if (keywords.length >= 1) {
+            self.myLocations().forEach(function(location) {
                 if (location.selected()) {
-                    location.getPlacename(keyword);
+                    location.getPlacename(keywords);
                 }
             });
         }
-
-        if (categories.length ===  1) { // looking for a place type
-            var type = categories[0];
-            self.myLocations().forEach( function(location) {
-                if (location.selected()) {
-                    location.getPlacetype(type);
-                }
-            });
-        }
-
-        if (self.numPlaces() === 0) {
-            self.showResults(false);
-        } else {
-            if (window.innerWidth > 750) self.showResults(true);
-        }
-
-        /*
-        myCategories = [];
-        self.getPlaces(categories);
-        self.showLocation(false); // hide the locations list
-        self.showCategory(false); // hide the categories list
-        self.keyword(""); // reset the keyword
-        */
     };
 
     self.getPlaces = function(categories) {
@@ -1239,10 +1199,7 @@ function ViewModel() {
       it show or hide the results  independently of the screen size
     **/
     self.toggleResults = function() {
-        /* if (self.numberPlaces() > 0) { */
-        if (self.numPlaces() > 0) {
-            self.showResults(!self.showResults());
-        }
+        self.showResults(!self.showResults());
     };
 
     /**
@@ -1275,12 +1232,12 @@ function ViewModel() {
 
 
     /*
-    *   compute the number of places
-    *   this number of places is used to hide the results list ( LISTVIEW) when it is zero
-    */
+     *   compute the number of places
+     *   this number of places is used to hide the results list ( LISTVIEW) when it is zero
+     */
     self.numPlaces = ko.computed(function() {
         var numplace = 0;
-        self.myLocations().forEach( function(location){
+        self.myLocations().forEach(function(location) {
             if (location.selected()) {
                 numplace = numplace + location.nearByPlaces().length;
             }
@@ -1403,12 +1360,6 @@ function ViewModel() {
     /* hide results when  window size is smaller than 800px */
     window.onresize = function() {
         showResults();
-    };
-
-    window.onload = function() {
-        if ( self.numPlaces() > 0) {
-                showResults();
-        }
     };
 
     window.onerror = (function(message, source, lineno, colno, error) {
