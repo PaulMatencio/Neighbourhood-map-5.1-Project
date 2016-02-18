@@ -38,7 +38,7 @@ The difference with the previous version are
 
 The Readable and commented HTML/CSS/JavaScript files are in the '<project folder>/src' folder. Gulp is used to minify html, javasript and css files , to cmpress images, and to deploy the resulting files into the <project folder>. Check ['src'](https://github.com/PaulMatencio/Neighbourhood-map-5.1-Project/tree/master/src) folder for commented readable codes.
 
-For the working page check this link: ( http://paulmatencio.github.io/Neighbourhood-map-5.1-Project )
+For the working page check this link: (http://paulmatencio.github.io/Neighbourhood-map-5.1-Project)
 
 ###Project Overview:
 
@@ -46,11 +46,10 @@ Develop a single page application featuring a map of a neighborhood you would li
 
 #### Asynchonous
 
-Google Maps, knockout.js and jQuery are loaded asynchnously
-For Google maps, a callback function is executed when the API is loaded
-For jQuery and Knockout.js, the application will wait 5ms and retry 20 times until they are loaded
-
-The application can opearte without jQuery ( third parties services will not be available)
+Google Maps, knockout.js and jQuery are loaded asynchnously.
+For Google maps, a callback function is executed when the API is loaded. If map API is not available or map nearby services is not available , an alert will be raised.
+For jQuery and Knockout.js, the application will wait 5ms and retry 20 times until they are loaded. If they can't be loaded, an alert will be raised. 
+The application can opearte without jQuery, however without jquery third parties services will not be available
 
 ###How to deploy the app
 
@@ -87,38 +86,39 @@ run both line ommands  gulp and gulp mini-html-1
 
   * input-text must start with a semi colon[:]
 
-  * keywords must be separated by a semi colon [:]. The last one does not need to end with a [;]
+  * keywords must be separated by a semi colon [:]. The last one does not need to end with a [:]
 
-  ** The filter will not be cleared by the appliaction. ** When user select (not yet selected) a location in the Locations list, the application will use the filter to filter places returned by nearbysearch services for this new Location. The filter must be cleared by the user (clear input-text, reset button, etc)
+  ** The filter will not be cleared by the appliaction. ** When you select (a not yet selected) a location in the Locations list, the application will use this filter keyword to filter places returned by nearbysearch services for this new Location. 
+  The filter must be cleared by the user (clear the input-text, use the reset button, etc).
 
-  ** Example of a filter: Best western:Centre commercial:Tuilierie:Jardin:Parc **
+  ** Example of a filter  :Best western:Centre commercial:Tuilierie:Jardin:Parc **
   
 
-* SEARCH BOX ( used to filter places category  or to ADD a new Location to the Locations list).
+* SEARCH BOX to filter places category or to ADD a new Location to the Locations list. You can display the Location list with the Location list button located on the right of the SEARCH BOX
 
-  * input text must not start with a double colon ":"
+  * input text must not contain any ":" 
+  * keyword must be separated by space. No comma for the momment.
 
-  * a single keyword (categorz type) to fire nearbysearch for a category type. The keyword must match a category, ifnot nothing happen. The application will use this category place to fire Google nearbySearch services for all the currently selected Locations in the  Location list 
+  * if the input text contains a single keyword (category type). it will be used to fire nearbysearch for a category type. The keyword must match a map category place if it will be ignored. The application will use this category place to fire Google nearbySearch services for all the currently selected Locations in the  Locations list 
 
-  * multiple keywords to ADD a new location to the Locations list. The application will use these keywords to add a new location ON TOP of the Location listd ( via Google searchbox) and fire nearbysearch places this new location
+  * if the input text contain multiple keywords, they will be used to ADD a new location on top of the to the Locations list. The application Google map searchbox (textsearch could be used instead) to geolocalize the location  and fire nearbysearch places this new location
 
-  * To add a new  location, type  multiple keywords as for instance London picadelly square or Newyork central park or any full address. When a new location is entered, the application will use the Google maps searchBox services to look ONLY for the coordinates ( textsearch services could be used instead), it will not use the getplaces returned by Google Search box. The coordinated returned by search-box are used to mark the location, then the nearbySearch services is used to search for nearby places of the new location.
 
-* BUTTONS ( on the right of  the Filter/search bar)
+* BUTTONS 
 
-  There are 3  buttons after the SEARCH BOX
+  There are 3  buttons  on the right of  the Filter bar/search box
 
-  LOCATION LIST BUTTON: The first button ( Plus Sign ⊕) is to display the list of Locations, and to select, deselect or remove a Location. Adding a location is done with the Search-Box. The updated list of locations is saved on Local storage when a location is removed. Select or deselect operations are not saved to local storage for the moment. When the ko.toJS() issues is solved, it will be implemented
+  -LOCATIONS LIST: The first button ( Plus Sign ⊕) is to display the list of Locations, and to select, deselect or remove a Location. Adding a location is done with the Search-Box. The updated list of locations is saved on Local storage when a location is removed. Select or deselect operations are not saved to local storage for the moment. When the ko.toJS() issues is solved, it will be implemented
 
-  CATEGORY LIST BUTTON: The second button ( 3 bares  ☰) can be used to select/deselect multiple categories ( place types). Every time, place types are updated (select or inselect), a new nearby search is performed for every selected location.
+  -CATEGORIES LIST: The second button ( 3 bares  ☰) can be used to select/deselect multiple categories ( place types). Every time, place types are updated (select or inselect), a new nearby search is performed for every selected location.
 
-  REFRESH BUTTON: The third button can be used to reset the category options and fire nearbysearch. It is the same button on top of the ToolBox
+  -REFRESH BUTTON: The third button can be used to reset the category options and fire nearbysearch. It is the same button on top of the ToolBox
 
-* LOCATION LIST ( Location filter)
+* LOCATIONS LIST to select and navigate between locations on the map
 
-  There are 5 hard coded locations in Paris, 5 of them are selected by default. Location entries can be selected/deselected or removed later. As stated above, user can add new locations using the SearchBox input-text ( multiple keywords)
+  There are 6 hard coded locations in Paris, 4 of them are selected by default. Location entries can be selected/deselected or removed at any time. As stated above, you can add new locations using the SearchBox input-text ( multiple keywords)
 
-  User can use this Location list to navigate between existing locations. When a location is selected, it will be put on top of the list,  markers, places view list and the center of the map will changed accordingly.
+  You can use this Location list to navigate between existing locations. When a location is selected, it is put on top of the locations list, corresponding places are marked on the map and  places are prepended in theview list, and the center of the map will changed accordingly.
 
   To select/deselect a location you must ** click on the label of that location. Checking/unchecking is not enough. **
 
@@ -126,16 +126,16 @@ run both line ommands  gulp and gulp mini-html-1
 
   To delete a location, click on the remove button on the right of the location label. This button is shown when user pass the mouse over the label.
 
-  When user deselect a location, all markers (map) and places (list view) of that location will be removed.
+  When user deselect a location, all cooresponding markers (map) and places (list view) of that location will be removed.
 
   When there is no more marker on the map, the LISTVIEW and TOOLBOX are hidden.
 
 
 * CATEGORIES LIST ( User can filter and select multiple place categories)
 
-  Using this list ( The google maps places types), a user select/deselect ** multiple place types ** . However when a category ( type) is selected, immediately the application will look the nearby places for this type for the current locations that were selected.
+  Using this list which contains most of the google maps places types, you can select/deselect ** multiple place types ** . However when a category ( type) is selected, the application will immediately fire look nearby places for this type for all the current locations that were selected.
 
-  The diference with are  the TOOLBAR : Multiple selected options and a complete list of place types are offered to the user
+  The difference with are  the TOOLBAR are:  multiple selected options and a more complete list of place types are offered to the user
 
 * LISTVIEW ( places)
 

@@ -318,12 +318,11 @@ gMaps.prototype.initAutocomplete = function() {
     function boxSearch() {
         var self = this.self;
         var keyword = self.keyword();
-        console.log(keyword);
-        if (keyword.slice(0, 1) === ":") return;
-        var input = keyword.split(" ");
+        if (keyword.indexOf(":") >= 0) return;  // must not contain ":"
+        var input = keyword.split(" "); // single keyword  => category place
         if (input.length === 1) {
             var categories = [];
-            categories.push(keyword);
+            categories.push(keyword);    
             self.getPlaces(categories); // nearby search for this category ( Like Toolbox or Categories list)
             return;
         }
@@ -1012,12 +1011,11 @@ function ViewModel() {
         self.showLocation(false); // hide the  list of locations
         self.showCategory(false); // hide the list of categories
         var input = self.keyword().trim();
-        if (input.slice(0, 1) != ":") {
-            return; // let's google boxsearch looking for a location
-        }
+        var idx = input.indexOf(":");
+        if ( idx < 0 ) return; // let's google boxsearch looking for a location
         // filter place of existing locations on the map
-        var input1 = input.slice(1);
-        var keywords = input1.split(":"); // keywords must be separated by a semi colon
+        var input1 = input.slice(idx); // get rid of the first :
+        var keywords = input1.split(":"); // keywords must be separated by a semi colon.  
         if (keywords.length >= 1) {
             self.myLocations().forEach(function(location) {
                 if (location.selected()) {
