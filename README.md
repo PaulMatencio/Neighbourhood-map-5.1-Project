@@ -67,17 +67,17 @@ run both line ommands  gulp and gulp mini-html-1
 * Examples
 
   * Example 1
-    -Select existing locations ( if they are not selected) in the Locations list ( Location List button) or ADD a new Location using the SEARCH BOX
-    -Use the FILTER bar to filter places on the map
+    * Select existing locations ( if they are not selected) in the Locations list ( Location List button) or ADD a new Location using the SEARCH BOX
+    * Use the FILTER bar to filter places on the map
 
   * Example 2
-    -Select existing locations ( if they are not selected) in the Locations list ( Location List button) or ADD a new Location using the SEARCH BOX
-    -Specify a place category ( using the category list button or Search box with a single keyword[place type] or an icon of the TOOL BOX (experimental)
-    -Use the FILTER bar to filter places on the map for the selected category type in step 2
+    * Select existing locations ( if they are not selected) in the Locations list ( Location List button) or ADD a new Location using the SEARCH BOX
+    * Specify a place category ( using the category list button or Search box with a single keyword[place type] or an icon of the TOOL BOX (experimental)
+    * Use the FILTER bar to filter places on the map for the selected category type in step 2
 
   * Exemple 3
-    - Exemple 1 or Example 2 then  
-    - Select a location in the Location list (button locations list) which is not yet selected, the filter will be applied to this newly selected location
+    * Exemple 1 or Example 2 then  
+    * Select a location in the Location list (button locations list) which is not yet selected, the filter will be applied to this newly selected location
 
     When user navigate between locations in the Location List, if the filter is not cleared, the appliaction will apply this filter to the focus location. 
 
@@ -108,11 +108,11 @@ run both line ommands  gulp and gulp mini-html-1
 
   There are 3  buttons  on the right of  the Filter bar/search box
 
-  -LOCATIONS LIST: The first button ( Plus Sign ⊕) is to display the list of Locations, and to select, deselect or remove a Location. Adding a location is done with the Search-Box. The updated list of locations is saved on Local storage when a location is removed. Select or deselect operations are not saved to local storage for the moment. When the ko.toJS() issues is solved, it will be implemented
+  * LOCATIONS LIST: The first button ( Plus Sign ⊕) is to display the list of Locations, and to select, deselect or remove a Location. Adding a location is done with the Search-Box. The updated list of locations is saved on Local storage when a location is removed. Select or deselect operations are not saved to local storage for the moment. When the ko.toJS() issues is solved, it will be implemented
 
-  -CATEGORIES LIST: The second button ( 3 bares  ☰) can be used to select/deselect multiple categories ( place types). Every time, place types are updated (select or inselect), a new nearby search is performed for every selected location.
+  * CATEGORIES LIST: The second button ( 3 bares  ☰) can be used to select/deselect multiple categories ( place types). Every time, place types are updated (select or inselect), a new nearby search is performed for every selected location.
 
-  -REFRESH BUTTON: The third button can be used to reset the category options and fire nearbysearch. It is the same button on top of the ToolBox
+  * REFRESH BUTTON: The third button can be used to reset the category options and fire nearbysearch. It is the same button on top of the ToolBox
 
 * LOCATIONS LIST to select and navigate between locations on the map
 
