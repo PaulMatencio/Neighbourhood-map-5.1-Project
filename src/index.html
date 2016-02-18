@@ -31,9 +31,9 @@
     </div>
     <!--div id="options" style="display: none;"-->
         <!-- location list-->
-    <div class="my-locations" data-bind="visible: $root.showLocation || Locations().length > 0">
+    <div class="my-locations" data-bind="visible: $root.showLocation">
         <input id="new-location" class="new-location" data-bind="value: newLocation, valueUpdate: 'afterkeydown'" placeholder="Add a new location">
-        <div class="locations" group="controls">
+        <div class="locations" group="controls" data-bind="visible: myLocations().length >0">
             <ul class="locations-list" group="controls" data-bind="foreach: $root.filteredLocations">
                 <span data-bind="with:$parent.displayLocation($data)"></span>
                 <li data-bind="css:{selected:selected}">
@@ -165,8 +165,8 @@
         </div>
         <!-- viewport -->
     </div>
-        <!--end review page -->
-        <!-- Photos display -->
+    <!--end review page -->
+    <!-- Photos display -->
     <div id="photos-page" class="viewport" data-bind="visible: placePhotos().length">
         <button type="core" data-bind="click:$root.closePhoto" class="navButton" group="closeButton" style="display: block">
             <span style="font-size:24px;">⇦</span>

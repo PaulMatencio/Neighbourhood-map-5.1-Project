@@ -863,12 +863,16 @@ function ViewModel() {
 
     /* show or hide the location view */
     self.toggleLocation = function() {
+        /*
         if (self.myLocations().length === 0) {
             self.showLocation(false);
         } else {
             self.showLocation(!self.showLocation());
         }
+        */
+        self.showLocation(!self.showLocation());
         self.showCategory(false);
+
     };
 
     /* show or hide the catgories selection lists*/
@@ -1338,9 +1342,11 @@ function ViewModel() {
         showResults();
     };
 
+
     window.onerror = (function(message, source, lineno, colno, error) {
         self.customAlert(message);
     });
+
 }
 // end of the MODEL VIEW
 
