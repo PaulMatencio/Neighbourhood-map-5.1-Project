@@ -147,33 +147,25 @@ strong {
     border: none;
 }
 
-#search-box input:focus {
+#filter-bar input:focus {
     background-color: white;
 }
 
-#search-input {
-    width: 100%;
-}
-/*
-#hide-list {
-    z-index: 105;
-    right: 1vw;
-    top: 1vw;
-    margin: 0;
-}
-*/
-
-#map-canvas {
-    height: 100%;
-}
-
-#search-box {
+#filter-bar {
     display: inline;
     width: 35%;
     line-height: 30px;
     top: 0%;
     left: 16.5%;
     z-index: 105;
+}
+
+#filter-bar-input {
+   width: 100%
+}
+
+#map-canvas {
+    height: 100%;
 }
 
 .photoCounter {
@@ -496,7 +488,8 @@ img.street-view {
     font-weight: bold;
 }
 
-.mycategories {
+.my-categories,
+.my-locations {
     z-index: 106;
     padding: 0;
     margin: 0;
@@ -505,7 +498,24 @@ img.street-view {
     border-radius: 5px;
 }
 
-.myCategories-header {
+.new-location {
+    position: absolute;
+    z-index: 104;
+    display: block;
+    line-height: 25px;
+    width: 30%;
+    max-width: 250px;
+    top: 60px;
+    left: 40%;
+    border-radius: 5px;
+    padding-bottom: 2px;
+}
+
+.new-location input:focus {
+    background-color: white;
+}
+
+.my-categories-header {
     background-color: #6890C1;
     padding: 5px;
     color: white;
@@ -525,13 +535,13 @@ img.street-view {
 }
 
 /* location list */
-#location {
+.locations {
     display: -webkit-flex;
     display: flex;
     -webkit-flex-direction: row;
     padding: 0;
     margin: 0;
-    top: 60px;
+    top: 90px;
     left: 40%;
     width: 30%;
     max-width: 250px;
@@ -540,20 +550,20 @@ img.street-view {
     z-index: 106;
 }
 
-#location-list {
+.locations-list {
     background-color: #fffae3;
     width: 100%;
     height: 100%;
     list-style: none;
 }
 
-#location-list li {
+.locations-list li {
     position: relative;
     font-size: 14px;
     border-bottom: 2px solid #ededed;
 }
 
-#location-list li label {
+.locations-list li label {
   /* color: #d9d9d9; */
     color: #a9a9a9;
     white-space: pre-line;
@@ -564,11 +574,11 @@ img.street-view {
     transition: color 0.4s;
 }
 
-#location-list li.selected label {
+.locations-list li.selected label {
     color: gray;
 }
 
-#location-list li .toggle {
+.locations-list li .toggle {
     text-align: center;
     width: 24px;
     height: auto;
@@ -581,15 +591,15 @@ img.street-view {
     /* appearance: none; */
 }
 
-#location-list li .toggle:after {
+.locations-list li .toggle:after {
     content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-10 -18 100 135"><circle cx="50" cy="50" r="50" fill="none" stroke="#ededed" stroke-width="3"/></svg>');
 }
 
-#location-list li .toggle:checked:after {
+.locations-list li .toggle:checked:after {
     content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-10 -18 100 135"><circle cx="50" cy="50" r="50" fill="none" stroke="#bddad5" stroke-width="3"/><path fill="#5dc2af" d="M72 25L42 71 27 56l-4 4 20 20 34-52z"/></svg>');
 }
 
-#location-list li .destroy {
+.locations-list li .destroy {
     display: none;
     position: absolute;
     top: 0;
@@ -604,18 +614,18 @@ img.street-view {
     transition: color 0.2s ease-out;
 }
 
-#location-list li .destroy:hover {
+.locations-list li .destroy:hover {
     text-shadow: 0 0 1px #000,
          0 0 15px rgba(199, 107, 107, 0.8);
     -webkit-transform: scale(1.3);
     transform: scale(1.3);
 }
 
-#location-list li .destroy:after {
+.locations-list li .destroy:after {
     content: '✖';
 }
 
-#location-list li:hover .destroy {
+.locations-list li:hover .destroy {
     display: block;
 }
 
@@ -963,7 +973,8 @@ img.street-view {
         width: 30px;
     }
 
-    #location {
+    .locations,
+    .new-location {
         left: 15%;
         width: 70%;
     }

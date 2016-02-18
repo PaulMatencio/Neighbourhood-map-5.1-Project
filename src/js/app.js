@@ -268,10 +268,10 @@ gMaps.prototype.getResults = function(results, status, pagination) {
         map.fitBounds(bounds);
         this.nearByPlaces(nearByPlaces);
         this.savePlaces = nearByPlaces;
+        // this.createMarkers(this.nearByPlaces());
         /* if the filter keyword is not cleared, it will be used to filer the new location */
-        if (self.keyword() && self.keyword().slice(0, 1) === ":") {
-            var input = self.keyword().slice(1);
-            var keywords = input.split(":");
+        if (self.keyword()) {
+            var keywords = self.keyword().split(" ");
             this.getPlacename(keywords);
         } else {
             this.createMarkers(this.nearByPlaces());
@@ -293,13 +293,10 @@ gMaps.prototype.getResults = function(results, status, pagination) {
  * Google maps places API autocomplete service.
  */
 gMaps.prototype.initAutocomplete = function() {
-    // var Map = this;
     var map = this.map;
-    // var self = this.self;
     // Create the search box and link it to the input UI element.
-    var searchInput = document.getElementById('search-input');
+    var searchInput = document.getElementById('new-location');
     var searchBox = new google.maps.places.SearchBox(searchInput);
-    //  map.controls[google.maps.ControlPosition.TOP_LEFT].push(searchInput);
     //  Bias the SearchBox results towards current map's viewport.
     map.addListener('bounds_changed', function() {
         searchBox.setBounds(map.getBounds());
@@ -307,42 +304,30 @@ gMaps.prototype.initAutocomplete = function() {
     });
 
     /*
-     * Multiple keywords, the application will the searchBox.getPlaces()  to look for a new location
-     *
+     *  searchBox.getPlaces()  to look for a new location
      *  Newyork Central Square
      *  London Picadilly Circus
      *  or any Full address
-     *
-     * Single keyword, the application will get self.getPlaces() to look for a place
      */
     function boxSearch() {
         var self = this.self;
-        var keyword = self.keyword();
-        if (keyword.indexOf(":") >= 0) return;  // must not contain ":"
-        var input = keyword.split(" "); // single keyword  => category place
-        if (input.length === 1) {
-            var categories = [];
-            categories.push(keyword);    
-            self.getPlaces(categories); // nearby search for this category ( Like Toolbox or Categories list)
-            return;
-        }
-
+        var newLocation = self.newLocation();
         /* looking for a new location */
-        if (input.length > 1) {
+        if (newLocation.trim().length > 0) {
             var searchedPlaces = searchBox.getPlaces();
             var places = searchedPlaces.length;
-            if (places === 1) {
+            if (places >= 1) {
                 var place = searchedPlaces[0]; // take the first result
                 if (!place.geometry) {
-                    self.customAlert("SearchBox's returned place contains no geometry");
+                    self.customAlert("map searchBox's returned place contains no geometry");
                     return;
                 }
                 this.mapCenter = place.geometry.location;
-                // myLocations = []; // reset the hard coded location array
                 // create a new location based on information returned by searchBox.getPlaces()
                 var location = {};
-                location.name = keyword;
-                location.city = keyword;
+                console.log(place);
+                location.name = place.formatted_address;
+                location.city = place.formatted_address;
                 location.mapcenter = {
                     lat: place.geometry.location.lat(),
                     lng: place.geometry.location.lng(),
@@ -350,8 +335,10 @@ gMaps.prototype.initAutocomplete = function() {
                 location.selected = true;
                 // set a new location and search places for nearby this location
                 self.addLocation(location);
+            } else {
+                self.customAlert("map searchBox could not locate the new location");
             }
-            self.keyword("");
+            self.newLocation("");
         }
     }
     searchBox.addListener('places_changed', boxSearch.bind(this));
@@ -421,8 +408,11 @@ gMaps.prototype.createMarkers = function(places) {
 
         /* define the click function for the marker*/
         marker.addListener('click', function() {
-            this.markers.forEach(function(marker) {
-                marker.setAnimation(null);
+            var self = this.self;
+            self.myLocations().forEach(function(location) {
+                location.markers.forEach(function(marker) {
+                    marker.setAnimation(null);
+                });
             });
 
             if (marker.getAnimation() !== null) {
@@ -434,10 +424,11 @@ gMaps.prototype.createMarkers = function(places) {
             }
         }.bind(this));
 
-        /* add  thenew  marker to  the markers array of the location*/
+        /* add  the new  marker to  the markers array of the location*/
         this.markers.push(marker);
 
-        /*add the new  maker to the current place. it will be used to open the infowindow when user click
+        /*
+         * add the new  maker to the current place. it will be used to open the infowindow when user click
          * the list view
          */
         place.marker = marker;
@@ -463,7 +454,7 @@ gMaps.prototype.addInfoWindow = function(place, marker) {
     var Map = this;
     var self = this.self;
 
-    //var infoWindow = this.infoWindow;
+    // var infoWindow = this.infoWindow;
     var infoWindow = self.infoWindow(); // used a observable infoWindow instead of the infoWindow of this location
 
     var winWidth = window.innerWidth;
@@ -627,19 +618,7 @@ gMaps.prototype.getOpenings = function(place) {
     return opening;
 };
 
-/* return a place type for this location */
-function getPlacetype(place) {
-    for (var i = 0; i < place.types.length; i++) {
-        if (type.toLowerCase() === place.types[i]) return place;
-    }
-}
-
-gMaps.prototype.getPlacetype = function(type) {
-    this.nearByPlaces(this.savePlaces.filter(getPlacetype));
-    this.createMarkers(this.nearByPlaces());
-};
-
-/* return a places  which contain the filter for this location this */
+/* filter places using the keywords array  for this location this */
 gMaps.prototype.getPlacename = function(keywords) {
     var nearbyPlaces = [];
     keywords.forEach(function(keyword) {
@@ -739,11 +718,12 @@ function ViewModel() {
     */
     self.myLocations = ko.observableArray([]); // ko array for hard coded locations
     self.currentLocation = ko.observable(null); // current selected location or the top of the myLocations
+    self.newLocation = ko.observable();
     self.showLocation = ko.observable(false); // use to show or hide the liste of Locations
     self.showCategory = ko.observable(false); // use to show or hode the list of Categories
-    self.showIcons = ko.observable(true); // use to hide or show the icons n the tool bar
     self.jqload = ko.observable(false); // use to hide third party services if jquery is not loaded
-    self.controlIcon = ko.observable("⊲"); // control the display of the icons
+    self.showIcons = ko.observable(false); // use to hide or show the icons n the tool bar. By default it sis hidden since it is experimental
+    self.controlIcon = ko.observable("⊳"); // control the display of the icons
     self.showResults = ko.observable(true); // boolean to hide or show the places returned by google Map places API nearby search services
     // self.numberPlaces = ko.observable(0); // total number of nearby places
     self.placeReviews = ko.observableArray([]); // ko array for place review objects returned by google map places API getDetails() service
@@ -997,37 +977,40 @@ function ViewModel() {
     });
 
     /*
-      Search near by  places or new locations
-      input : Place types. Place type should be separated with space
-      ex: cafe restaurant gas food etc ..
+      invoked when  when user input data on the filter bar
+      input-text : Place names. Places name must be separated by a comma ";"
+      Exemple  Centre commercial,parc,jardin, etc..
 
-    if the keyword start with (: ) the application will look for category type or place name.
-        If single keyword starting with : , it will look for a place type
-        if multiple keyword staring with :, it will look for a place name
-    otherwsie it will use teh keywords too look for a new location. A new location must have a least 2 words
+      To reset the filter, just clear the input-text and hit enter
     */
 
     self.getPlace = function() {
         self.showLocation(false); // hide the  list of locations
         self.showCategory(false); // hide the list of categories
         var input = self.keyword().trim();
-        var idx = input.indexOf(":");
-        if ( idx < 0 ) return; // let's google boxsearch looking for a location
         // filter place of existing locations on the map
-        var input1 = input.slice(idx); // get rid of the first :
-        var keywords = input1.split(":"); // keywords must be separated by a semi colon.  
-        if (keywords.length >= 1) {
+        if (input.length >  0) {
+            var keywords = input.split(","); // keywords must be separated by a semi colon.
+            if (keywords.length >= 1) {
+                self.myLocations().forEach(function(location) {
+                    if (location.selected()) {
+                        location.getPlacename(keywords);
+                    }
+                });
+            }
+        } else {
+            // restore the nearbyplaces() using the save places
             self.myLocations().forEach(function(location) {
                 if (location.selected()) {
-                    location.getPlacename(keywords);
+                    location.nearByPlaces(location.savePlaces);
+                    location.createMarkers(location.nearByPlaces());
                 }
             });
         }
     };
 
+    /* this is not actually used */
     self.getPlaces = function(categories) {
-        // map some input keyword  to map Google place types
-        // and altet the myCategories oberservable array
         categories.forEach(function(cat) {
             cat = cat.toLowerCase();
             if (cat.substring(0, 5) == "clini") cat = "hospital";
@@ -1042,13 +1025,10 @@ function ViewModel() {
                 });
                 self.myCategories(myCategories);
             }
-
             function getCat(maptype) {
                 return stringStartsWith(maptype, cat);
             }
         });
-        // self.numberPlaces(0);
-        // save the updated categories array in local storage
         localStorage.myCategories = JSON.stringify(myCategories);
         // center the map using the geolocalization of first entry of the locations array
         self.setCenter();
@@ -1188,7 +1168,6 @@ function ViewModel() {
             idx2 = add.indexOf('</span>', start);
             location.country = add.slice(start, idx2);
         }
-        //console.log(location);
         return location;
     };
 
@@ -1227,7 +1206,6 @@ function ViewModel() {
         } else iconnum = Math.min(iconDict.length, 14);
         return iconDict.slice(0, iconnum);
     });
-
 
     /*
      *   compute the number of places

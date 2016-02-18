@@ -14,8 +14,8 @@
     <!--div tag that holds the google map-->
     <div id="map-canvas"></div>
     <!--  search box -->
-    <div id="search-box" group="controls">
-        <input id="search-input" type="text" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlace" placeholder="Looking for a place category or adding a location ...">
+    <div id="filter-bar" group="controls">
+        <input id="filter-bar-input" type="text" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlace" placeholder="filter your place locations" autofocus>
     </div>
     <div class="hz-buttons">
         <div type="core" data-bind="click: $root.toggleLocation" class="hz-button">
@@ -31,9 +31,10 @@
     </div>
     <!--div id="options" style="display: none;"-->
         <!-- location list-->
-    <div data-bind="visible: $root.showLocation || Locations().length > 0">
-        <div id="location" group="controls">
-            <ul id="location-list" group="controls" data-bind="foreach: $root.filteredLocations">
+    <div class="my-locations" data-bind="visible: $root.showLocation || Locations().length > 0">
+        <input id="new-location" class="new-location" data-bind="value: newLocation, valueUpdate: 'afterkeydown'" placeholder="Add a new location"  autofocus>
+        <div class="locations" group="controls">
+            <ul class="locations-list" group="controls" data-bind="foreach: $root.filteredLocations">
                 <span data-bind="with:$parent.displayLocation($data)"></span>
                 <li data-bind="css:{selected:selected}">
                     <button class="destroy" data-bind="click: $root.removeLocation"></button>
@@ -43,7 +44,7 @@
             </ul>
         </div>
     </div>
-    <div class="mycategories" group="controls" data-bind="visible:$root.showCategory">
+    <div class="my-categories" group="controls" data-bind="visible:$root.showCategory">
         <div class="select">
             <h3 style="background-color:#6890C1;padding:5px;color:white">Choose any categories</h3>
             <select style="padding:15px;" data-bind="options: mapPlaceTypes, selectedOptions: myCategories" size="9" multiple="true"></select>
