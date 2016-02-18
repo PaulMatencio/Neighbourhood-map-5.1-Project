@@ -799,8 +799,8 @@ function ViewModel() {
 
     // var streetViewApiKey = "AIzaSyAUYlUoaLYjM8hidnMVQ05zXiEXJ87dFiY",
     var streeViewURL = "http://maps.googleapis.com/maps/api/streetview?";
-
-
+    var expand = "⊳";
+    var collapse = "⊲";
 
     /* function to return string starting with prefix */
     function stringStartsWith(string, prefix) {
@@ -1207,7 +1207,7 @@ function ViewModel() {
         });
         if (window.innerWidth < 750) {
             iconnum = 7;
-        } else iconnum = Math.min(iconDict.length, 14);
+        } else iconnum = Math.min(iconDict.length, 12);
         return iconDict.slice(0, iconnum);
     });
 
@@ -1327,6 +1327,7 @@ function ViewModel() {
         localStorage.myCategories = JSON.stringify(myCategories);
     };
 
+
     self.toggleIcons = function() {
         if (self.controlIcon() === "⊲") {
             self.controlIcon("⊳");
@@ -1341,11 +1342,11 @@ function ViewModel() {
     window.onresize = function() {
         showResults();
     };
-
-
+    /*
     window.onerror = (function(message, source, lineno, colno, error) {
         self.customAlert(message);
     });
+    */
 
 }
 // end of the MODEL VIEW

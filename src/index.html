@@ -110,6 +110,7 @@
     <!-- Tools bar -->
     <div data-bind="visible: showResults && numPlaces() >0">
         <div id="btn-toolbar" group="controls">
+            <p class="tool-bar"><span ></span></p>
             <button type="core" class="btn" style="display: block;background-color: #4b86b4;" data-bind="click: $root.resetIcons">
                 <span style="font-size: 24px;"> ↺ </span>
             </button>
@@ -122,9 +123,9 @@
                     <br>
                 </div>
             </div>
-            <button id="hide" type="core" class="btn" style="display: block;background-color: #4b86b4;">
-                <span style="font-size:24px;" data-bind="text: controlIcon, click:$root.toggleIcons"></span>
-            </button>
+            <div id="hide" type="core" class="btn" style="display: block;background-color: #4b86b4;">
+                <p style="font-size:24px;" data-bind="text: controlIcon, click:$root.toggleIcons"></p>
+            </div>
         </div>
     </div>
     <!-- end of place search result -->
