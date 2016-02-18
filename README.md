@@ -83,8 +83,6 @@ run both line ommands  gulp and gulp mini-html-1
     * Exemple 1 or Example 2 then  
     * Select a location in the Location list (button locations list) which is not yet selected, the filter will be applied to this newly selected location
 
-    When user navigate between locations in the Location List, if the filter is not cleared, the appliaction will apply this filter to the focus location. 
-
 
 * FILTER BAR to filter places for all the selected locations.
 
