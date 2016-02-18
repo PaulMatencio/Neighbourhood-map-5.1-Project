@@ -15,7 +15,7 @@
     <div id="map-canvas"></div>
     <!--  search box -->
     <div id="filter-bar" group="controls">
-        <input id="filter-bar-input" type="text" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlace" placeholder="filter your place locations" autofocus>
+        <input id="filter-bar-input" type="text" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlace" placeholder="filter your place locations">
     </div>
     <div class="hz-buttons">
         <div type="core" data-bind="click: $root.toggleLocation" class="hz-button">
@@ -32,7 +32,7 @@
     <!--div id="options" style="display: none;"-->
         <!-- location list-->
     <div class="my-locations" data-bind="visible: $root.showLocation || Locations().length > 0">
-        <input id="new-location" class="new-location" data-bind="value: newLocation, valueUpdate: 'afterkeydown'" placeholder="Add a new location"  autofocus>
+        <input id="new-location" class="new-location" data-bind="value: newLocation, valueUpdate: 'afterkeydown'" placeholder="Add a new location">
         <div class="locations" group="controls">
             <ul class="locations-list" group="controls" data-bind="foreach: $root.filteredLocations">
                 <span data-bind="with:$parent.displayLocation($data)"></span>
