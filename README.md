@@ -67,15 +67,19 @@ run both line ommands  gulp and gulp mini-html-1
 * Examples
 
   * Example 1
-    * Select existing locations ( if they are not selected) in the Locations list ( Location List button) or ADD a new Location using the SEARCH BOX
-    * Use the FILTER bar to filter places on the map
+
+    * Select existing locations ( if they are not yet selected) in the Locations list with the  Locations List button or ADD a new location to the location list using the SEARCH BOX.
+    * Use the FILTER bar to filter places on the map. Filter must begin with a ":" and multiple keyword must be separated by a ":"  
 
   * Example 2
-    * Select existing locations ( if they are not selected) in the Locations list ( Location List button) or ADD a new Location using the SEARCH BOX
-    * Specify a place category ( using the category list button or Search box with a single keyword[place type] or an icon of the TOOL BOX (experimental)
-    * Use the FILTER bar to filter places on the map for the selected category type in step 2
 
-  * Exemple 3
+    * Select existing locations ( if they are not yet selected) in the Locations list with the Locations list button or ADD a new Location with the SEARCH BOX ( multiple keywords separated by spaces). 
+    * Specify a place category  with the category list button or with the SearchBOX with a single keyword (place type) or select an correspinding icon of the TOOL BOX (experimental),
+    * Use the FILTER bar  to filter places on the map for the selected category type in step 2 ( )
+
+
+  * Example 3
+
     * Exemple 1 or Example 2 then  
     * Select a location in the Location list (button locations list) which is not yet selected, the filter will be applied to this newly selected location
 
