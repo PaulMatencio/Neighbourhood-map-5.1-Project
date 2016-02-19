@@ -657,7 +657,7 @@ img.street-view {
 }
 
 #myLocations span:after {
-    content:'List of locations';
+    content:'Update locations';
     position:absolute;
     width:130px;
     /* height:30px; */

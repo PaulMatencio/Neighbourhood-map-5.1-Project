@@ -409,18 +409,22 @@ gMaps.prototype.createMarkers = function(places) {
         /* define the click function for the marker*/
         marker.addListener('click', function() {
             var self = this.self;
+            /*
             self.myLocations().forEach(function(location) {
                 location.markers.forEach(function(marker) {
                     marker.setAnimation(null);
                 });
             });
-
+            */
+            var prevMarker = self.prevMarker();
+            if (prevMarker) prevMarker.setAnimation(null);
             if (marker.getAnimation() !== null) {
                 marker.setAnimation(null);
             } else {
                 marker.setAnimation(google.maps.Animation.BOUNCE);
                 map.panTo(marker.position);
                 map.panBy(offsetX, offsetY);
+                self.prevMarker(marker);
             }
         }.bind(this));
 
@@ -723,7 +727,7 @@ function ViewModel() {
     self.showCategory = ko.observable(false); // use to show or hode the list of Categories
     self.jqload = ko.observable(false); // use to hide third party services if jquery is not loaded
     self.showIcons = ko.observable(false); // use to hide or show the icons n the tool bar. By default it sis hidden since it is experimental
-    self.controlIcon = ko.observable("⊳"); // control the display of the icons
+    self.controlIcon = ko.observable("\u25B2"); // control the display of the icons
     self.showResults = ko.observable(true); // boolean to hide or show the places returned by google Map places API nearby search services
     // self.numberPlaces = ko.observable(0); // total number of nearby places
     self.placeReviews = ko.observableArray([]); // ko array for place review objects returned by google map places API getDetails() service
@@ -747,6 +751,7 @@ function ViewModel() {
     self.alertHeader = ko.observable("Error message, please aknowledge");
     self.alertBody = ko.observable("");
     self.alertFooter = ko.observable("");
+    self.prevMarker = ko.observable(null);
     /*
      *  Location is a subclass of the gMaps class
      */
@@ -799,8 +804,8 @@ function ViewModel() {
 
     // var streetViewApiKey = "AIzaSyAUYlUoaLYjM8hidnMVQ05zXiEXJ87dFiY",
     var streeViewURL = "http://maps.googleapis.com/maps/api/streetview?";
-    var expand = "⊳";
-    var collapse = "⊲";
+    var expand = "\u2303";
+    var collapse = "\u2304" ;
 
     /* function to return string starting with prefix */
     function stringStartsWith(string, prefix) {
@@ -1327,7 +1332,7 @@ function ViewModel() {
         localStorage.myCategories = JSON.stringify(myCategories);
     };
 
-
+    /*
     self.toggleIcons = function() {
         if (self.controlIcon() === "⊲") {
             self.controlIcon("⊳");
@@ -1337,6 +1342,19 @@ function ViewModel() {
             self.showIcons(true);
         }
     };
+
+    */
+    self.toggleIcons = function() {
+        if (self.controlIcon() === "\u25B2") {
+            self.controlIcon("\u25BC");
+            self.showIcons(true);
+        } else if (self.controlIcon() === "\u25BC") {
+            self.controlIcon("\u25B2");
+            self.showIcons(false);
+        }
+    };
+
+
 
     /* hide results when  window size is smaller than 800px */
     window.onresize = function() {
