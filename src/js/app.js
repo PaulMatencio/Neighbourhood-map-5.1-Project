@@ -830,6 +830,10 @@ function ViewModel() {
      */
     function showResults() {
         // var $winWidth = $(window).width();
+        if (self.numPlaces() === 0) {
+            self.showResults(false);
+            return;
+        }
         var winWidth = window.innerWidth;
         if (winWidth > 750) {
             self.showResults(true);
@@ -935,7 +939,8 @@ function ViewModel() {
             if (user filter a place type) location.getPlace(type)
         */
         location.createMarkers(location.nearByPlaces());
-        if (self.numPlaces() == 0) self.showResults(false);
+        showResults();
+        // if (self.numPlaces() == 0) self.showResults(false);
     };
 
     /* computed observable to return the city name of a location */
@@ -1186,7 +1191,6 @@ function ViewModel() {
       it show or hide the results  independently of the screen size
     **/
     self.toggleResults = function() {
-
         self.showResults(!self.showResults());
         if (self.numPlaces() === 0) self.showResults(false);
         self.showCategory(false);
@@ -1232,7 +1236,7 @@ function ViewModel() {
                 numplace = numplace + location.nearByPlaces().length;
             }
         });
-        console.log(numplace);
+        // console.log(numplace);
         return numplace;
     });
 
