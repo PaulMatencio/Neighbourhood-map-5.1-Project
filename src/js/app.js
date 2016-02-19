@@ -935,6 +935,7 @@ function ViewModel() {
             if (user filter a place type) location.getPlace(type)
         */
         location.createMarkers(location.nearByPlaces());
+        if (self.numPlaces() == 0) self.showResults(false);
     };
 
     /* computed observable to return the city name of a location */
@@ -1185,7 +1186,11 @@ function ViewModel() {
       it show or hide the results  independently of the screen size
     **/
     self.toggleResults = function() {
+
         self.showResults(!self.showResults());
+        if (self.numPlaces() === 0) self.showResults(false);
+        self.showCategory(false);
+        self.showLocation(false);
     };
 
     /**
@@ -1227,6 +1232,7 @@ function ViewModel() {
                 numplace = numplace + location.nearByPlaces().length;
             }
         });
+        console.log(numplace);
         return numplace;
     });
 
@@ -1328,6 +1334,8 @@ function ViewModel() {
     self.resetIcons = function() {
         self.keyword("");
         myCategories = [];
+        self.showCategory(false);
+        self.showLocation(false);
         self.myCategories(myCategories);
         localStorage.myCategories = JSON.stringify(myCategories);
     };
@@ -1359,7 +1367,13 @@ function ViewModel() {
     /* hide results when  window size is smaller than 800px */
     window.onresize = function() {
         showResults();
+        self.showLocation(false);
+        self.showCategory(false);
     };
+
+    window.onload = function() {
+        showResults();
+    }
     /*
     window.onerror = (function(message, source, lineno, colno, error) {
         self.customAlert(message);

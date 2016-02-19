@@ -500,7 +500,7 @@ img.street-view {
 
 .new-location {
     position: absolute;
-    z-index: 104;
+    z-index: 106;
     display: block;
     line-height: 25px;
     width: 30%;
@@ -998,7 +998,7 @@ img.street-view {
     }
 
     .results {
-        width: 35%;
+        width: 40%;
         max-width: 350px;
         height: 65%;
     }
