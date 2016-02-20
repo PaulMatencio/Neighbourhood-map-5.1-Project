@@ -271,7 +271,7 @@ gMaps.prototype.getResults = function(results, status, pagination) {
         // this.createMarkers(this.nearByPlaces());
         /* if the filter keyword is not cleared, it will be used to filer the new location */
         if (self.keyword()) {
-            var keywords = self.keyword().split(" ");
+            var keywords = self.keyword().split(delimiter);
             this.getPlacename(keywords);
         } else {
             this.createMarkers(this.nearByPlaces());
@@ -806,6 +806,7 @@ function ViewModel() {
     var streeViewURL = "http://maps.googleapis.com/maps/api/streetview?";
     var expand = "\u2303";
     var collapse = "\u2304" ;
+    var delimiter = " ";
 
     /* function to return string starting with prefix */
     function stringStartsWith(string, prefix) {
@@ -993,8 +994,10 @@ function ViewModel() {
 
     /*
       invoked when  when user input data on the filter bar
-      input-text : Place names. Places name must be separated by a comma ";"
-      Exemple  Centre commercial,parc,jardin, etc..
+      
+      input-text > Place names, places name must be separated by a comma ","
+                    Exemple  Centre commercial,parc,jardin, etc..
+                    or Place type if the input-text begins with a double colon ":"
 
       To reset the filter, just clear the input-text and hit enter
     */
@@ -1002,10 +1005,18 @@ function ViewModel() {
     self.getPlace = function() {
         self.showLocation(false); // hide the  list of locations
         self.showCategory(false); // hide the list of categories
+        var keywords = [] ;
         var input = self.keyword().trim();
-        // filter place of existing locations on the map
         if (input.length >  0) {
-            var keywords = input.split(","); // keywords must be separated by a semi colon.
+            /* if the input text start with a double colon ":"  => fire new nearby search with these keywords*/
+            if (input.slice(0,1)===":") {
+                keywords = input.slice(1).split(delimiter); 
+                self.getPlaces(keywords);
+                self.keyword("");
+                return;
+            }
+            /* filter places which are already on the map */
+            keywords = input.split(delimiter); 
             if (keywords.length >= 1) {
                 self.myLocations().forEach(function(location) {
                     if (location.selected()) {
@@ -1014,7 +1025,7 @@ function ViewModel() {
                 });
             }
         } else {
-            // restore the nearbyplaces() using the save places
+            // restore the nearbyplaces() using the previous places (savePlaces array)
             self.myLocations().forEach(function(location) {
                 if (location.selected()) {
                     location.nearByPlaces(location.savePlaces);
@@ -1026,6 +1037,7 @@ function ViewModel() {
 
     /* this is not actually used */
     self.getPlaces = function(categories) {
+        self.myCategories.removeAll();
         categories.forEach(function(cat) {
             cat = cat.toLowerCase();
             if (cat.substring(0, 5) == "clini") cat = "hospital";

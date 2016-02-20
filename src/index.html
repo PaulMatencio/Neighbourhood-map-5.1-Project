@@ -15,7 +15,8 @@
     <div id="map-canvas"></div>
     <!--  search box -->
     <div id="filter-bar" group="controls">
-        <input id="filter-bar-input" type="text" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlace" placeholder="filter your place locations">
+        <input id="filter-bar-input" type="text" data-bind="value: keyword, valueUpdate: 'afterkeydown', enterKey: getPlace" placeholder="Filter [place-names] or [] and press enter">
+        <span></span>
     </div>
     <div class="hz-buttons">
         <div type="core" data-bind="click: $root.toggleLocation" class="hz-button">

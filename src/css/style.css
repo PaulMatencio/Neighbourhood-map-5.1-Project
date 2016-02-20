@@ -161,8 +161,49 @@ strong {
 }
 
 #filter-bar-input {
-   width: 100%
+    width: 100%
 }
+
+#filter-bar:hover span {
+    display: block;
+}
+
+#filter-bar span{
+    background: none repeat scroll 0 0 #F8F8F8; 
+    border: 2px solid #DFDFDF;
+    z-index: 105;
+    color: #717171;
+    font-size: 13px;
+    letter-spacing: 1px;
+    line-height: 28px;
+    margin: 0 auto;
+    position: relative;
+    text-align: center;
+    top:  -80px;
+    left: -30px;
+    display: none;
+    padding: 0 20px;
+
+}
+
+#filter-bar span:after {
+    content:'or search for new [:place-types]';
+    position: absolute;
+    width: 100%;
+    text-align: left;
+    /* height:30px; */
+    border-bottom: 2px solid #dfdfdf;
+    border-right: 2px solid #dfdfdf;
+    background: #f8c010;
+    left: 25px; 
+    top: 70px;
+    margin-left: 1px;
+    border-radius: 5px;
+    -moz-transform: none;
+    -webkit-transform: none;
+    transform: none;
+}
+
 
 #map-canvas {
     height: 100%;
@@ -657,13 +698,13 @@ img.street-view {
 }
 
 #myLocations span:after {
-    content:'Update locations';
-    position:absolute;
-    width:130px;
+    content: 'Update locations list';
+    position: absolute;
+    width: 160px;
     /* height:30px; */
-    border-bottom:5px solid #dfdfdf;
-    border-right:5px solid #dfdfdf;
-    background:#f8f8f8;
+    border-bottom: 2px solid #dfdfdf;
+    border-right: 2px solid #dfdfdf;
+    background: #f8c010;
     top: 70px;
     margin-left: 1px;
     border-radius: 5px;
@@ -700,19 +741,19 @@ img.street-view {
 }
 
 #myCategories span:after {
-    content:'List of categories';
-    position:absolute;
-    width:140px;
+    content: 'Search for place types';
+    position: absolute;
+    width: 160px;
     /* height:28px;*/
-    border-bottom:5px solid #dfdfdf;
-    border-right:5px solid #dfdfdf;
-    background:#f8f8f8;
+    border-bottom: 2px solid #dfdfdf;
+    border-right: 2px solid #dfdfdf;
+    background: #f8c010;
     top: 70px;
     margin-left: 1px;
     border-radius: 5px;
-    -moz-transform:none;
-    -webkit-transform:none;
-    transform:none;
+    -moz-transform: none;
+    -webkit-transform: one;
+    transform: none;
 }
 
 #myRefresh {
@@ -737,19 +778,19 @@ img.street-view {
     text-align: center;
     top: -80px;
     left:-30px;
-    display:none;
-    padding:0 20px;
+    display: none;
+    padding: 0 20px;
 
 }
 
 #myRefresh span:after {
-    content:'Refresh categories';
-    position:absolute;
-    width:140px;
+    content:'Reset place types';
+    position: absolute;
+    width: 140px;
     /* height:28px;*/
-    border-bottom:5px solid #dfdfdf;
-    border-right:5px solid #dfdfdf;
-    background:#f8f8f8;
+    border-bottom: 2px solid #dfdfdf;
+    border-right: 2px solid #dfdfdf;
+    background: #f8c010;
     top: 70px;
     margin-left: 1px;
     border-radius: 5px;
@@ -776,25 +817,25 @@ img.street-view {
     text-align: center;
     top: -80px;
     left:-30px;
-    display:none;
-    padding:0 20px;
+    display: none;
+    padding: 0 20px;
 
 }
 
 #myResults span:after {
-    content:'List of results';
-    position:absolute;
-    width:120px;
+    content: 'List of results';
+    position: absolute;
+    width: 120px;
     /* height:30px; */
-    border-bottom:5px solid #dfdfdf;
-    border-right:5px solid #dfdfdf;
-    background:#f8f8f8;
+    border-bottom: 2px solid #dfdfdf;
+    border-right: 2px solid #dfdfdf;
+    background: #f8c010;
     top: 40px;
     margin-left:-80px;
     border-radius: 5px;
-    -moz-transform:none;
-    -webkit-transform:none;
-    transform:none;
+    -moz-transform: none;
+    -webkit-transform: none;
+    transform: none;
 }
 
 #btn-toolbar:hover .tool-bar span  {
@@ -802,7 +843,7 @@ img.street-view {
 }
 
 .tool-bar span {
-    background: none repeat scroll 0 0 #F8F8F8;
+    background: none repeat scroll 0 0 #f8f8f8;
     border: 5px solid #DFDFDF;
     z-index: 106;
     color: #717171;
@@ -821,17 +862,17 @@ img.street-view {
 }
 
 .tool-bar span:after {
-    content:'Experimental';
-    position:absolute;
-    width:140px;
-    border-bottom:5px solid #dfdfdf;
-    border-right:5px solid #dfdfdf;
-    background:#f8f8f8;
+    content: 'Experimental';
+    position: absolute;
+    width: 140px;
+    border-bottom: 2px solid #dfdfdf;
+    border-right: 2px solid #dfdfdf;
+    background: #f8c010;
     margin-left: 1px;
     border-radius: 5px;
-    -moz-transform:none;
-    -webkit-transform:none;
-    transform:none;
+    -moz-transform: none;
+    -webkit-transform: none;
+    transform: none;
 }
 
 /* custom alert box */
@@ -998,7 +1039,7 @@ img.street-view {
     }
 
     .results {
-        width: 40%;
+        width: 42%;
         max-width: 350px;
         height: 65%;
     }

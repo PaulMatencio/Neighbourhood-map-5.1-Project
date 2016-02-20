@@ -70,13 +70,13 @@ run both line ommands  gulp and gulp mini-html-1
 
     * Select existing locations ( if they are not yet selected) in the Locations list with the  Locations List button).The location which is just selected is placed on the top of the Locations list, nearbysearch  is launched for this location  and the results (Viewlist) on the right should be updated accordingly.
     * Add  a new location to the Locations list ( if you like). Use the Location list button located on the rigth of the filter bar to manipulate the locations list. If you add a new location, nearbysearch is launched for this location. The newly added location or the location which is just selected is placed on the top of the Locations list and the view list on the right should be updated accordingly.
-    * Use the FILTER bar to filter places on the map. You can enter multiple keywords separated by a comma ",". You can add/select a new location with the filter active (the filter bar is not cleared), the application will launch nearby search for this location, and filter the results with this filter
+    * Use the FILTER bar to filter places on the map. You can enter multiple keywords separated by a colon. You can add/select a new location with the filter active (the filter bar is not cleared), the application will launch nearby search for this location, and filter the results with this filter
     * A null line resets the filter > clear the filter bar and hit enter.
 
   * Example 2 ( categories list and filter bar)
 
     * Select category places with the Categories list, nearby search is lauched for these categories.
-    * Use the FILTER bar to filter places on the map. You can enter multiple keywords separated by a comma ",". You can add/select a new location with the filter active (the filter bar is not cleared), the application will launch nearby search for this location with the categories , then filter with the filters.
+    * Use the FILTER bar to filter places on the map. You can enter multiple keywords separated by a colon. You can add/select a new location with the filter active (the filter bar is not cleared), the application will launch nearby search for this location with the categories , then filter with the filters.
 
   * Example 3 ( Locations list & filter bar)
 
@@ -87,13 +87,18 @@ run both line ommands  gulp and gulp mini-html-1
 
   **When the filter bar is active (input text not cleared), the application will used it when you navigate  between locations in the Locations list**
 
+  * Example 4 ( filter bar)
 
-* FILTER BAR to filter places for all the selected locations.
+    * Use the filter bar to search for speficic place types. Prefix the keywords with a double [:] as for instance [:movie food museum]
+    * Use the filter bar to filter the results with place names as for instance [Saint Michel]
 
-  * keywords must be separated by a semi colon [,] . As for instance Best western:Centre commercial:Tuilierie:Jardin:Parc
 
-  ** The filter will not be cleared by the appliaction. The application will use this filter keyword to filter places returned by nearbysearch services for this new Location.
-  The filter must be cleared by the user (clear the input-text, use the reset button, etc). when the filter is cleared, an enter will reset the filter, the application will restore the original places without any filter.
+* FILTER BAR to filter place names already on the map for all the selected locations or fire new nearby search place categories
+
+  * keywords must be sepaarted by a blank space. As for instance [Centre Jardin Parc]
+  * if the input text begins with a double colon [:food movie], map nearbySearch services are fired off for food and movie. Place types must match Google place types, the categories list give all the currently supported place types.
+
+  ** If the  filter is for place names, it will not be cleared by the application. The application will use this filter keyword to filter places returned by nearbysearch services for this new Location.The filter must be cleared by the user (to clear the input-text, use the reset button, etc). An null filter will reset the filter and display the results of the previous nearbySearch results.
 
 
 * BUTTONS
