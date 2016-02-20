@@ -164,6 +164,8 @@ var myLocations = [{
     selected: false
 }];
 
+var delimiter = " ";
+
 /* Function to define javascript subclass */
 function inherit(subClass, superClass) {
     subClass.prototype = Object.create(superClass.prototype); // delegate to prototype
@@ -268,7 +270,6 @@ gMaps.prototype.getResults = function(results, status, pagination) {
         map.fitBounds(bounds);
         this.nearByPlaces(nearByPlaces);
         this.savePlaces = nearByPlaces;
-        // this.createMarkers(this.nearByPlaces());
         /* if the filter keyword is not cleared, it will be used to filer the new location */
         if (self.keyword()) {
             var keywords = self.keyword().split(delimiter);
@@ -409,13 +410,6 @@ gMaps.prototype.createMarkers = function(places) {
         /* define the click function for the marker*/
         marker.addListener('click', function() {
             var self = this.self;
-            /*
-            self.myLocations().forEach(function(location) {
-                location.markers.forEach(function(marker) {
-                    marker.setAnimation(null);
-                });
-            });
-            */
             var prevMarker = self.prevMarker();
             if (prevMarker) prevMarker.setAnimation(null);
             if (marker.getAnimation() !== null) {
@@ -634,6 +628,7 @@ gMaps.prototype.getPlacename = function(keywords) {
         }
     }.bind(this));
     this.nearByPlaces(nearbyPlaces);
+    console.log(nearbyPlaces);
     this.createMarkers(this.nearByPlaces());
 };
 
@@ -806,7 +801,6 @@ function ViewModel() {
     var streeViewURL = "http://maps.googleapis.com/maps/api/streetview?";
     var expand = "\u2303";
     var collapse = "\u2304" ;
-    var delimiter = " ";
 
     /* function to return string starting with prefix */
     function stringStartsWith(string, prefix) {
@@ -911,8 +905,6 @@ function ViewModel() {
         /*
          *  if unselect,
          *   Remove the markers from the map for this location,
-         *   Decrement the totoal number of displayed pplace
-         *   the total number of places is incremented by the nearby search functions
          */
         if (!location.selected()) {
             // self.numberPlaces(self.numberPlaces() - location.nearByPlaces().length);
@@ -941,7 +933,6 @@ function ViewModel() {
         */
         location.createMarkers(location.nearByPlaces());
         showResults();
-        // if (self.numPlaces() == 0) self.showResults(false);
     };
 
     /* computed observable to return the city name of a location */
@@ -1008,7 +999,7 @@ function ViewModel() {
         var keywords = [] ;
         var input = self.keyword().trim();
         if (input.length >  0) {
-            /* if the input text start with a double colon ":"  => fire new nearby search with these keywords*/
+            /* if the input text start with a double colon ":",  fire new nearby search with these keywords*/
             if (input.slice(0,1)===":") {
                 keywords = input.slice(1).split(delimiter); 
                 self.getPlaces(keywords);
