@@ -327,7 +327,6 @@ gMaps.prototype.initAutocomplete = function() {
                 this.mapCenter = place.geometry.location;
                 // create a new location based on information returned by searchBox.getPlaces()
                 var location = {};
-                console.log(place);
                 location.name = place.formatted_address;
                 location.city = place.formatted_address;
                 location.mapcenter = {
@@ -826,7 +825,6 @@ function ViewModel() {
      */
     function showResults() {
         self.showResults(true);
-        console.log(self.numPlaces());
         if (self.numPlaces() === 0) {
             self.showResults(false);
             return;
@@ -1071,6 +1069,10 @@ function ViewModel() {
         localStorage.myLocations = JSON.stringify(myLocations); // save the myLocations array to local storage
     };
 
+    self.addaLocation = function() {
+        // reserve for the future
+        // Right now, searchBox is fired to search for alocation
+    }
     /*
         Unselect the location first (if it is selected)
         Remove the location (filter)
