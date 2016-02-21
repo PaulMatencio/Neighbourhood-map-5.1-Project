@@ -20,13 +20,13 @@
     </div>
     <div class="hz-buttons">
         <div type="core" data-bind="click: $root.toggleLocation" class="hz-button">
-            <p id="myLocations" style="font-size: 24px;"> ⊕ <span ></span></p>
+            <p id="myLocations" class="unicode"> ⊕ <span ></span></p>
         </div>
         <div type="core" data-bind="click: $root.toggleCategory" class="hz-button">
-            <p id="myCategories" style="font-size: 24px;"> ☰ <span></span></p>
+            <p id="myCategories" class="unicode"> ☰ <span></span></p>
         </div>
         <div type="core" data-bind="click: $root.resetIcons" class="hz-button">
-            <p id="myRefresh" style="font-size: 24px;"> ↺ <span></span></p>
+            <p id="myRefresh" class="unicode"> ↺ <span></span></p>
         </div>
 
     </div>
@@ -43,7 +43,12 @@
                     <label data-bind="text: $data.name, event: { click: $root.selectLocation }"></label>
                 </li>
             </ul>
+        
         </div>
+        <div type="core" class="destroy-all-locations" data-bind="visible: myLocations().length >0, event: {click: $root.removeAllLocations}">
+            <p class="unicode">x<span></span></p>
+        </div>
+        
     </div>
     <div class="my-categories" group="controls" data-bind="visible:$root.showCategory">
         <div class="select">
@@ -54,7 +59,7 @@
     <!-- button to hide or show the search result list -->
     <div class="hide-result" group="controls">
         <div type="core" data-bind="click: $root.toggleResults">
-            <p id="myResults" style="font-size: 24px;"> ☷ <span></span></p>
+            <p id="myResults" class="unicode"> ☷ <span></span></p>
         </div>
     </div>
     <!--/div-->
@@ -113,7 +118,7 @@
         <div id="btn-toolbar" group="controls">
             <p class="tool-bar"><span ></span></p>
             <button type="core" class="btn" style="display: block;background-color: #4b86b4;" data-bind="click: $root.resetIcons">
-                <span style="font-size: 24px;"> ↺ </span>
+                <span class="unicode"> ↺ </span>
             </button>
             <div data-bind="visible: showIcons">
                 <div class="btn-group" data-bind="foreach: icons" role="group" aria-label="plane">
@@ -125,7 +130,7 @@
                 </div>
             </div>
             <div id="hide" type="core" class="btn" style="display: block;background-color: #4b86b4;">
-                <p style="font-size:24px;" data-bind="text: controlIcon, click:$root.toggleIcons"></p>
+                <p class="unicode" data-bind="text: controlIcon, click:$root.toggleIcons"></p>
             </div>
         </div>
     </div>
@@ -135,7 +140,7 @@
     <div data-bind="visible: placeReviews().length">
         <div id="review-page" class="viewport">
             <button type="core" data-bind="click:$root.closeReview" class="navButton" group="closeButton" style="display: block">
-                <span style="font-size:24px;">⇦</span>
+                <span class="unicode">⇦</span>
             </button>
             <div group="review-lists">
                 <div class="review-title" data-bind="with: placeInFocus">
@@ -171,7 +176,7 @@
     <!-- Photos display -->
     <div id="photos-page" class="viewport" data-bind="visible: placePhotos().length">
         <button type="core" data-bind="click:$root.closePhoto" class="navButton" group="closeButton" style="display: block">
-            <span style="font-size:24px;">⇦</span>
+            <span class="unicode">⇦</span>
         </button>
         <div data-bind="with: currentPhoto">
             <img class="photo" data-bind="attr:{ src: getUrl({maxHeight: 800})}" alt="photo">
@@ -182,16 +187,16 @@
             <span data-bind="text: placePhotos().length"></span>
         </div>
         <button type="core" data-bind="click:$root.photoBackward" class="navButton" group="backward" style="display: block">
-            <span style="font-size: 24px;">⊲</span>
+            <span class="unicode">⊲</span>
         </button>
         <button type="core" data-bind="click:$root.photoForward" class="navButton" group="forward" style="display: block">
-            <span style="font-size: 24px;">⊳</span>
+            <span class="unicode">⊳</span>
         </button>
     </div>
     <!-- New york times page -->
     <div id="nytimes-page" class="viewport" data-bind="visible: nytarticles().length">
         <button type="core" data-bind="click:$root.closeNyt" class="navButton" group="closeButton" style="display: block">
-            <span style="font-size:24px;">⇦</span>
+            <span class="unicode">⇦</span>
         </button>
 
         <div class="Container" group="lists">
@@ -210,7 +215,7 @@
     <!-- Wikipedia page -->
     <div id="wiki-page" class="viewport" data-bind="visible: wikiarticles().length">
         <button type="core" data-bind="click:$root.closeWiki" class="navButton" group="closeButton" style="display: block">
-            <span style="font-size:24px;">⇦</span>
+            <span class="unicode">⇦</span>
         </button>
         <div class="Container" group="lists">
             <div class="review-title">
@@ -228,7 +233,7 @@
     <div data-bind="visible: showView">
         <div id="street-page" class="viewport">
             <button type="core" data-bind="click:$root.closeView" class="navButton" group="closeButton" style="display: block">
-                    <span style="font-size:24px;">⇦</span>
+                    <span class="unicode">⇦</span>
             </button>
             <div id="streeview">
                 <img class="street-view" data-bind="attr:{src: streetView}" alt="noimage">
@@ -250,7 +255,7 @@
         <div class="alertboxbody" data-bind="text:alertBody"></div>
         <div class="alertboxfoot" data-bind="click:$root.errorOK">
             <button>
-                <span style="font-size:24px;">⇦</span>
+                <span class="unicode">⇦</span>
             </button>
         </div>
     </div>
@@ -337,7 +342,7 @@
                 alert.style.display = "block";
                 document.getElementById('alertboxhead').innerHTML = "Error message, please aknowledge";
                 document.getElementById('alertboxbody').innerHTML = dialog;
-                document.getElementById('alertboxfoot').innerHTML = '<button onclick="Alert.ok()"><span style="font-size:24px;">⇦</span></button>';
+                document.getElementById('alertboxfoot').innerHTML = '<button onclick="Alert.ok()"><span class="unicode">⇦</span></button>';
             };
             this.ok = function() {
                 document.getElementById('alertbox').style.display = "none";

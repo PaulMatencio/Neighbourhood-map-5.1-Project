@@ -220,9 +220,16 @@ gMaps.prototype.markLocation = function() {
     var marker = new google.maps.Marker({
         map: map,
         position: position,
-        title: name
+        title: name,
+        draggable: true
     });
+    // google.maps.event.addListener(marker, 'dragend', console.log(marker));
     this.marker = marker;
+    google.maps.event.addListener(marker, 'dblclick', function() {
+        var self = this.self;
+        self.removeLocation(this);
+    }.bind(this));
+
 };
 
 // center the map around a location
@@ -802,6 +809,27 @@ function ViewModel() {
     var expand = "\u2303";
     var collapse = "\u2304" ;
 
+    /*
+    *  add a new location when user click on the map 
+    *
+    */
+    map.addListener('dblclick',function(event) {
+        var latlng = event.latLng;
+        var x = event.Sa.x.toString().slice(0,8);
+        var y = event.Sa.y.toString().slice(0,8);
+        var place = "lat:" + x + "-lng:" + y;
+        var location = {};
+        location.name = place;
+        location.city = place;
+        location.mapcenter = {
+            lat: latlng.lat(),
+            lng: latlng.lng(),
+        };
+        location.selected = true;
+        // set a new location and search places for nearby this location
+        self.addLocation(location);
+    });
+
     /* function to return string starting with prefix */
     function stringStartsWith(string, prefix) {
         return string.slice(0, prefix.length) == prefix;
@@ -1062,9 +1090,6 @@ function ViewModel() {
         var loc = new Location(location); // instancie a new location
         self.myLocations.unshift(loc); // add it to the top of the observable location array
         loc.markLocation(); // mark the new location
-
-        // self.myLocations(myLocations);
-
         self.currentLocation(loc); // set the current Location to the new location
         localStorage.myLocations = JSON.stringify(myLocations); // save the myLocations array to local storage
     };
@@ -1073,6 +1098,7 @@ function ViewModel() {
         // reserve for the future
         // Right now, searchBox is fired to search for alocation
     }
+
     /*
         Unselect the location first (if it is selected)
         Remove the location (filter)
@@ -1085,14 +1111,11 @@ function ViewModel() {
         if (location.selected()) {
             self.selectLocation(location);
         }
-
-        /* remove the location of the locations observable array and that's it */
-
-        /*  I get a security or timeout issue with
-         *       ko.toJS(self.myLocations()
-         *    Below is a work around to Jsonify the mylocations array ( not really efficient but it works)
-         */
-
+        /*  Remove the location of the locations observable array and that's it  
+        *   I get a security or timeout issue with
+        *       ko.toJS(self.myLocations()
+        *   Below is a work around to Jsonify the mylocations array ( not really efficient but it works)
+        */
         self.myLocations(self.myLocations().filter(function(location, idx) {
             myLocations[idx].remove = true;
             if (location.name != name) {
@@ -1100,6 +1123,7 @@ function ViewModel() {
                 return location;
             }
         }));
+
         if (self.myLocations().length === 0) self.showLocation(false);
         // save the new locations array on the local storage
         myLocations = myLocations.filter(function(location) {
@@ -1107,27 +1131,14 @@ function ViewModel() {
         });
         localStorage.myLocations = JSON.stringify(myLocations);
 
-        /*
-        try {
-            localStorage.myLocations = ko.toJS(self.myLocations());
-        } catch (e) {
-            console.log(e);
-            self.myLocations(self.myLocations().filter(function(location, idx) {
-                myLocations[idx].remove = true;
-                if (location.name != name) {
-                    myLocations[idx].remove = false;
-                    return location;
-                }
-            }));
-
-            // save the new locations array on the local storage
-            myLocations = myLocations.filter(function(location) {
-                if (location.remove == false) return location;
-            });
-            localStorage.myLocations = JSON.stringify(myLocations);
-        };
-        */
     };
+
+    /* is executed when the destroy all button of the Locations list is clicked */
+    self.removeAllLocations = function() {
+        self.myLocations().forEach( function(location){
+            self.removeLocation(location);
+        });
+    }
 
     /* set the center of current Locatio  or the the map using the goelocalisation of first selected
      * entry of the locations array
@@ -1350,17 +1361,8 @@ function ViewModel() {
         localStorage.myCategories = JSON.stringify(myCategories);
     };
 
-    /*
-    self.toggleIcons = function() {
-        if (self.controlIcon() === "⊲") {
-            self.controlIcon("⊳");
-            self.showIcons(false);
-        } else if (self.controlIcon() === "⊳") {
-            self.controlIcon("⊲");
-            self.showIcons(true);
-        }
-    };
-
+    /* if expand , then  collapse the tool bar  
+    *  if collapse then expand the tool bar
     */
     self.toggleIcons = function() {
         if (self.controlIcon() === "\u25B2") {
@@ -1389,7 +1391,6 @@ function ViewModel() {
         self.customAlert(message);
     });
     */
-
 }
 // end of the MODEL VIEW
 
@@ -1401,6 +1402,7 @@ if (localStorage.myLocations) {
 if (localStorage.myCategories) {
     myCategories = JSON.parse(localStorage.myCategories);
 }
+
 
 /* ko is asynchronulsy loaded
  *  Check if ko  is ready before binding

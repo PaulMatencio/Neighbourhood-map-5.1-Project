@@ -66,36 +66,44 @@ run both line ommands  gulp and gulp mini-html-1
 
 * Examples
 
-  * Example 1 ( Locations list and filter bar)
+  * Example 1 ( [update Locations list] button and filter bar)
 
-    * Select existing locations ( if they are not yet selected) in the Locations list with the  Locations List button).The location which is just selected is placed on the top of the Locations list, nearbysearch  is launched for this location  and the results (Viewlist) on the right should be updated accordingly.
-    * Add  a new location to the Locations list ( if you like). Use the Location list button located on the rigth of the filter bar to manipulate the locations list. If you add a new location, nearbysearch is launched for this location. The newly added location or the location which is just selected is placed on the top of the Locations list and the view list on the right should be updated accordingly.
-    * Use the FILTER bar to filter places on the map. You can enter multiple keywords separated by a colon. You can add/select a new location with the filter active (the filter bar is not cleared), the application will launch nearby search for this location, and filter the results with this filter
-    * A null line resets the filter > clear the filter bar and hit enter.
+    * Select existing locations ( if they are not yet selected) in the Locations list with the [UPDATE LOCATION LIST] button).This selected location is placed on the top of the Locations list, then map nearbysearch services is fired off for this location  and the results [Viewlist] on the right should be updated accordingly.
+    * Add  a new location to the Locations list ( if you like). Use the [UPDATE LOCATIONS LIST] button located on the rigth of the filter bar to manipulate the locations list. If you add a new location, nearbysearch is launched for this location. The newly added location or the location which is just selected is placed on the top of the Locations list and the view list on the right should be updated accordingly.
+    * Use the FILTER bar to filter place names on the map. You can enter multiple keywords. If the filter for place names is not cleared, the application will apply the filter when you select or add a new location, 
+    * To reset the Filter name, clear the filter bar and hit enter.
 
-  * Example 2 ( categories list and filter bar)
+  * Example 2 ( [SEARCH FOR PLACE TYPES] button and filter bar)
 
-    * Select category places with the Categories list, nearby search is lauched for these categories.
-    * Use the FILTER bar to filter places on the map. You can enter multiple keywords separated by a colon. You can add/select a new location with the filter active (the filter bar is not cleared), the application will launch nearby search for this location with the categories , then filter with the filters.
+    * Select place types with the [SEARCH FOR PLACE TYPES] button.
+    * Use the FILTER bar to filter place name on the map. You can enter multiple keywords separated by a colon.If the filter for place names is not cleared, the application will apply the filter when you select or add a new location, 
+    * To reset the Filter name, clear the filter bar and hit enter. 
 
-  * Example 3 ( Locations list & filter bar)
+  * Example 3 ( [UPDATE LOCATIONS LIST] button & filter bar)
 
-    * Remove all the locations in the location list ( Locations list button)
-    * Add your own location ( as for instance: New York central park, San Francisco bay, London Picadily circus, etc ...)
+    * Remove all the locations in the location list using the [UPDATE LOCATIONS LIST] button
+    * Add new locations ( as for instance: New York central park, San Francisco bay, London Picadily circus, etc ...)
     * Use the filter bar to filter existing places on the map
-    * Use the categories list to fire new nearby search for all the current active ( selected locations)
-
-  **When the filter bar is active (input text not cleared), the application will used it when you navigate  between locations in the Locations list**
+    * Use the [SEARCH FOR PLACE TYPES] button to fire new nearby search for all the current active ( selected locations)
+    * If the filter for place names is not cleared, the application will apply the filter when you select or add a new location, 
 
   * Example 4 ( filter bar)
 
-    * Use the filter bar to search for speficic place types. Prefix the keywords with a double [:] as for instance [:movie food museum]
+    * Use the filter bar to search for speficic place types. Prefix  keywords with a double [:] as for instance [:movie food museum]
     * Use the filter bar to filter the results with place names as for instance [Saint Michel]
+
+  * Example 5 ( Double click on the map and filter bar)
+
+    * Double click on all the existing location ( Google red location icon) to remove the default locations
+    * Double click on the map to create new locations
+    * Use the [Search for place  types]  button to search specific place types or the filter bar (input-text must start with ":")
+    * Use the Filter bar to filter place name 
+    * Double click to add or remove new locations. The application will apply the above filter to all new locations
 
 
 * FILTER BAR to filter place names already on the map for all the selected locations or fire new nearby search place categories
 
-  * keywords must be sepaarted by a blank space. As for instance [Centre Jardin Parc]
+  * keywords must be separated by a blank space. As for instance [Centre Jardin Parc]
   * if the input text begins with a double colon [:food movie], map nearbySearch services are fired off for food and movie. Place types must match Google place types, the categories list give all the currently supported place types.
 
   ** If the  filter is for place names, it will not be cleared by the application. The application will use this filter keyword to filter places returned by nearbysearch services for this new Location.The filter must be cleared by the user (to clear the input-text, use the reset button, etc). An null filter will reset the filter and display the results of the previous nearbySearch results.
@@ -105,13 +113,15 @@ run both line ommands  gulp and gulp mini-html-1
 
   There are 3  buttons  on the right of  the Filter bar/search box
 
-  * LOCATIONS LIST: The first button ( Plus Sign ⊕) is to display the list of Locations, and to select, deselect or remove a Location. Adding a location is done with the Search-Box. The updated list of locations is saved on Local storage when a location is removed. Select or deselect operations are not saved to local storage for the moment. When the ko.toJS() issues is solved, it will be implemented
+  * [UPDATE LOCATIONS LIST]: The first button ( Plus Sign ⊕) is to display the list of Locations, and to select, deselect or remove a Location. Adding a location is done with the Search-Box. The updated list of locations is saved on Local storage when a location is removed. Select or deselect operations are not saved to local storage for the moment. When the ko.toJS() issues is solved, it will be implemented
+  ** double clik on the map will create a new location **
+  ** double click on an existing location will remove this location **
 
-  * CATEGORIES LIST: The second button ( 3 bares  ☰) can be used to select/deselect multiple categories ( place types). Every time, place types are updated (select or inselect), a new nearby search is performed for every selected location.
+  * [SEARCH FOR PLACE TYPES]: The second button ( 3 bares  ☰) can be used to select/deselect multiple categories ( place types). Every time, place types are updated (select or inselect), a new nearby search is performed for every selected location.
 
-  * REFRESH BUTTON: The third button can be used to reset the category options and fire nearbysearch for all the currently selected locations in the locations list. It is the same button on top of the ToolBox.
+  * [RESET PLACE TYPES]: The third button can be used to reset the category options and fire nearbysearch for all the currently selected locations in the locations list. It is the same button on top of the ToolBox.
 
-* LOCATIONS LIST o add/select/select/remoce and  navigate between locations on the map.
+* [UPDATE LOCATIONS LIST] BUTTON to add/select/select/remove and  navigate between locations on the map.
 
   There are 6 hard coded locations in Paris, 4 of them are selected by default. Location entries can be selected/deselected or removed at any time. As stated above, you can add new locations using the SearchBox input-text ( multiple keywords)
 
@@ -128,7 +138,7 @@ run both line ommands  gulp and gulp mini-html-1
   When there is no more marker on the map, the LISTVIEW and TOOLBOX are hidden.
 
 
-* CATEGORIES LIST ( User can filter and select multiple place categories)
+* [SEARCH FOR PLACE TYPES] BUTTON ( User can filter and select multiple place categories)
 
   This list which contains most of the google maps places types, you can select/deselect ** multiple place types ** . When a category ( type) is selected, the application will immediately fire nearby places for this type for all the current locations that were selected.
 
@@ -140,14 +150,14 @@ run both line ommands  gulp and gulp mini-html-1
 
    Places corresponding to the location of the LISTVIEW ( and markers) are removed when this location is deselected. When all locations are unchecked or deleted, the list of places ( and the tool bars) is hidden.
 
-* HAMBURGER BUTTON:
+* [LIST OF RESULTS] BUTTON:
 
   This button is at the top-rigth of the Place list.  User can use this button to hide or show the LISTVIEW and the TOOLBAR. Clicking on this button while the number of visible places is empty has no effect.
 
 
 * TOOLBAR ( User can filter and select a single place category). It is experimental and is hidden by default.
 
-   * Use the CATEGORIES LIST to select multiple place types)
+   * Use the [SEARCH FOR PLACE TYPE] button  to select multiple place types)
 
    This toolbar dynamically changes with the neighborhood. It will show the set of the markers returned be the near by search or searchbox. The number of icons is limited to 9, use the search-box to filter other google Maps categories
 
