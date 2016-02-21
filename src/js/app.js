@@ -277,6 +277,7 @@ gMaps.prototype.getResults = function(results, status, pagination) {
         } else {
             this.createMarkers(this.nearByPlaces());
         }
+        if (self.numPlaces() > 0) self.showResults(true);
 
     } else {
         self.customAlert("Problem with Google map nearby place services");
@@ -824,11 +825,12 @@ function ViewModel() {
      * function hide or show results list depending on the screen resizing ,
      */
     function showResults() {
-        // var $winWidth = $(window).width();
+        self.showResults(true);
+        console.log(self.numPlaces());
         if (self.numPlaces() === 0) {
             self.showResults(false);
             return;
-        }
+        } 
         var winWidth = window.innerWidth;
         if (winWidth > 750) {
             self.showResults(true);
@@ -907,7 +909,6 @@ function ViewModel() {
          *   Remove the markers from the map for this location,
          */
         if (!location.selected()) {
-            // self.numberPlaces(self.numberPlaces() - location.nearByPlaces().length);
             location.nearByPlaces([]); // reset the nearby  places for this location
             // prepare to remove the markers
             if (location.marker) {
@@ -1438,10 +1439,10 @@ var model = null;
 var numretry = 0;
 (function jqIsReady() {
     if (typeof $ === "undefined") {
-        console.log("jQuery is not loaded, retry in 5 ms", numretry);
+        console.log("jQuery is not loaded, retry in 10 ms", numretry);
         numretry++;
         if (numretry < 40) {
-            setTimeout(jqIsReady(numretry), 5);
+            setTimeout(jqIsReady(numretry), 10);
             return;
         } else {
             var message = "Timeout: jQuery can't be loaded, run without third parties services or Reload";
