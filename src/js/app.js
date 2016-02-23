@@ -105,7 +105,7 @@ var mapPlaceTypes = [
     */
     mapCenter = {},
     myCategories = [],
-    radius = 2000;
+    radius = 800;
 
 /* default locations array which is used for the first time
  * they  will be updated and saved in local storage
@@ -1110,27 +1110,14 @@ function ViewModel() {
         // unselect the location if it is selected which will decrease the number of current places
         if (location.selected()) {
             self.selectLocation(location);
-        }
-        /*  Remove the location of the locations observable array and that's it  
-        *   I get a security or timeout issue with
-        *       ko.toJS(self.myLocations()
-        *   Below is a work around to Jsonify the mylocations array ( not really efficient but it works)
-        */
-        self.myLocations(self.myLocations().filter(function(location, idx) {
-            myLocations[idx].remove = true;
+        }      
+        self.myLocations(self.myLocations().filter(function(location, idx) {   
             if (location.name != name) {
-                myLocations[idx].remove = false;
                 return location;
-            }
+            } else  myLocations.splice(idx,1);
         }));
-
         if (self.myLocations().length === 0) self.showLocation(false);
-        // save the new locations array on the local storage
-        myLocations = myLocations.filter(function(location) {
-            if (location.remove === false) return location;
-        });
         localStorage.myLocations = JSON.stringify(myLocations);
-
     };
 
     /* is executed when the destroy all button of the Locations list is clicked */
