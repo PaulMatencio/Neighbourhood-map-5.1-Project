@@ -233,11 +233,21 @@ gMaps.prototype.markLocation = function() {
 
 };
 
-// center the map around a location
+// center the map around a location depending on the radius value
 gMaps.prototype.setCenter = function() {
     // console.log(this.name());
     map.setCenter(new google.maps.LatLng(this.mapcenter().lat, this.mapcenter().lng));
-    map.setZoom(13);
+    var zoom;
+    switch (radius) {
+        case 500:
+            zoom =  15;
+            break;
+        case 1000:
+            zoom = 14;
+            break;
+        default: zoom = 13;
+    }
+    map.setZoom(zoom);
 };
 
 /**
@@ -758,6 +768,7 @@ function ViewModel() {
     self.alertFooter = ko.observable("");
     self.prevMarker = ko.observable(null);
     self.rangeValue = ko.observable(2);
+    self.showRange  = ko.observable(true);
     /*
      *  Location is a subclass of the gMaps class
      */
@@ -814,7 +825,7 @@ function ViewModel() {
     var collapse = "\u2304" ;
 
     /*
-    *  add a new location when user click on the map 
+    *  add a new location when user click on the map
     *
     */
     map.addListener('dblclick',function(event) {
@@ -860,12 +871,17 @@ function ViewModel() {
         if (self.numPlaces() === 0) {
             self.showResults(false);
             return;
-        } 
+        }
         var winWidth = window.innerWidth;
-        if (winWidth > 750) {
-            self.showResults(true);
-        } else self.showResults(false);
+        console.log(winWidth);
+        if (winWidth > 750)  self.showResults(true);
+        else self.showResults(false);
+        if (winWidth > 1170)  self.showRange(true);
+        else self.showRange(false);
+
+
     }
+
     /*
      *  Custome Alert Box to be used after ko is initialzed
      */
@@ -1016,7 +1032,7 @@ function ViewModel() {
 
     /*
       invoked when  when user input data on the filter bar
-      
+
       input-text > Place names, places name must be separated by a comma ","
                     Exemple  Centre commercial,parc,jardin, etc..
                     or Place type if the input-text begins with a double colon ":"
@@ -1032,13 +1048,13 @@ function ViewModel() {
         if (input.length >  0) {
             /* if the input text start with a double colon ":",  fire new nearby search with these keywords*/
             if (input.slice(0,1)===":") {
-                keywords = input.slice(1).split(delimiter); 
+                keywords = input.slice(1).split(delimiter);
                 self.getPlaces(keywords);
                 self.keyword("");
                 return;
             }
             /* filter places which are already on the map */
-            keywords = input.split(delimiter); 
+            keywords = input.split(delimiter);
             if (keywords.length >= 1) {
                 self.myLocations().forEach(function(location) {
                     if (location.selected()) {
@@ -1114,8 +1130,8 @@ function ViewModel() {
         // unselect the location if it is selected which will decrease the number of current places
         if (location.selected()) {
             self.selectLocation(location);
-        }      
-        self.myLocations(self.myLocations().filter(function(location, idx) {   
+        }
+        self.myLocations(self.myLocations().filter(function(location, idx) {
             if (location.name != name) {
                 return location;
             } else  myLocations.splice(idx,1);
@@ -1348,11 +1364,12 @@ function ViewModel() {
         myCategories = [];
         self.showCategory(false);
         self.showLocation(false);
+        showResults();
         self.myCategories(myCategories);
         localStorage.myCategories = JSON.stringify(myCategories);
     };
 
-    /* if expand , then  collapse the tool bar  
+    /* if expand , then  collapse the tool bar
     *  if collapse then expand the tool bar
     */
     self.toggleIcons = function() {

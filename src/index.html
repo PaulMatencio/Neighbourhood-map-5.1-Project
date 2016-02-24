@@ -28,12 +28,28 @@
         <div type="core" data-bind="click: $root.resetIcons" class="hz-button">
             <p id="myRefresh" class="unicode"> ↺ <span></span></p>
         </div>
-        <div class="radius-slider">
-            <input  type="range" data-bind= "attr: {min:1, max:4, value:2, step:1}, value: rangeValue, valueUpdate: 'input'"></input>
-            <span></span>
+        <div class="radius-slider container-fluid">
+            <div class="row">
+                <input  class="col-md-12 no-padding" type="range" data-bind= "attr: {min:1, max:4, value:2, step:1}, value: rangeValue, valueUpdate: 'input'"></input>
+            </div>
+            <div  class="row" data-bind ="visible: showRange">
+                <div class="col-md-3">
+                    <p class="italic">0.5 </p>
+                </div>
+                <div class="col-md-3">
+                    <p class="italic">1.0</p>
+                </div>
+                <div class="col-md-3">
+                    <p class="italic">1.5 </p>
+                </div>
+                <div class="col-md-3">
+                    <p class="italic">2.0</p>
+                </div>
+            </div>
+            <!--span></span-->
         </div>
     </div>
-    
+
     <!--div id="options" style="display: none;"-->
         <!-- location list-->
     <div class="my-locations" data-bind="visible: $root.showLocation">
@@ -47,12 +63,12 @@
                     <label data-bind="text: $data.name, event: { click: $root.selectLocation }"></label>
                 </li>
             </ul>
-        
+
         </div>
         <div type="core" class="destroy-all-locations" data-bind="visible: myLocations().length >0, event: {click: $root.removeAllLocations}">
             <p class="unicode">x<span></span></p>
         </div>
-        
+
     </div>
     <div class="my-categories" group="controls" data-bind="visible:$root.showCategory">
         <div class="select">
@@ -305,7 +321,7 @@
         mapOptions = {
             center: {lat: 48.852729, lng: 2.350564},
             zoomControl: true,
-            zoom: 14,
+            zoom: 13,
             minZoom: 2,
             maxZoom: 20,
             disableDefaultUI: true,
