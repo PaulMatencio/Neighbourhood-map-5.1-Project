@@ -105,7 +105,8 @@ var mapPlaceTypes = [
     */
     mapCenter = {},
     myCategories = [],
-    radius = 800;
+    unit = 500;
+    radius = unit;
 
 /* default locations array which is used for the first time
  * they  will be updated and saved in local storage
@@ -679,6 +680,7 @@ gMaps.prototype.createLocMarker = function(place) {
         title: name
     });
 };
+
 // END of Google maps location class
 
 /*
@@ -717,6 +719,7 @@ function ViewModel() {
 
     // a custom binding to handle the enter key
     ko.bindingHandlers.enterKey = keyhandlerBindingFactory(ENTER_KEY);
+
     var self = this;
 
     /*
@@ -754,6 +757,7 @@ function ViewModel() {
     self.alertBody = ko.observable("");
     self.alertFooter = ko.observable("");
     self.prevMarker = ko.observable(null);
+    self.rangeValue = ko.observable(2);
     /*
      *  Location is a subclass of the gMaps class
      */
@@ -1361,7 +1365,10 @@ function ViewModel() {
         }
     };
 
-
+    /* change the radius whenever the rangeValue of the slider is changed */
+    self.rangeValue.subscribe(function(value) {
+        radius = unit * value;
+    });
 
     /* hide results when  window size is smaller than 800px */
     window.onresize = function() {
