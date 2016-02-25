@@ -37,19 +37,15 @@ var mapPlaceTypes = [
         "electronics_store",
         "embassy",
         "establishment",
-        "finance",
         "fire_station",
         "florist",
-        "food",
         "funeral_home",
         "furniture_store",
         "gas_station",
-        "general_contractor",
         "grocery_or_supermarket",
         "gym",
         "hair_care",
         "hardware_store",
-        "health",
         "hindu_temple",
         "home_goods_store",
         "hospital",
@@ -76,7 +72,6 @@ var mapPlaceTypes = [
         "pet_store",
         "pharmacy",
         "physiotherapist",
-        "place_of_worship",
         "plumber",
         "police",
         "post_office",
@@ -257,11 +252,12 @@ gMaps.prototype.setCenter = function() {
  */
 gMaps.prototype.nearbySearch = function() {
     var self = this.self;
+    var type = self.myCategories[0]; //  Only one type may be specified
     var service = new google.maps.places.PlacesService(this.map);
     service.nearbySearch({
         location: this.mapcenter(),
         radius: radius,
-        types: self.myCategories()
+        type: self.myCategories()
     }, this.getResults.bind(this));
 };
 
@@ -880,6 +876,7 @@ function ViewModel() {
         } else {
             self.showResults(false);
             self.showSlider(false);
+            zoom = 500;
         }
     }
 
@@ -1081,7 +1078,7 @@ function ViewModel() {
             cat = cat.toLowerCase();
             if (cat.substring(0, 5) == "clini") cat = "hospital";
             if (cat == "fitness") cat = "gym";
-            if (cat.substring(0, 3) == "eat") cat = "food";
+            // if (cat.substring(0, 3) == "eat") cat = "food";
             if (cat.substring(0, 5) == "metro") cat = "subway";
             mapplacetype = mapPlaceTypes.filter(getCat);
             // check if the category exist
@@ -1109,6 +1106,7 @@ function ViewModel() {
     self.addLocation = function(location) {
         myLocations.unshift(location);
         self.showCategory(false);
+        if (self.showResults() === false) self.showLocation(false);
         // self.showResuls(false);
         var loc = new Location(location); // instancie a new location
         self.myLocations.unshift(loc); // add it to the top of the observable location array
