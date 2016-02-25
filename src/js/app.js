@@ -817,9 +817,10 @@ function ViewModel() {
 
     // var streetViewApiKey = "AIzaSyAUYlUoaLYjM8hidnMVQ05zXiEXJ87dFiY",
     var streeViewURL = "http://maps.googleapis.com/maps/api/streetview?";
+    var orangeWifi = "https://api.orange.com/wifilocator/v2/hotspots"?
     var expand = "\u2303";
     var collapse = "\u2304" ;
-
+    var authorization_header = "Basic " + btoa(client_id + ":" + client_secret)
     /*
     *  add a new location when user click on the map
     *
