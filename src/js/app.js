@@ -768,7 +768,7 @@ function ViewModel() {
     self.alertFooter = ko.observable("");
     self.prevMarker = ko.observable(null);
     self.rangeValue = ko.observable(2);
-    self.showRange  = ko.observable(true);
+    self.showSlider  = ko.observable(true);
     /*
      *  Location is a subclass of the gMaps class
      */
@@ -873,13 +873,14 @@ function ViewModel() {
             return;
         }
         var winWidth = window.innerWidth;
-        console.log(winWidth);
-        if (winWidth > 750)  self.showResults(true);
-        else self.showResults(false);
-        if (winWidth > 1170)  self.showRange(true);
-        else self.showRange(false);
 
-
+        if (winWidth > 750)  {
+            self.showResults(true);
+            self.showSlider(true);
+        } else {
+            self.showResults(false);
+            self.showSlider(false);
+        }
     }
 
     /*
@@ -1107,6 +1108,8 @@ function ViewModel() {
      */
     self.addLocation = function(location) {
         myLocations.unshift(location);
+        self.showCategory(false);
+        // self.showResuls(false);
         var loc = new Location(location); // instancie a new location
         self.myLocations.unshift(loc); // add it to the top of the observable location array
         loc.markLocation(); // mark the new location
@@ -1117,7 +1120,7 @@ function ViewModel() {
     self.addaLocation = function() {
         // reserve for the future
         // Right now, searchBox is fired to search for alocation
-    }
+    };
 
     /*
         Unselect the location first (if it is selected)
@@ -1145,7 +1148,7 @@ function ViewModel() {
         self.myLocations().forEach( function(location){
             self.removeLocation(location);
         });
-    }
+    };
 
     /* set the center of current Locatio  or the the map using the goelocalisation of first selected
      * entry of the locations array
@@ -1396,7 +1399,7 @@ function ViewModel() {
 
     window.onload = function() {
         showResults();
-    }
+    };
     /*
     window.onerror = (function(message, source, lineno, colno, error) {
         self.customAlert(message);
