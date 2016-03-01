@@ -817,18 +817,20 @@ function ViewModel() {
 
     // var streetViewApiKey = "AIzaSyAUYlUoaLYjM8hidnMVQ05zXiEXJ87dFiY",
     var streeViewURL = "http://maps.googleapis.com/maps/api/streetview?";
-    var orangeWifi = "https://api.orange.com/wifilocator/v2/hotspots"?
+    // var orangeWifi = "https://api.orange.com/wifilocator/v2/hotspots";
     var expand = "\u2303";
     var collapse = "\u2304" ;
-    var authorization_header = "Basic " + btoa(client_id + ":" + client_secret)
+    // var authorization_header = "Basic " + btoa(client_id + ":" + client_secret)
     /*
     *  add a new location when user click on the map
     *
     */
     map.addListener('dblclick',function(event) {
         var latlng = event.latLng;
-        var x = event.Sa.x.toString().slice(0,8);
-        var y = event.Sa.y.toString().slice(0,8);
+        // console.log(event);
+        // Change Sa to Ra
+        var x = event.Ra.x.toString().slice(0,8);
+        var y = event.Ra.y.toString().slice(0,8);
         var place = "lat:" + x + "-lng:" + y;
         var location = {};
         location.name = place;
