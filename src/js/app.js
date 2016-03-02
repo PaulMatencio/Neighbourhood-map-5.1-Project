@@ -100,6 +100,7 @@ var mapPlaceTypes = [
     */
     mapCenter = {},
     myCategories = [],
+    myCategory = "";
     unit = 500;
     radius = unit;
 
@@ -252,12 +253,13 @@ gMaps.prototype.setCenter = function() {
  */
 gMaps.prototype.nearbySearch = function() {
     var self = this.self;
-    var type = self.myCategories[0]; //  Only one type may be specified
+    // var type = self.myCategories[0]; //  Only one type may be specified
     var service = new google.maps.places.PlacesService(this.map);
     service.nearbySearch({
         location: this.mapcenter(),
         radius: radius,
-        type: self.myCategories()
+        // type: self.myCategories()
+        type: self.myCategory()
     }, this.getResults.bind(this));
 };
 
@@ -351,7 +353,7 @@ gMaps.prototype.initAutocomplete = function() {
                 // set a new location and search places for nearby this location
                 self.addLocation(location);
             } else {
-                self.customAlert("map searchBox could not locate the new location");
+                // self.customAlert("map searchBox could not locate the new location");
             }
             self.newLocation("");
         }
@@ -755,7 +757,9 @@ function ViewModel() {
     self.currentIndex = ko.observable(0); // cirrent photo index holder
     self.keyword = ko.observable(); // search box keyword
     self.mapPlaceTypes = ko.observableArray(mapPlaceTypes); // ko array of all the place types supported by Google map search nearby services
-    self.myCategories = ko.observableArray(myCategories); // ko array of the selected place types
+    // self.myCategories = ko.observableArray(myCategories); // ko array of the selected place types
+    self.myCategory  = ko.observable(myCategory);
+    self.selectedCategory = ko.observable(myCategory);
     self.infoWindow = ko.observable(infoWindow);
     // self.filterExisting(false);
     self.myError = ko.observable(false);
@@ -1074,9 +1078,19 @@ function ViewModel() {
         }
     };
 
+    self.setCategory = function() {
+        myCategory = self.myCategory();
+        localStorage.myCategory = JSON.stringify(myCategory);
+    }
+
+    self.setmyCategory = function(myCategory) {
+        self.myCategory(myCategory);
+        localStorage.myCategory = JSON.stringify(myCategory);
+    }
+
     /* this is not actually used */
     self.getPlaces = function(categories) {
-        self.myCategories.removeAll();
+        self.myCategory("");
         categories.forEach(function(cat) {
             cat = cat.toLowerCase();
             if (cat.substring(0, 5) == "clini") cat = "hospital";
@@ -1086,16 +1100,19 @@ function ViewModel() {
             mapplacetype = mapPlaceTypes.filter(getCat);
             // check if the category exist
             if (mapplacetype.length > 0) {
+                /*
                 mapplacetype.forEach(function(type) {
                     myCategories.push(type);
                 });
-                self.myCategories(myCategories);
+                */
+                myCategory = mapplacetype[0]; // keep the first one
+                self.myCategory(myCategory);
             }
             function getCat(maptype) {
                 return stringStartsWith(maptype, cat);
             }
         });
-        localStorage.myCategories = JSON.stringify(myCategories);
+        localStorage.myCategory = JSON.stringify(myCategory);
         // center the map using the geolocalization of first entry of the locations array
         self.setCenter();
 
@@ -1352,11 +1369,15 @@ function ViewModel() {
             if (rawCategory.indexOf(val) != -1) return value;
         }
         myCategories = mapPlaceTypes.filter(Category);
-        self.myCategories(myCategories);
+        myCategory = myCategories[0] ; // Update: New Google maps nearby places service only accept one  category
+        self.setmyCategory(myCategory);
+        /*
+        self.myCategory(myCategory);
+        localStorage.myCategory = JSON.stringify(myCategory);
+        */
         //self.numberPlaces(0); // reset the total number of places for these categories
         self.showLocation(false);
         self.showCategory(false);
-        localStorage.myCategories = JSON.stringify(myCategories);
     };
 
     /**
@@ -1365,12 +1386,17 @@ function ViewModel() {
      **/
     self.resetIcons = function() {
         self.keyword("");
-        myCategories = [];
+        // myCategories = [];
+        myCategory="";
         self.showCategory(false);
         self.showLocation(false);
         showResults();
-        self.myCategories(myCategories);
-        localStorage.myCategories = JSON.stringify(myCategories);
+        self.setmyCategory(myCategory);
+        console.log(self.myCategory());
+        /*
+        self.myCategory(myCategory);
+        localStorage.myCategory = JSON.stringify(myCategory);
+        */
     };
 
     /* if expand , then  collapse the tool bar
@@ -1414,8 +1440,8 @@ if (localStorage.myLocations) {
     myLocations = JSON.parse(localStorage.myLocations);
 }
 
-if (localStorage.myCategories) {
-    myCategories = JSON.parse(localStorage.myCategories);
+if (localStorage.myCategory) {
+    myCategory = JSON.parse(localStorage.myCategory);
 }
 
 

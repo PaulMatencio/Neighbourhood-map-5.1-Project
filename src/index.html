@@ -70,9 +70,16 @@
 
     </div>
     <div class="my-categories" group="controls" data-bind="visible:$root.showCategory">
-        <div class="select">
+        <!--div class="select">
             <h3 style="background-color:#6890C1;padding:5px;color:white">Choose one category</h3>
             <select style="padding:15px;" data-bind="options: mapPlaceTypes, selectedOptions: myCategories" size="9" multiple="true"></select>
+        </div-->
+        <div class="select">
+            <label for="categoryInput">Place types:</label-->
+            <input id="categoryInput"  type="text" data-bind="value: myCategory, valueUpdate: 'afterkeydown, enterKey: setCategory'" list="categoryList" placeholder="Select place types" />
+            <datalist id="categoryList" data-bind="foreach:mapPlaceTypes">
+                <option data-bind="value: $data"></option>
+            </datalist>
         </div>
     </div>
     <!-- button to hide or show the search result list -->
